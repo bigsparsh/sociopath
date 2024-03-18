@@ -1,0 +1,59 @@
+import { useEffect, useState } from "react";
+import PostCard from "../components/PostCard";
+import axios from "axios";
+
+const Feed = () => {
+
+  const [posts, setPosts] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [render, setRender] = useState(false);
+  useEffect(() => {
+    axios.get(import.meta.env.VITE_BACKEND_URL + "/user/me?jwt=" + localStorage.getItem("auth-token"), {
+      headers: {
+        Authorization: localStorage.getItem("auth-token")
+      }
+    }).then((res) => {
+      if (res.data.error) return;
+      setCurrentUser(res.data.you);
+      axios.get(import.meta.env.VITE_BACKEND_URL + "/post/get", {
+        headers: {
+          Authorization: localStorage.getItem("auth-token")
+        }
+      }).then((res) => {
+        if (res.data.error) return;
+        setPosts(res.data.posts);
+      })
+    })
+
+
+  }, [render])
+
+  return <div className="flex gap-10">
+    <div className="p-3 lg:p-10 basis-2/3">
+      <h1 className="text-3xl font-bold">Your Feed</h1>
+      <div className="flex flex-col py-10 gap-5">
+        {posts && currentUser ?
+          posts.map((ele) => (
+            <PostCard description={ele.description}
+              post_image={ele.post_image}
+              key={ele.post_id}
+              id={ele.post_id}
+              user={ele.user}
+              created_at={String(new Date(ele.created_at))}
+              preference={ele.preference}
+              comment={ele.comment}
+              current_user={currentUser}
+              render={setRender}
+            />))
+          :
+          <div className="h-[500px] w-full grid place-items-center">
+            <span className="loading loading-infinity loading-lg"></span>
+          </div>
+        }
+      </div>
+
+    </div>
+    <div className="basis-1/3">Welcome to the dark side anakin</div>
+  </div>
+}
+export default Feed;
