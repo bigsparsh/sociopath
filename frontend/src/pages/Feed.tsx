@@ -40,10 +40,10 @@ const Feed = () => {
                 description: ele.description,
                 post_image: ele.post_image,
                 created_at: String(new Date(ele.created_at)),
+                preference: ele.preference
               }}
               key={ele.post_id}
               user={ele.user}
-              preference={ele.preference}
               comment={ele.comment}
               current_user={currentUser}
               render={setRender}

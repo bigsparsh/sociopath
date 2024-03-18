@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react"
 import { HiChatBubbleLeft, HiMiniHandThumbDown, HiMiniHandThumbUp } from "react-icons/hi2"
 
-const PostCard = ({ current_user, user, post, comment, preference, render }) => {
+const PostCard = ({ current_user, user, post, comment, render }) => {
 
   const [utilCounts, setUtilCounts] = useState([0, 0, 0]);
   const [currentPreference, setCurrentPreference] = useState(false);
@@ -19,9 +19,17 @@ const PostCard = ({ current_user, user, post, comment, preference, render }) => 
     comments = comment.length;
     setUtilCounts([likes, dislikes, comments]);
 
+    current_user.post_preference.map((ele) => {
+      if (ele.post_id == post.post_id) {
+        setCurrentPreference(ele.preference);
+      }
+    })
 
+  }, [comment, post, current_user])
 
-  }, [comment, post])
+  const checkPreference = () => {
+    console.log("Happy days");
+  }
 
   return (
     <div className={post.post_image == "NO IMAGE" ? `flex flex-col bg-base-300 rounded-xl overflow-hidden shadow-xl  max-h-[600px]` : `flex flex-col bg-base-300 rounded-xl overflow-hidden shadow-xl  h-[600px]`}>
@@ -66,10 +74,10 @@ const PostCard = ({ current_user, user, post, comment, preference, render }) => 
       <p className="text-xs opacity-50 px-5 pt-3">Posted at {post.created_at} </p>
       <div className="flex bg-base-300 p-5 lg:justify-start justify-evenly gap-16 items-center">
         <button className="btn btn-ghost flex gap-3 items-center" id="like" onClick={checkPreference}>
-          <HiMiniHandThumbUp className={`text-xl pointer-events-none` + (currentP == true ? ` text-green-500` : "")} /> {utilCounts[0]}
+          <HiMiniHandThumbUp className={`text-xl pointer-events-none` + (currentPreference == true ? ` text-green-500` : "")} /> {utilCounts[0]}
         </button>
         <button className="btn btn-ghost flex gap-3 items-center" id="dislike" onClick={checkPreference}>
-          <HiMiniHandThumbDown className={`text-xl pointer-events-none` + (currentP == false ? ` text-red-500` : "")} /> {utilCounts[1]}
+          <HiMiniHandThumbDown className={`text-xl pointer-events-none` + (currentPreference == false ? ` text-red-500` : "")} /> {utilCounts[1]}
         </button>
         <button className="btn btn-ghost flex gap-3 items-center">
           <HiChatBubbleLeft className="text-xl" /> {utilCounts[2]}
