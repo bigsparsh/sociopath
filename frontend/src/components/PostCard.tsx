@@ -1,11 +1,13 @@
 import axios from "axios";
-import { useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react"
 import { HiChatBubbleLeft, HiMiniHandThumbDown, HiMiniHandThumbUp } from "react-icons/hi2"
+import { removePreference, updatePreference } from "../utils";
 
 const PostCard = ({ current_user, user, post, comment, render }) => {
 
   const [utilCounts, setUtilCounts] = useState([0, 0, 0]);
-  const [currentPreference, setCurrentPreference] = useState(false);
+  const [currentPreference, setCurrentPreference] = useState(null);
+  const [preferenceLoader, setPreferenceLoader] = useState(false);
 
   useEffect(() => {
 
@@ -27,8 +29,40 @@ const PostCard = ({ current_user, user, post, comment, render }) => {
 
   }, [comment, post, current_user])
 
-  const checkPreference = () => {
-    console.log("Happy days");
+  let debounceTimeout;
+
+  const checkPreference = async (e) => {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(async () => {
+      const target = e.target.id;
+      if (currentPreference == true && target == "like" || currentPreference == false && target == "dislike") {
+        setPreferenceLoader(true);
+        await removePreference(current_user.user_id, post.post_id).then(
+          () => {
+            render(e => !e);
+            setCurrentPreference(null);
+            setPreferenceLoader(false);
+          }
+        )
+        return;
+      }
+      let preference;
+      if (target == "like") {
+        preference = true;
+
+      }
+      else if (target == "dislike") {
+        preference = false;
+      }
+      else {
+        return;
+      }
+      setPreferenceLoader(true);
+      await updatePreference(current_user.user_id, post.post_id, preference).then(() => {
+        render(e => !e);
+        setPreferenceLoader(false);
+      })
+    }, 250);
   }
 
   return (
@@ -73,15 +107,31 @@ const PostCard = ({ current_user, user, post, comment, render }) => {
       </div>
       <p className="text-xs opacity-50 px-5 pt-3">Posted at {post.created_at} </p>
       <div className="flex bg-base-300 p-5 lg:justify-start justify-evenly gap-16 items-center">
-        <button className="btn btn-ghost flex gap-3 items-center" id="like" onClick={checkPreference}>
-          <HiMiniHandThumbUp className={`text-xl pointer-events-none` + (currentPreference == true ? ` text-green-500` : "")} /> {utilCounts[0]}
-        </button>
-        <button className="btn btn-ghost flex gap-3 items-center" id="dislike" onClick={checkPreference}>
-          <HiMiniHandThumbDown className={`text-xl pointer-events-none` + (currentPreference == false ? ` text-red-500` : "")} /> {utilCounts[1]}
-        </button>
-        <button className="btn btn-ghost flex gap-3 items-center">
-          <HiChatBubbleLeft className="text-xl" /> {utilCounts[2]}
-        </button>
+        {
+          preferenceLoader ?
+            <>
+              <button className="btn btn-ghost flex gap-3 items-center skeleton" id="like" disabled>
+                <HiMiniHandThumbUp className={`text-xl pointer-events-none` + (currentPreference == true ? ` text-green-500` : "")} /> {utilCounts[0]}
+              </button>
+              <button className="btn btn-ghost flex gap-3 items-center skeleton" disabled id="dislike">
+                <HiMiniHandThumbDown className={`text-xl pointer-events-none` + (currentPreference == false ? ` text-red-500` : "")} /> {utilCounts[1]}
+              </button>
+              <button className="btn btn-ghost flex gap-3 items-center skeleton" disabled>
+                <HiChatBubbleLeft className="text-xl" /> {utilCounts[2]}
+              </button>
+            </> :
+            <>
+              <button className="btn btn-ghost flex gap-3 items-center" id="like" onClick={checkPreference}>
+                <HiMiniHandThumbUp className={`text-xl pointer-events-none` + (currentPreference == true ? ` text-green-500` : "")} /> {utilCounts[0]}
+              </button>
+              <button className="btn btn-ghost flex gap-3 items-center" id="dislike" onClick={checkPreference}>
+                <HiMiniHandThumbDown className={`text-xl pointer-events-none` + (currentPreference == false ? ` text-red-500` : "")} /> {utilCounts[1]}
+              </button>
+              <button className="btn btn-ghost flex gap-3 items-center">
+                <HiChatBubbleLeft className="text-xl" /> {utilCounts[2]}
+              </button>
+            </>
+        }
       </div>
     </div >
   )

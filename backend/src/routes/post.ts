@@ -32,38 +32,22 @@ postRouter.post('/create', async (c) => {
   })
 })
 
-postRouter.get('/getPreferences', async (c) => {
+
+postRouter.delete('/removePreference', async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
 
-  const filterId = c.req.query("filterId") || "";
-  if (filterId != "") {
-    const likes = await prisma.postPreference.count({
-      where: {
-        post_id: filterId,
-        preference: true
-      }
-    })
-    const dislikes = await prisma.postPreference.count({
-      where: {
-        post_id: filterId,
-        preference: false
-      }
-    })
-    const comments = await prisma.comment.count({
-      where: {
-        post_id: filterId
-      }
-    })
-    return c.json({
-      positive: likes,
-      negative: dislikes,
-      comments: comments
-    })
-  }
+  const body = await c.req.json()
+  await prisma.postPreference.deleteMany({
+    where: {
+      post_id: body.post_id,
+      user_id: body.user_id
+    }
+  })
+
   return c.json({
-    error: "Send Post ID in order to find the preferences"
+    message: "Preference deleted Successfully"
   })
 
 });
@@ -156,17 +140,38 @@ postRouter.put('/updatePreference', async (c) => {
   }).$extends(withAccelerate());
 
   const body = await c.req.json();
-  const preference = await prisma.postPreference.create({
-    data: {
+  const exists = await prisma.postPreference.findFirst({
+    where: {
       post_id: body.post_id,
-      preference: body.preference,
       user_id: body.user_id
+    }
+  })
+  if (!exists) {
+
+    await prisma.postPreference.create({
+      data: {
+        post_id: body.post_id,
+        preference: body.preference,
+        user_id: body.user_id
+      }
+    })
+    return c.json({
+      message: "Post preference created Successfully"
+    })
+  }
+  await prisma.postPreference.updateMany({
+    where: {
+      post_id: body.post_id,
+      user_id: body.user_id
+    },
+    data: {
+      preference: body.preference,
+
     }
   })
 
   return c.json({
     message: "Post preference updated Successfully",
-    data: preference
   })
 
 });
