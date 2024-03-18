@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { createRef, useEffect, useState } from "react";
 import PostCard from "../components/PostCard";
 import axios from "axios";
 
@@ -34,12 +34,15 @@ const Feed = () => {
       <div className="flex flex-col py-10 gap-5">
         {posts && currentUser ?
           posts.map((ele) => (
-            <PostCard description={ele.description}
-              post_image={ele.post_image}
+            <PostCard
+              post={{
+                post_id: ele.post_id,
+                description: ele.description,
+                post_image: ele.post_image,
+                created_at: String(new Date(ele.created_at)),
+              }}
               key={ele.post_id}
-              id={ele.post_id}
               user={ele.user}
-              created_at={String(new Date(ele.created_at))}
               preference={ele.preference}
               comment={ele.comment}
               current_user={currentUser}
