@@ -2,12 +2,15 @@ import { useRef, useState } from "react"
 import logo from "../assets/social-lilac.svg"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { HiOutlineInformationCircle } from "react-icons/hi2";
 const Landing = () => {
 
   const [loadingState, setLoadingState] = useState(false);
   const [error, setError] = useState(null);
+  const [timer, setTimer] = useState(false);
   const email = useRef(null);
   const password = useRef(null);
+  const screenTime = useRef(null);
   const navigator = useNavigate();
 
   const login = (e: Event) => {
@@ -24,6 +27,9 @@ const Landing = () => {
         }, 3000);
       } else {
         localStorage.setItem("auth-token", res.data.jwt);
+        if(screenTime.current) {
+            localStorage.setItem("screen-time", screenTime.current.value);
+          }
         navigator("/user/feed");
       }
       setLoadingState(val => !val);
@@ -64,6 +70,40 @@ const Landing = () => {
                   <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
                 </label>
               </div>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <input type="checkbox" className="toggle toggle-primary toggle-sm" onChange={() => {
+                    setTimer(e => !e);
+                  }} />
+
+                  <label className="label">
+                    <span className="label-text">Screen logout timer</span>
+                  </label>
+                </div>
+                <label className="label">
+                  <div className="tooltip" data-tip="Enabling this will add a timer when you login and when the time runs out you will be logged out.">
+                    <button className="btn btn-sm btn-ghost">
+                      <HiOutlineInformationCircle className="text-lg" />
+                    </button>
+                  </div>
+                </label>
+              </div>
+              {
+                timer ?
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text">Minutes</span>
+                    </label>
+                    <input type="range" min="1" max="5"  className="range range-primary range-sm" ref={screenTime} />
+                    <div className="w-full flex justify-between text-xs px-2">
+                      <span>1</span>
+                      <span>2</span>
+                      <span>3</span>
+                      <span>4</span>
+                      <span>5</span>
+                    </div>
+                  </div> : null
+              }
               <div className="form-control mt-6">
                 {!loadingState ?
                   <button className="btn btn-primary">

@@ -1,13 +1,19 @@
+import { useEffect, useState } from "react";
 import logo from "../assets/social-lilac.svg"
+import Timer from "./Timer";
 const NavBar = ({ extras }) => {
-  return <div className="navbar bg-base-100">
-    <div className="flex-1">
+  
+
+
+  return <div className="navbar bg-base-100 justify-between">
+    <div className="">
       <a className="btn btn-ghost text-xl">
         <img src={logo} width="75" className="hidden lg:block" />
         {extras ? extras : null}
 
       </a>
     </div>
+   <Timer /> 
     <div className="flex-none">
       <ul className="menu menu-horizontal px-1">
 

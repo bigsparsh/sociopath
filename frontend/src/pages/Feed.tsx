@@ -1,34 +1,39 @@
 import { useEffect, useState } from "react";
 import PostCard from "../components/PostCard";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Feed = () => {
 
   const [posts, setPosts] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [render, setRender] = useState(false);
+  const n = useNavigate();
 
   useEffect(() => {
+    if (!localStorage.getItem("auth-token")) {
+      n("/");
+    }
+    else {
+      axios.get(import.meta.env.VITE_BACKEND_URL + "/user/me?jwt=" + localStorage.getItem("auth-token"), {
+        headers: {
+          Authorization: localStorage.getItem("auth-token")
+        }
+      }).then((res) => {
+        if (res.data.error) return;
+        setCurrentUser(res.data.you);
 
-    axios.get(import.meta.env.VITE_BACKEND_URL + "/user/me?jwt=" + localStorage.getItem("auth-token"), {
-      headers: {
-        Authorization: localStorage.getItem("auth-token")
-      }
-    }).then((res) => {
-      if (res.data.error) return;
-      setCurrentUser(res.data.you);
-
-    })
-    axios.get(import.meta.env.VITE_BACKEND_URL + "/post/get", {
-      headers: {
-        Authorization: localStorage.getItem("auth-token")
-      }
-    }).then((res) => {
-      if (res.data.error) return;
-      setPosts(res.data.posts);
-    })
-
-  }, [render])
+      })
+      axios.get(import.meta.env.VITE_BACKEND_URL + "/post/get", {
+        headers: {
+          Authorization: localStorage.getItem("auth-token")
+        }
+      }).then((res) => {
+        if (res.data.error) return;
+        setPosts(res.data.posts);
+      })
+    }
+  }, [render, n])
 
   return <div className="flex gap-10">
     <div className="p-3 lg:p-10 basis-2/3">

@@ -1,4 +1,5 @@
 import axios from "axios"
+import { useNavigate } from "react-router-dom"
 
 export const removePreference = async (user_id, post_id) => {
   await axios.delete(import.meta.env.VITE_BACKEND_URL+ "/post/removePreference", {
@@ -23,4 +24,7 @@ export const updatePreference = async (user_id, post_id, preference) => {
     }
   })
 }
-
+export const logout = (navigator) => {
+    navigator("/");
+    localStorage.clear();
+  }
