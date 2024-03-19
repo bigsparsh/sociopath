@@ -7,7 +7,9 @@ const Feed = () => {
   const [posts, setPosts] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [render, setRender] = useState(false);
+
   useEffect(() => {
+
     axios.get(import.meta.env.VITE_BACKEND_URL + "/user/me?jwt=" + localStorage.getItem("auth-token"), {
       headers: {
         Authorization: localStorage.getItem("auth-token")
