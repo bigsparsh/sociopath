@@ -7,7 +7,8 @@ const Feed = () => {
 
   const [posts, setPosts] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
-  const [render, setRender] = useState(false);
+  const [feedRender, setFeedRender] = useState(false);
+  const [rightSection, setRightSection] = useState(null);
   const n = useNavigate();
 
   useEffect(() => {
@@ -33,10 +34,10 @@ const Feed = () => {
         setPosts(res.data.posts);
       })
     }
-  }, [render, n])
+  }, [feedRender, n])
 
-  return <div className="flex gap-10">
-    <div className="p-3 lg:p-10 basis-2/3">
+  return <div className="flex gap-3  relative">
+    <div className="p-3 lg:p-5 basis-2/3">
       <h1 className="text-3xl font-bold">Your Feed</h1>
       <div className="flex flex-col py-10 gap-5">
         {posts && currentUser ?
@@ -49,11 +50,12 @@ const Feed = () => {
                 created_at: String(new Date(ele.created_at)),
                 preference: ele.preference
               }}
+              right_sec={setRightSection}
               key={ele.post_id}
               user={ele.user}
               comment={ele.comment}
               current_user={currentUser}
-              render={setRender}
+              feed_render={setFeedRender}
             />))
           :
           <div className="h-[500px] w-full grid place-items-center">
@@ -63,7 +65,11 @@ const Feed = () => {
       </div>
 
     </div>
-    <div className="basis-1/3">Welcome to the dark side anakin</div>
+    <div className="basis-1/3">
+      {
+        rightSection ? rightSection : null
+      }
+    </div>
   </div>
 }
 export default Feed;

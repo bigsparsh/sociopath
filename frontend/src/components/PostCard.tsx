@@ -1,9 +1,9 @@
-import axios from "axios";
-import { memo, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { HiChatBubbleLeft, HiMiniHandThumbDown, HiMiniHandThumbUp } from "react-icons/hi2"
-import { removePreference, updatePreference } from "../utils";
+import { removePostPreference, updatePostPreference } from "../utils";
+import CommentSection from "../pages/CommentSection";
 
-const PostCard = ({ current_user, user, post, comment, render }) => {
+const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }) => {
 
   const [utilCounts, setUtilCounts] = useState([0, 0, 0]);
   const [currentPreference, setCurrentPreference] = useState(null);
@@ -29,6 +29,10 @@ const PostCard = ({ current_user, user, post, comment, render }) => {
 
   }, [comment, post, current_user])
 
+  const showComments = () => {
+    right_sec(<CommentSection post_id={post.post_id} close={right_sec} current_user={current_user} feed_render={feed_render} />)
+  }
+
   let debounceTimeout;
 
   const checkPreference = async (e) => {
@@ -37,9 +41,9 @@ const PostCard = ({ current_user, user, post, comment, render }) => {
       const target = e.target.id;
       if (currentPreference == true && target == "like" || currentPreference == false && target == "dislike") {
         setPreferenceLoader(true);
-        await removePreference(current_user.user_id, post.post_id).then(
+        await removePostPreference(current_user.user_id, post.post_id).then(
           () => {
-            render(e => !e);
+            feed_render(e => !e);
             setCurrentPreference(null);
             setPreferenceLoader(false);
           }
@@ -58,8 +62,8 @@ const PostCard = ({ current_user, user, post, comment, render }) => {
         return;
       }
       setPreferenceLoader(true);
-      await updatePreference(current_user.user_id, post.post_id, preference).then(() => {
-        render(e => !e);
+      await updatePostPreference(current_user.user_id, post.post_id, preference).then(() => {
+        feed_render(e => !e);
         setPreferenceLoader(false);
       })
     }, 250);
@@ -127,7 +131,7 @@ const PostCard = ({ current_user, user, post, comment, render }) => {
               <button className="btn btn-ghost flex gap-3 items-center" id="dislike" onClick={checkPreference}>
                 <HiMiniHandThumbDown className={`text-xl pointer-events-none` + (currentPreference == false ? ` text-red-500` : "")} /> {utilCounts[1]}
               </button>
-              <button className="btn btn-ghost flex gap-3 items-center">
+              <button className="btn btn-ghost flex gap-3 items-center" onClick={showComments}>
                 <HiChatBubbleLeft className="text-xl" /> {utilCounts[2]}
               </button>
             </>

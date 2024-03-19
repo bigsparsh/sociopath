@@ -43,6 +43,18 @@ commentRouter.get('/get', async (c) => {
   const comments = await prisma.comment.findMany({
     where: {
       post_id: filterId
+    },
+    select: {
+      comment_id: true,
+      message: true,
+      created_at: true,
+      user: true,
+      preference: {
+        select: {
+          preference: true,
+          user: true
+        }
+      }
     }
   });
   return c.json({
@@ -101,17 +113,57 @@ commentRouter.put('/updatePreference', async (c) => {
   }).$extends(withAccelerate());
 
   const body = await c.req.json();
-  const preference = await prisma.commentPreferences.create({
-    data: {
+  const exists = await prisma.commentPreferences.findFirst({
+    where: {
       comment_id: body.comment_id,
+      user_id: body.user_id
+    }
+  })
+  if (!exists) {
+
+    await prisma.commentPreferences.create({
+      data: {
+        comment_id: body.comment_id,
+        preference: body.preference,
+        user_id: body.user_id
+      }
+    })
+    return c.json({
+      message: "Comment reference created Successfully"
+    })
+  }
+  await prisma.commentPreferences.updateMany({
+    where: {
+      comment_id: body.comment_id,
+      user_id: body.user_id
+    },
+    data: {
       preference: body.preference,
+
+    }
+  })
+
+  return c.json({
+    message: "Comment preference updated Successfully",
+  })
+
+});
+
+commentRouter.delete('/removePreference', async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  const body = await c.req.json()
+  await prisma.commentPreferences.deleteMany({
+    where: {
+      comment_id: body.comment_id,
       user_id: body.user_id
     }
   })
 
   return c.json({
-    message: "Comment preference updated",
-    preference: preference
+    message: "Comment preference deleted Successfully"
   })
 
 });

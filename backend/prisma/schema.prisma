@@ -55,6 +55,7 @@ model Post {
 model Comment {
   comment_id String @id @default(uuid())
   message String
+  created_at DateTime @default(now())
   post_id String
   user_id String
   post Post @relation(fields: [post_id], references: [post_id])

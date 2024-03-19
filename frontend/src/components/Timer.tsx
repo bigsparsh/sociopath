@@ -10,7 +10,7 @@ const Timer = () => {
     var timer = localStorage.getItem("screen-time") * 60;
     if (localStorage.getItem("screen-time")) {
       const interval = setInterval(() => {
-        const minutes = parseInt(timer / 60 - 1);
+        const minutes = parseInt(timer / 60 );
         const seconds = parseInt(timer % 60);
         if (timer == 0) {
           clearInterval(interval);
