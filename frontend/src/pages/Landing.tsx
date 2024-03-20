@@ -1,24 +1,24 @@
-import { useRef, useState } from "react"
+import React, { useRef, useState } from "react"
 import logo from "../assets/social-lilac.svg"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineInformationCircle } from "react-icons/hi2";
 const Landing = () => {
 
-  const [loadingState, setLoadingState] = useState(false);
-  const [error, setError] = useState(null);
-  const [timer, setTimer] = useState(false);
-  const email = useRef(null);
-  const password = useRef(null);
-  const screenTime = useRef(null);
+  const [loadingState, setLoadingState] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>();
+  const [timer, setTimer] = useState<boolean>(false);
+  const email = useRef<HTMLInputElement>(null);
+  const password = useRef<HTMLInputElement>(null);
+  const screenTime = useRef<HTMLInputElement>(null);
   const navigator = useNavigate();
 
-  const login = (e: Event) => {
+  const login = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoadingState(val => !val);
     axios.post(import.meta.env.VITE_BACKEND_URL + "/user/login", {
-      email: email.current.value,
-      password: password.current.value
+      email: (email.current as HTMLInputElement).value,
+      password: (password.current as HTMLInputElement).value
     }).then((res) => {
       if (res.data.error) {
         setError(res.data.error);

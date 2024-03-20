@@ -1,6 +1,8 @@
 import logo from "../assets/social-lilac.svg"
 import Timer from "./Timer";
-const NavBar = ({ extras }) => {
+const NavBar = ({ extras }:{
+  extras: JSX.Element | null
+}) => {
   
 
 

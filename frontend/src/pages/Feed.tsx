@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import PostCard from "../components/PostCard";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import CurrentUserType from "../types/CurrentUserType"
+import PostType from "../types/PostType"
 
 const Feed = () => {
 
-  const [posts, setPosts] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [feedRender, setFeedRender] = useState(false);
-  const [rightSection, setRightSection] = useState(null);
+  const [posts, setPosts] = useState<PostType[]>();
+  const [currentUser, setCurrentUser] = useState<CurrentUserType>();
+  const [feedRender, setFeedRender] = useState<boolean>(false);
+  const [rightSection, setRightSection] = useState<JSX.Element | null | undefined>();
   const n = useNavigate();
 
   useEffect(() => {

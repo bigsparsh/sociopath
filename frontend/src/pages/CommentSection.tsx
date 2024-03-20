@@ -1,14 +1,20 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import CommentCard from "../components/CommentCard";
+import CurrentUserType from "../types/CurrentUserType"
+import CommentType from "../types/CommentType"
 import { uploadComment } from "../utils";
 
-const CommentSection = ({ post_id, close, feed_render }) => {
-  const [comment, setComment] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [loader, setLoader] = useState(true);
-  const [commentRender, setCommentRender] = useState(true);
-  const user_comment = useRef(null);
+const CommentSection = ({ post_id, close, feed_render }: {
+  post_id: string;
+  feed_render: Dispatch<SetStateAction<boolean>>;
+  close: Dispatch<SetStateAction<JSX.Element | null | undefined>>;
+}) => {
+  const [comment, setComment] = useState<CommentType[]>();
+  const [currentUser, setCurrentUser] = useState<CurrentUserType>();
+  const [loader, setLoader] = useState<boolean>(true);
+  const [commentRender, setCommentRender] = useState<boolean>(true);
+  const user_comment = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     axios.get(import.meta.env.VITE_BACKEND_URL + "/user/me?jwt=" + localStorage.getItem("auth-token"), {
       headers: {
@@ -34,10 +40,10 @@ const CommentSection = ({ post_id, close, feed_render }) => {
   }, [post_id, commentRender, commentRender, feed_render]);
 
   const upload_comment = async () => {
-    user_comment.current.value = "";
-    if (user_comment.current.value.length < 3) return;
+    (user_comment.current as HTMLTextAreaElement).value = "";
+    if ((user_comment.current as HTMLTextAreaElement).value.length < 3) return;
     setLoader(true);
-    uploadComment(currentUser.user_id, post_id, user_comment.current.value).then(() => {
+    uploadComment(currentUser?.user_id, post_id, (user_comment.current as HTMLTextAreaElement).value).then(() => {
       feed_render(e=>!e);
       setCommentRender(e=>!e);
       setLoader(false);
@@ -68,13 +74,13 @@ const CommentSection = ({ post_id, close, feed_render }) => {
         </div>
         <div className="h-full w-full flex flex-col gap-3">
           {
-            loader == false ?
+            loader == false && comment && currentUser ?
               comment.map((ele) => {
                 return <CommentCard
                   comment={{
                     comment_id: ele.comment_id,
                     message: ele.message,
-                    created_at: ele.created_at
+                    created_at: String(new Date(ele.created_at))
                   }}
                   preference={ele.preference}
                   user={ele.user}

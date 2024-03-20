@@ -1,12 +1,25 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { HiOutlineChevronDown, HiOutlineChevronUp } from "react-icons/hi2";
 import { removeCommentPreference, updateCommentPreference } from "../utils";
+import CommentType from "../types/CommentType"
+import CurrentUserType from "../types/CurrentUserType"
 
-const CommentCard = ({ comment, user, preference, id, current_user, comment_render }) => {
+const CommentCard = ({ comment, user, preference, id, current_user, comment_render }:{
+  comment: {
+    comment_id: string;
+    message: string;
+    created_at: string;
+  };
+  user: CommentType["user"];
+  id: string;
+  preference: CommentType["preference"];
+  current_user: CurrentUserType;
+  comment_render: Dispatch<SetStateAction<boolean>>;
+}) => {
 
-  const [utilCounts, setUtilCounts] = useState([0, 0]);
-  const [currentPreference, setCurrentPreference] = useState(null);
-  const [preferenceLoader, setPreferenceLoader] = useState(false);
+  const [utilCounts, setUtilCounts] = useState<number[]>([0, 0]);
+  const [currentPreference, setCurrentPreference] = useState<boolean | null>(null);
+  const [preferenceLoader, setPreferenceLoader] = useState<boolean>(false);
 
   useEffect(() => {
     let likes = 0, dislikes = 0;
@@ -26,12 +39,12 @@ const CommentCard = ({ comment, user, preference, id, current_user, comment_rend
 
   }, [comment, preference, id, current_user, comment_render])
 
-  let debounceTimeout;
+  let debounceTimeout: ReturnType<typeof setTimeout>;
 
-  const checkPreference = async (e) => {
+  const checkPreference = async (e: React.MouseEvent<HTMLButtonElement>) => {
     clearTimeout(debounceTimeout);
     debounceTimeout = setTimeout(async () => {
-      const target = e.target.id;
+      const target = (e.target as HTMLButtonElement).id;
       if (currentPreference == true && target == "like" || currentPreference == false && target == "dislike") {
         setPreferenceLoader(true);
         await removeCommentPreference(current_user.user_id, id).then(

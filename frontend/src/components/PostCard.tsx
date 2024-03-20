@@ -1,14 +1,37 @@
-import { useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { HiChatBubbleLeft, HiMiniHandThumbDown, HiMiniHandThumbUp } from "react-icons/hi2"
 import { removePostPreference, updatePostPreference } from "../utils";
 import CommentSection from "../pages/CommentSection";
+import CurrentUserType from "../types/CurrentUserType"
+import PostType from "../types/PostType"
 
-const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }) => {
+interface post_card {
+  current_user: CurrentUserType;
+  user: PostType["user"];
+  post: {
+    post_id: string;
+    description: string;
+    created_at: string;
+    post_image: string;
+    preference: {
+      p_preference_id: string;
+      post_id: string;
+      preference: boolean;
+      user_id: string;
+    }[];
+  };
+  comment: PostType["comment"];
+  feed_render: Dispatch<SetStateAction<boolean>>;
+  right_sec: Dispatch<SetStateAction<JSX.Element | null | undefined>>;
+}
 
-  const [utilCounts, setUtilCounts] = useState([0, 0, 0]);
-  const [currentPreference, setCurrentPreference] = useState(null);
-  const [preferenceLoader, setPreferenceLoader] = useState(false);
+const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }: post_card) => {
 
+  const [utilCounts, setUtilCounts] = useState<number[]>([0, 0, 0]);
+  const [currentPreference, setCurrentPreference] = useState<boolean | null>(null);
+  const [preferenceLoader, setPreferenceLoader] = useState<boolean>(false);
+
+  console.log(utilCounts, setUtilCounts);
   useEffect(() => {
 
     let likes = 0, dislikes = 0, comments = 0;
@@ -32,12 +55,12 @@ const PostCard = ({ current_user, user, post, comment, feed_render, right_sec })
     right_sec(<CommentSection post_id={post.post_id} close={right_sec} feed_render={feed_render} />)
   }
 
-  let debounceTimeout;
+  let debounceTimeout: ReturnType<typeof setTimeout>;
 
-  const checkPreference = async (e) => {
+  const checkPreference = async (e: React.MouseEvent<HTMLButtonElement>) => {
     clearTimeout(debounceTimeout);
     debounceTimeout = setTimeout(async () => {
-      const target = e.target.id;
+      const target = (e.target as HTMLButtonElement).id;
       if (currentPreference == true && target == "like" || currentPreference == false && target == "dislike") {
         setPreferenceLoader(true);
         await removePostPreference(current_user.user_id, post.post_id).then(

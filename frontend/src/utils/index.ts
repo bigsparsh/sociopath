@@ -1,7 +1,8 @@
 import axios from "axios"
+import { NavigateFunction } from "react-router-dom"
 
 
-export const removePostPreference = async (user_id, post_id) => {
+export const removePostPreference = async (user_id: string | undefined, post_id: string) => {
   await axios.delete(import.meta.env.VITE_BACKEND_URL + "/post/removePreference", {
     data: {
       user_id: user_id,
@@ -13,7 +14,7 @@ export const removePostPreference = async (user_id, post_id) => {
   })
 }
 
-export const uploadComment = async (user_id, post_id, message) => {
+export const uploadComment = async (user_id: string | undefined, post_id:string, message:string) => {
   await axios.post(import.meta.env.VITE_BACKEND_URL + "/comment/create", {
     user_id: user_id,
     post_id: post_id,
@@ -25,7 +26,7 @@ export const uploadComment = async (user_id, post_id, message) => {
   })
 }
 
-export const updatePostPreference = async (user_id, post_id, preference) => {
+export const updatePostPreference = async (user_id:string |undefined, post_id:string, preference:boolean) => {
   await axios.put(import.meta.env.VITE_BACKEND_URL + "/post/updatePreference", {
     user_id: user_id,
     post_id: post_id,
@@ -37,7 +38,7 @@ export const updatePostPreference = async (user_id, post_id, preference) => {
   })
 }
 
-export const removeCommentPreference = async (user_id, comment_id) => {
+export const removeCommentPreference = async (user_id:string | undefined, comment_id:string) => {
   await axios.delete(import.meta.env.VITE_BACKEND_URL + "/comment/removePreference", {
     data: {
       user_id: user_id,
@@ -49,7 +50,7 @@ export const removeCommentPreference = async (user_id, comment_id) => {
   })
 }
 
-export const updateCommentPreference = async (user_id, comment_id, preference) => {
+export const updateCommentPreference = async (user_id:string | undefined, comment_id:string, preference:boolean) => {
   await axios.put(import.meta.env.VITE_BACKEND_URL + "/comment/updatePreference", {
     user_id: user_id,
     comment_id: comment_id,
@@ -61,7 +62,7 @@ export const updateCommentPreference = async (user_id, comment_id, preference) =
   })
 }
 
-export const logout = (navigator) => {
+export const logout = (navigator: NavigateFunction) => {
   navigator("/");
   localStorage.clear();
 }
