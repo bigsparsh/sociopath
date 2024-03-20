@@ -26,10 +26,10 @@ const PostCard = ({ current_user, user, post, comment, feed_render, right_sec })
         setCurrentPreference(ele.preference);
       }
     })
-  }, [comment, post, current_user])
+  }, [comment, post, current_user, feed_render])
 
   const showComments = () => {
-    right_sec(<CommentSection post_id={post.post_id} close={right_sec}  feed_render={feed_render} />)
+    right_sec(<CommentSection post_id={post.post_id} close={right_sec} feed_render={feed_render} />)
   }
 
   let debounceTimeout;
@@ -65,7 +65,7 @@ const PostCard = ({ current_user, user, post, comment, feed_render, right_sec })
         feed_render(e => !e);
         setPreferenceLoader(false);
       })
-    }, 250);
+    }, 100);
   }
 
   return (
