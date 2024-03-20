@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { HiOutlineChevronDown, HiOutlineChevronUp } from "react-icons/hi2";
 import { removeCommentPreference, updateCommentPreference } from "../utils";
 
-const CommentCard = ({ comment, user, preference, id, current_user, comment_render, feed_render }) => {
+const CommentCard = ({ comment, user, preference, id, current_user, comment_render }) => {
 
   const [utilCounts, setUtilCounts] = useState([0, 0]);
   const [currentPreference, setCurrentPreference] = useState(null);
@@ -24,7 +24,7 @@ const CommentCard = ({ comment, user, preference, id, current_user, comment_rend
       }
     })
 
-  }, [comment, preference, id, current_user, currentPreference])
+  }, [comment, preference, id, current_user, comment_render])
 
   let debounceTimeout;
 
@@ -38,7 +38,6 @@ const CommentCard = ({ comment, user, preference, id, current_user, comment_rend
           () => {
             comment_render(e => !e);
 
-            feed_render(e => !e);
             setCurrentPreference(null);
             setPreferenceLoader(false);
           }
@@ -60,7 +59,6 @@ const CommentCard = ({ comment, user, preference, id, current_user, comment_rend
       await updateCommentPreference(current_user.user_id, id, preference).then(() => {
         comment_render(e => !e);
 
-        feed_render(e => !e);
         setPreferenceLoader(false);
       })
     }, 250);

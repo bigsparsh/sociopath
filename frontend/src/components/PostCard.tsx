@@ -26,11 +26,10 @@ const PostCard = ({ current_user, user, post, comment, feed_render, right_sec })
         setCurrentPreference(ele.preference);
       }
     })
-
   }, [comment, post, current_user])
 
   const showComments = () => {
-    right_sec(<CommentSection post_id={post.post_id} close={right_sec} current_user={current_user} feed_render={feed_render} />)
+    right_sec(<CommentSection post_id={post.post_id} close={right_sec}  feed_render={feed_render} />)
   }
 
   let debounceTimeout;

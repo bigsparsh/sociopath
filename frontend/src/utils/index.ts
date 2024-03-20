@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useNavigate } from "react-router-dom"
+
 
 export const removePostPreference = async (user_id, post_id) => {
   await axios.delete(import.meta.env.VITE_BACKEND_URL + "/post/removePreference", {
@@ -19,9 +19,9 @@ export const uploadComment = async (user_id, post_id, message) => {
     post_id: post_id,
     message: message
   }, {
-    headers:{
-        Authorization: localStorage.getItem("auth-token")
-      } 
+    headers: {
+      Authorization: localStorage.getItem("auth-token")
+    }
   })
 }
 

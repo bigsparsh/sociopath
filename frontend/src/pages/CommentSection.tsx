@@ -3,27 +3,43 @@ import { useEffect, useRef, useState } from "react";
 import CommentCard from "../components/CommentCard";
 import { uploadComment } from "../utils";
 
-const CommentSection = ({ post_id, close, current_user, feed_render }) => {
+const CommentSection = ({ post_id, close, feed_render }) => {
   const [comment, setComment] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const [loader, setLoader] = useState(true);
   const [commentRender, setCommentRender] = useState(true);
   const user_comment = useRef(null);
   useEffect(() => {
-    setLoader(true);
-    axios.get(import.meta.env.VITE_BACKEND_URL + "/comment/get?filterId=" + post_id, {
+    axios.get(import.meta.env.VITE_BACKEND_URL + "/user/me?jwt=" + localStorage.getItem("auth-token"), {
       headers: {
         Authorization: localStorage.getItem("auth-token")
       }
     }).then((res) => {
       if (res.data.error) return;
-      setComment(res.data.comments);
-      setLoader(false);
+      console.log(res.data.you);
+      setCurrentUser(res.data.you);
+      setLoader(true);
+      axios.get(import.meta.env.VITE_BACKEND_URL + "/comment/get?filterId=" + post_id, {
+        headers: {
+          Authorization: localStorage.getItem("auth-token")
+        }
+      }).then((res) => {
+        if (res.data.error) return;
+        setComment(res.data.comments);
+        setLoader(false);
+            feed_render(e=>!e);
+      })
     })
-  }, [post_id ,current_user, commentRender, feed_render]);
+
+  }, [post_id, commentRender, commentRender, feed_render]);
+
   const upload_comment = async () => {
+    user_comment.current.value = "";
     if (user_comment.current.value.length < 3) return;
     setLoader(true);
-    uploadComment(current_user.user_id, post_id, user_comment.current.value).then(() => {
+    uploadComment(currentUser.user_id, post_id, user_comment.current.value).then(() => {
+      feed_render(e=>!e);
+      setCommentRender(e=>!e);
       setLoader(false);
     });
   }
@@ -60,12 +76,11 @@ const CommentSection = ({ post_id, close, current_user, feed_render }) => {
                     message: ele.message,
                     created_at: ele.created_at
                   }}
-                  comment_render={setCommentRender}
                   preference={ele.preference}
                   user={ele.user}
-                  feed_render={feed_render}
                   id={ele.comment_id}
-                  current_user={current_user}
+                  current_user={currentUser}
+                  comment_render={setCommentRender}
                   key={ele.comment_id}
                 />
               }) :

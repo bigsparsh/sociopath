@@ -36,8 +36,8 @@ const Feed = () => {
     }
   }, [feedRender, n])
 
-  return <div className="flex gap-3  relative">
-    <div className="p-3 lg:p-5 basis-2/3">
+  return <div className="flex gap-10">
+    <div className="p-3 lg:p-10 basis-2/3">
       <h1 className="text-3xl font-bold">Your Feed</h1>
       <div className="flex flex-col py-10 gap-5">
         {posts && currentUser ?
