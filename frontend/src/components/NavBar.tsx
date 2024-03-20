@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import logo from "../assets/social-lilac.svg"
 import Timer from "./Timer";
 const NavBar = ({ extras }) => {
