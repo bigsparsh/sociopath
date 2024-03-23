@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import NavBar from "../components/NavBar";
-import { HiHome } from "react-icons/hi";
+import { HiHome, HiX } from "react-icons/hi";
 import { HiOutlineHome, HiMiniPhoto, HiBars3 } from "react-icons/hi2";
 import { HiOutlineGlobeAlt } from "react-icons/hi2";
 import logo from "../assets/social-lilac.svg"
@@ -42,7 +42,7 @@ const PrimaryLayout = () => {
             </li>
             <li>
               <a>
-                <HiMiniPhoto className="text-xl" />
+                <HiX className="text-xl" />
                 Your Feed
               </a>
             </li>
