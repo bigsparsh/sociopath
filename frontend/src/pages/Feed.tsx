@@ -38,8 +38,8 @@ const Feed = () => {
     }
   }, [feedRender, n])
 
-  return <div className="flex gap-10">
-    <div className="p-3 lg:p-10 basis-2/3">
+  return <div className="flex lg:gap-10 gap-0">
+    <div className="p-3 lg:p-10 grow lg:basis-2/3 w-full">
       <h1 className="text-3xl font-bold">Your Feed</h1>
       <div className="flex flex-col py-10 gap-5">
         {posts && currentUser ?
@@ -67,7 +67,7 @@ const Feed = () => {
       </div>
 
     </div>
-    <div className="basis-1/3">
+    <div className="lg:basis-1/2 basis-0">
       {
         rightSection ? rightSection : null
       }

@@ -85,13 +85,13 @@ const CommentCard = ({ comment, user, preference, id, current_user, comment_rend
         {
           user.profile_image == "NO IMAGE" ?
             <div className="avatar placeholder">
-              <div className="bg-neutral text-neutral-content rounded-full w-12">
+              <div className="bg-neutral text-neutral-content rounded-full w-10">
                 <span className="text-md">{user.name.split(" ")[0][0].toUpperCase()}{user.name.split(" ")[1][0].toUpperCase()}</span>
               </div>
             </div>
             :
             <div className="avatar">
-              <div className="w-12 rounded-full">
+              <div className="w-10 rounded-full">
                 <img src={user.profile_image} loading="lazy" />
               </div>
             </div>
@@ -102,8 +102,8 @@ const CommentCard = ({ comment, user, preference, id, current_user, comment_rend
               <div className="w-24 rounded-full h-3 skeleton"></div></> :
             <>
 
-              <h1 className="text-xl">{user.name}</h1>
-              <p className="text-sm">{user.email}</p></>}
+              <h1 className="text-base">{user.name}</h1>
+              <p className="text-xs">{user.email}</p></>}
         </div>
 
 

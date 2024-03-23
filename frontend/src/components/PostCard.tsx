@@ -132,7 +132,7 @@ const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }:
         <p className="p-5">{post.description}</p>
       </div>
       <p className="text-xs opacity-50 px-5 pt-3">Posted at {post.created_at} </p>
-      <div className="flex bg-base-300 p-5 lg:justify-start justify-evenly gap-16 items-center">
+      <div className="flex bg-base-300 p-5 justify-start lg:gap-16 items-center">
         {
           preferenceLoader ?
             <>
