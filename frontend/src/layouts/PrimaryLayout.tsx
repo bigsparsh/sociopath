@@ -1,13 +1,13 @@
 import { Outlet } from "react-router-dom";
 import NavBar from "../components/NavBar";
-import { HiHome, HiX } from "react-icons/hi";
-import { HiOutlineHome, HiMiniPhoto, HiBars3 } from "react-icons/hi2";
+import { HiBan, HiFlag, HiHome } from "react-icons/hi";
+import { HiOutlineHome, HiMiniPhoto, HiBars3, HiEye, HiChatBubbleBottomCenter } from "react-icons/hi2";
 import { HiOutlineGlobeAlt } from "react-icons/hi2";
 import logo from "../assets/social-lilac.svg"
 
 const PrimaryLayout = () => {
   return <div className="flex flex-col">
-    <NavBar extras={<label htmlFor="my-drawer-2" className="btn btn-sm btn-primary drawer-button lg:hidden"><HiBars3 className="text-xl"/></label>
+    <NavBar extras={<label htmlFor="my-drawer-2" className="btn btn-sm btn-primary drawer-button lg:hidden"><HiBars3 className="text-xl" /></label>
     } />
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -19,9 +19,9 @@ const PrimaryLayout = () => {
       <div className="drawer-side">
 
         <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
-        <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
+        <ul className="menu p-4 w-80 min-h-full text-base-content">
           <img src={logo} width="75" className="lg:hidden block" />
-          <ul className="menu bg-base-200 w-56 rounded-box">
+          <ul className="menu bg-base-300 w-full gap-1 rounded-box">
             <li>
               <a>
                 <HiHome className="text-xl" />
@@ -31,21 +31,40 @@ const PrimaryLayout = () => {
             <li>
               <a>
                 <HiOutlineHome className="text-xl" />
-                Another Home
+                Upload Post
               </a>
             </li>
             <li>
               <a>
                 <HiOutlineGlobeAlt className="text-xl" />
-                Explore your network
+                Your Profile
               </a>
             </li>
             <li>
               <a>
-                <HiX className="text-xl" />
+                <HiBan className="text-xl" />
                 Your Feed
               </a>
             </li>
+            <li>
+              <a>
+                <HiEye className="text-xl" />
+                Settings
+              </a>
+            </li>
+            <li>
+              <a>
+                <HiHome className="text-xl" />
+                Selective Feed
+              </a>
+            </li>
+            <li>
+              <a>
+                <HiFlag className="text-xl" />
+                Friend Feed
+              </a>
+            </li>
+
           </ul>
         </ul>
 
