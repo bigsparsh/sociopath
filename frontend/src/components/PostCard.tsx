@@ -29,9 +29,8 @@ const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }:
 
   const [utilCounts, setUtilCounts] = useState<number[]>([0, 0, 0]);
   const [currentPreference, setCurrentPreference] = useState<boolean | null>(null);
-  const [preferenceLoader, setPreferenceLoader] = useState<boolean>(false);
+  const [debouncer, setDebouncer] = useState<ReturnType<typeof setTimeout> | null>(null);
 
-  console.log(utilCounts, setUtilCounts);
   useEffect(() => {
 
     let likes = 0, dislikes = 0, comments = 0;
@@ -49,46 +48,59 @@ const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }:
         setCurrentPreference(ele.preference);
       }
     })
-  }, [comment, post, current_user, feed_render])
+  }, [])
 
   const showComments = () => {
-    right_sec(<CommentSection post_id={post.post_id} close={right_sec} feed_render={feed_render} />)
+    right_sec(<CommentSection post_id={post.post_id} close={right_sec} feed_render={feed_render} current_user={current_user}/>)
   }
 
-  let debounceTimeout: ReturnType<typeof setTimeout>;
-
   const checkPreference = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    clearTimeout(debounceTimeout);
-    debounceTimeout = setTimeout(async () => {
-      const target = (e.target as HTMLButtonElement).id;
-      if (currentPreference == true && target == "like" || currentPreference == false && target == "dislike") {
-        setPreferenceLoader(true);
-        await removePostPreference(current_user.user_id, post.post_id).then(
-          () => {
-            feed_render(e => !e);
-            setCurrentPreference(null);
-            setPreferenceLoader(false);
-          }
-        )
-        return;
-      }
-      let preference;
-      if (target == "like") {
-        preference = true;
+    let cpBuffer: null | boolean;
+    if (currentPreference == true && (e.target as HTMLButtonElement).id == "like") {
+      console.log("true, like");
+      cpBuffer = null;
+      setCurrentPreference(null);
+      setUtilCounts([utilCounts[0] - 1, utilCounts[1], utilCounts[2]]);
+    }
+    if (currentPreference == false && (e.target as HTMLButtonElement).id == "dislike") {
+      console.log("false, dislike");
+      cpBuffer = null;
+      setCurrentPreference(null);
+      setUtilCounts([utilCounts[0], utilCounts[1] - 1, utilCounts[2]]);
+    }
+    if (currentPreference == true && (e.target as HTMLButtonElement).id == "dislike") {
+      console.log("true, dislike");
+      cpBuffer = false;
+      setCurrentPreference(false);
+      setUtilCounts([utilCounts[0] - 1, utilCounts[1] + 1, utilCounts[2]]);
+    }
+    if (currentPreference == false && (e.target as HTMLButtonElement).id == "like") {
+      console.log("false, like");
+      cpBuffer = true;
+      setCurrentPreference(true);
+      setUtilCounts([utilCounts[0] + 1, utilCounts[1] - 1, utilCounts[2]]);
+    }
+    if (currentPreference == null && (e.target as HTMLButtonElement).id == "like") {
+      console.log("null, like");
+      cpBuffer = true;
+      setCurrentPreference(true);
+      setUtilCounts([utilCounts[0] + 1, utilCounts[1], utilCounts[2]]);
+    }
+    if (currentPreference == null && (e.target as HTMLButtonElement).id == "dislike") {
+      console.log("null, dislike");
+      cpBuffer = false;
+      setCurrentPreference(false);
+      setUtilCounts([utilCounts[0], utilCounts[1] + 1, utilCounts[2]]);
+    }
+    if (debouncer) {
+      clearTimeout(debouncer);
+    }
+    setDebouncer(setTimeout(async () => {
+      if (cpBuffer != null) { await updatePostPreference(current_user.user_id, post.post_id, cpBuffer); }
+      else { await removePostPreference(current_user.user_id, post.post_id); }
+      feed_render(e => !e);
+    }, 5000));
 
-      }
-      else if (target == "dislike") {
-        preference = false;
-      }
-      else {
-        return;
-      }
-      setPreferenceLoader(true);
-      await updatePostPreference(current_user.user_id, post.post_id, preference).then(() => {
-        feed_render(e => !e);
-        setPreferenceLoader(false);
-      })
-    }, 100);
   }
 
   return (
@@ -134,32 +146,32 @@ const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }:
       <p className="text-xs opacity-50 px-5 pt-3">Posted at {post.created_at} </p>
       <div className="flex bg-base-300 p-5 justify-start lg:gap-16 items-center">
         {
-          preferenceLoader ?
-            <>
-              <button className="btn btn-ghost flex gap-3 items-center skeleton" id="like" disabled>
-                <HiMiniHandThumbUp className={`text-xl pointer-events-none` + (currentPreference == true ? ` text-green-500` : "")} /> {utilCounts[0]}
-              </button>
-              <button className="btn btn-ghost flex gap-3 items-center skeleton" disabled id="dislike">
-                <HiMiniHandThumbDown className={`text-xl pointer-events-none` + (currentPreference == false ? ` text-red-500` : "")} /> {utilCounts[1]}
-              </button>
-              <button className="btn btn-ghost flex gap-3 items-center skeleton" disabled>
-                <HiChatBubbleLeft className="text-xl" /> {utilCounts[2]}
-              </button>
-            </> :
-            <>
-              <button className="btn btn-ghost flex gap-3 items-center" id="like" onClick={checkPreference}>
-                <HiMiniHandThumbUp className={`text-xl pointer-events-none` + (currentPreference == true ? ` text-green-500` : "")} /> {utilCounts[0]}
-              </button>
-              <button className="btn btn-ghost flex gap-3 items-center" id="dislike" onClick={checkPreference}>
-                <HiMiniHandThumbDown className={`text-xl pointer-events-none` + (currentPreference == false ? ` text-red-500` : "")} /> {utilCounts[1]}
-              </button>
-              <button className="btn btn-ghost flex gap-3 items-center" onClick={showComments}>
-                <HiChatBubbleLeft className="text-xl" /> {utilCounts[2]}
-              </button>
-            </>
+          // preferenceLoader ?
+          //   <>
+          //     <button className="btn btn-ghost flex gap-3 items-center skeleton" id="like" disabled>
+          //       <HiMiniHandThumbUp className={`text-xl pointer-events-none` + (currentPreference == true ? ` text-green-500` : "")} /> {utilCounts[0]}
+          //     </button>
+          //     <button className="btn btn-ghost flex gap-3 items-center skeleton" disabled id="dislike">
+          //       <HiMiniHandThumbDown className={`text-xl pointer-events-none` + (currentPreference == false ? ` text-red-500` : "")} /> {utilCounts[1]}
+          //     </button>
+          //     <button className="btn btn-ghost flex gap-3 items-center skeleton" disabled>
+          //       <HiChatBubbleLeft className="text-xl" /> {utilCounts[2]}
+          //     </button>
+          //   </> :
+          <>
+            <button className="btn btn-ghost flex gap-3 items-center" id="like" onClick={checkPreference}>
+              <HiMiniHandThumbUp className={`text-xl pointer-events-none` + (currentPreference == true ? ` text-green-500` : "")} /> {utilCounts[0]}
+            </button>
+            <button className="btn btn-ghost flex gap-3 items-center" id="dislike" onClick={checkPreference}>
+              <HiMiniHandThumbDown className={`text-xl pointer-events-none` + (currentPreference == false ? ` text-red-500` : "")} /> {utilCounts[1]}
+            </button>
+            <button className="btn btn-ghost flex gap-3 items-center" onClick={showComments}>
+              <HiChatBubbleLeft className="text-xl" /> {utilCounts[2]}
+            </button>
+          </>
         }
       </div>
     </div >
   )
 }
-export default PostCard
+export default PostCard;
