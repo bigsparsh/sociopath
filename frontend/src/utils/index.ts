@@ -1,4 +1,5 @@
 import axios from "axios";
+import CommentType from "../types/CommentType";
 import { NavigateFunction } from "react-router-dom";
 
 export const removePostPreference = async (
@@ -19,24 +20,28 @@ export const removePostPreference = async (
   );
 };
 
-export const uploadComment = async (
+export const uploadComment = (
   user_id: string | undefined,
   post_id: string,
   message: string,
-) => {
-  await axios.post(
-    import.meta.env.VITE_BACKEND_URL + "/comment/create",
-    {
-      user_id: user_id,
-      post_id: post_id,
-      message: message,
-    },
-    {
-      headers: {
-        Authorization: localStorage.getItem("auth-token"),
+): Promise<CommentType> | void => {
+  axios
+    .post(
+      import.meta.env.VITE_BACKEND_URL + "/comment/create",
+      {
+        user_id: user_id,
+        post_id: post_id,
+        message: message,
       },
-    },
-  );
+      {
+        headers: {
+          Authorization: localStorage.getItem("auth-token"),
+        },
+      },
+    )
+    .then((res) => {
+      return res.data.comment;
+    });
 };
 
 export const updatePostPreference = async (

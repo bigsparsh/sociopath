@@ -27,21 +27,22 @@ interface post_card {
 
 const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }: post_card) => {
 
-  const [utilCounts, setUtilCounts] = useState<number[]>([0, 0, 0]);
+  const [utilCounts, setUtilCounts] = useState<number[]>([0, 0]);
+  const [commentCount, setCommentCount] = useState<number>(0);
   const [currentPreference, setCurrentPreference] = useState<boolean | null>(null);
   const [debouncer, setDebouncer] = useState<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
 
-    let likes = 0, dislikes = 0, comments = 0;
+    let likes = 0, dislikes = 0
     post.preference.map((ele) => {
       if (ele.preference == true) {
         likes++;
       }
     })
     dislikes = post.preference.length - likes;
-    comments = comment.length;
-    setUtilCounts([likes, dislikes, comments]);
+    setCommentCount(comment.length)
+    setUtilCounts([likes, dislikes]);
 
     current_user.post_preference.map((ele) => {
       if (ele.post_id == post.post_id) {
@@ -51,7 +52,7 @@ const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }:
   }, [])
 
   const showComments = () => {
-    right_sec(<CommentSection post_id={post.post_id} close={right_sec} feed_render={feed_render} current_user={current_user}/>)
+    right_sec(<CommentSection post_id={post.post_id} close={right_sec} feed_render={feed_render} current_user={current_user} comment_count={setCommentCount} />)
   }
 
   const checkPreference = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -166,7 +167,7 @@ const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }:
               <HiMiniHandThumbDown className={`text-xl pointer-events-none` + (currentPreference == false ? ` text-red-500` : "")} /> {utilCounts[1]}
             </button>
             <button className="btn btn-ghost flex gap-3 items-center" onClick={showComments}>
-              <HiChatBubbleLeft className="text-xl" /> {utilCounts[2]}
+              <HiChatBubbleLeft className="text-xl" /> {commentCount}
             </button>
           </>
         }

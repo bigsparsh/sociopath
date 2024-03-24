@@ -3,13 +3,13 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import CommentCard from "../components/CommentCard";
 import CurrentUserType from "../types/CurrentUserType"
 import CommentType from "../types/CommentType"
-import { uploadComment } from "../utils";
 
-const CommentSection = ({ post_id, close, feed_render, current_user }: {
+const CommentSection = ({ post_id, close, feed_render, current_user, comment_count }: {
   post_id: string;
   feed_render: Dispatch<SetStateAction<boolean>>;
   close: Dispatch<SetStateAction<JSX.Element | null | undefined>>;
   current_user: CurrentUserType | null;
+  comment_count: Dispatch<SetStateAction<number>>;
 }) => {
   const [comment, setComment] = useState<CommentType[]>();
   const [loader, setLoader] = useState<boolean>(true);
@@ -17,6 +17,7 @@ const CommentSection = ({ post_id, close, feed_render, current_user }: {
   const user_comment = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
 
+    setLoader(true);
     axios.get(import.meta.env.VITE_BACKEND_URL + "/comment/get?filterId=" + post_id, {
       headers: {
         Authorization: localStorage.getItem("auth-token")
@@ -29,10 +30,38 @@ const CommentSection = ({ post_id, close, feed_render, current_user }: {
     })
 
 
-  }, [post_id, commentRender, commentRender, feed_render]);
+  }, [post_id, commentRender, feed_render]);
 
   const upload_comment = async () => {
-    console.log((user_comment.current as HTMLTextAreaElement).value.length);
+    if ((user_comment.current as HTMLTextAreaElement).value.length < 3) {
+      return;
+    }
+    setLoader(true);
+    axios
+      .post(
+        import.meta.env.VITE_BACKEND_URL + "/comment/create",
+        {
+          user_id: current_user?.user_id,
+          post_id: post_id,
+          message: (user_comment.current as HTMLTextAreaElement).value,
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("auth-token"),
+          },
+        },
+      )
+      .then((res) => {
+        const currentComments = comment;
+        currentComments?.push(res.data.comment);
+        console.log(currentComments);
+        setComment(currentComments);
+        comment_count(e=>e+1);
+        setLoader(false);
+        setCommentRender(e => !e);
+      });
+
+    (user_comment.current as HTMLTextAreaElement).value = "";
   }
 
   return (
