@@ -30,7 +30,7 @@ const CommentSection = ({ post_id, close, feed_render, current_user, comment_cou
     })
 
 
-  }, []);
+  }, [post_id]);
 
   const upload_comment = async () => {
     if ((user_comment.current as HTMLTextAreaElement).value.length < 3) {
