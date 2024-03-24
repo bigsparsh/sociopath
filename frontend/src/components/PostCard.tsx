@@ -101,7 +101,6 @@ const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }:
       else { await removePostPreference(current_user.user_id, post.post_id); }
       feed_render(e => !e);
     }, 5000));
-
   }
 
   return (

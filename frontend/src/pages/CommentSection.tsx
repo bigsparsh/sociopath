@@ -13,7 +13,7 @@ const CommentSection = ({ post_id, close, feed_render, current_user, comment_cou
 }) => {
   const [comment, setComment] = useState<CommentType[]>();
   const [loader, setLoader] = useState<boolean>(true);
-  const [commentRender, setCommentRender] = useState<boolean>(true);
+  const [_, setCommentRender] = useState<boolean>(true);
   const user_comment = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
 
@@ -30,7 +30,7 @@ const CommentSection = ({ post_id, close, feed_render, current_user, comment_cou
     })
 
 
-  }, [post_id, commentRender, feed_render]);
+  }, []);
 
   const upload_comment = async () => {
     if ((user_comment.current as HTMLTextAreaElement).value.length < 3) {
@@ -56,7 +56,7 @@ const CommentSection = ({ post_id, close, feed_render, current_user, comment_cou
         currentComments?.push(res.data.comment);
         console.log(currentComments);
         setComment(currentComments);
-        comment_count(e=>e+1);
+        comment_count(e => e + 1);
         setLoader(false);
         setCommentRender(e => !e);
       });
