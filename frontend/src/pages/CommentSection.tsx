@@ -3,51 +3,65 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import CommentCard from "../components/CommentCard";
 import CurrentUserType from "../types/CurrentUserType"
 import CommentType from "../types/CommentType"
-import { uploadComment } from "../utils";
 
-const CommentSection = ({ post_id, close, feed_render }: {
+const CommentSection = ({ post_id, close, feed_render, current_user, comment_count }: {
   post_id: string;
   feed_render: Dispatch<SetStateAction<boolean>>;
   close: Dispatch<SetStateAction<JSX.Element | null | undefined>>;
+  current_user: CurrentUserType | null;
+  comment_count: Dispatch<SetStateAction<number>>;
 }) => {
   const [comment, setComment] = useState<CommentType[]>();
-  const [currentUser, setCurrentUser] = useState<CurrentUserType>();
   const [loader, setLoader] = useState<boolean>(true);
-  const [commentRender, setCommentRender] = useState<boolean>(true);
+  const [_, setCommentRender] = useState<boolean>(true);
   const user_comment = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
-    axios.get(import.meta.env.VITE_BACKEND_URL + "/user/me?jwt=" + localStorage.getItem("auth-token"), {
+
+    setLoader(true);
+    axios.get(import.meta.env.VITE_BACKEND_URL + "/comment/get?filterId=" + post_id, {
       headers: {
         Authorization: localStorage.getItem("auth-token")
       }
     }).then((res) => {
       if (res.data.error) return;
-      console.log(res.data.you);
-      setCurrentUser(res.data.you);
-      setLoader(true);
-      axios.get(import.meta.env.VITE_BACKEND_URL + "/comment/get?filterId=" + post_id, {
-        headers: {
-          Authorization: localStorage.getItem("auth-token")
-        }
-      }).then((res) => {
-        if (res.data.error) return;
-        setComment(res.data.comments);
-        setLoader(false);
-            feed_render(e=>!e);
-      })
+      setComment(res.data.comments);
+      setLoader(false);
+      feed_render(e => !e);
     })
 
-  }, [post_id, commentRender, commentRender, feed_render]);
+
+  }, []);
 
   const upload_comment = async () => {
-    (user_comment.current as HTMLTextAreaElement).value = "";
-    if ((user_comment.current as HTMLTextAreaElement).value.length < 3) return;
+    if ((user_comment.current as HTMLTextAreaElement).value.length < 3) {
+      return;
+    }
     setLoader(true);
-    uploadComment(currentUser?.user_id, post_id, (user_comment.current as HTMLTextAreaElement).value).then(() => {
-      feed_render(e=>!e);
-      setCommentRender(e=>!e);
-      setLoader(false);
-    });
+    axios
+      .post(
+        import.meta.env.VITE_BACKEND_URL + "/comment/create",
+        {
+          user_id: current_user?.user_id,
+          post_id: post_id,
+          message: (user_comment.current as HTMLTextAreaElement).value,
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("auth-token"),
+          },
+        },
+      )
+      .then((res) => {
+        const currentComments = comment;
+        currentComments?.push(res.data.comment);
+        console.log(currentComments);
+        setComment(currentComments);
+        comment_count(e => e + 1);
+        setLoader(false);
+        setCommentRender(e => !e);
+      });
+
+    (user_comment.current as HTMLTextAreaElement).value = "";
   }
 
   return (
@@ -74,7 +88,7 @@ const CommentSection = ({ post_id, close, feed_render }: {
         </div>
         <div className="h-full w-full flex flex-col gap-3">
           {
-            loader == false && comment && currentUser ?
+            loader == false && comment && current_user ?
               comment.map((ele) => {
                 return <CommentCard
                   comment={{
@@ -85,7 +99,7 @@ const CommentSection = ({ post_id, close, feed_render }: {
                   preference={ele.preference}
                   user={ele.user}
                   id={ele.comment_id}
-                  current_user={currentUser}
+                  current_user={current_user}
                   comment_render={setCommentRender}
                   key={ele.comment_id}
                 />

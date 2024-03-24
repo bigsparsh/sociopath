@@ -4,7 +4,7 @@ import { removeCommentPreference, updateCommentPreference } from "../utils";
 import CommentType from "../types/CommentType"
 import CurrentUserType from "../types/CurrentUserType"
 
-const CommentCard = ({ comment, user, preference, id, current_user, comment_render }:{
+const CommentCard = ({ comment, user, preference, id, current_user, comment_render }: {
   comment: {
     comment_id: string;
     message: string;
@@ -19,7 +19,7 @@ const CommentCard = ({ comment, user, preference, id, current_user, comment_rend
 
   const [utilCounts, setUtilCounts] = useState<number[]>([0, 0]);
   const [currentPreference, setCurrentPreference] = useState<boolean | null>(null);
-  const [preferenceLoader, setPreferenceLoader] = useState<boolean>(false);
+  const [debouncer, setDebouncer] = useState<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     let likes = 0, dislikes = 0;
@@ -37,44 +37,54 @@ const CommentCard = ({ comment, user, preference, id, current_user, comment_rend
       }
     })
 
-  }, [comment, preference, id, current_user, comment_render])
-
-  let debounceTimeout: ReturnType<typeof setTimeout>;
+  }, [])
 
   const checkPreference = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    clearTimeout(debounceTimeout);
-    debounceTimeout = setTimeout(async () => {
-      const target = (e.target as HTMLButtonElement).id;
-      if (currentPreference == true && target == "like" || currentPreference == false && target == "dislike") {
-        setPreferenceLoader(true);
-        await removeCommentPreference(current_user.user_id, id).then(
-          () => {
-            comment_render(e => !e);
-
-            setCurrentPreference(null);
-            setPreferenceLoader(false);
-          }
-        )
-        return;
-      }
-      let preference;
-      if (target == "like") {
-        preference = true;
-
-      }
-      else if (target == "dislike") {
-        preference = false;
-      }
-      else {
-        return;
-      }
-      setPreferenceLoader(true);
-      await updateCommentPreference(current_user.user_id, id, preference).then(() => {
-        comment_render(e => !e);
-
-        setPreferenceLoader(false);
-      })
-    }, 250);
+    let cpBuffer: null | boolean;
+    if (currentPreference == true && (e.target as HTMLButtonElement).id == "like") {
+      console.log("true, like");
+      cpBuffer = null;
+      setCurrentPreference(null);
+      setUtilCounts([utilCounts[0] - 1, utilCounts[1], utilCounts[2]]);
+    }
+    if (currentPreference == false && (e.target as HTMLButtonElement).id == "dislike") {
+      console.log("false, dislike");
+      cpBuffer = null;
+      setCurrentPreference(null);
+      setUtilCounts([utilCounts[0], utilCounts[1] - 1, utilCounts[2]]);
+    }
+    if (currentPreference == true && (e.target as HTMLButtonElement).id == "dislike") {
+      console.log("true, dislike");
+      cpBuffer = false;
+      setCurrentPreference(false);
+      setUtilCounts([utilCounts[0] - 1, utilCounts[1] + 1, utilCounts[2]]);
+    }
+    if (currentPreference == false && (e.target as HTMLButtonElement).id == "like") {
+      console.log("false, like");
+      cpBuffer = true;
+      setCurrentPreference(true);
+      setUtilCounts([utilCounts[0] + 1, utilCounts[1] - 1, utilCounts[2]]);
+    }
+    if (currentPreference == null && (e.target as HTMLButtonElement).id == "like") {
+      console.log("null, like");
+      cpBuffer = true;
+      setCurrentPreference(true);
+      setUtilCounts([utilCounts[0] + 1, utilCounts[1], utilCounts[2]]);
+    }
+    if (currentPreference == null && (e.target as HTMLButtonElement).id == "dislike") {
+      console.log("null, dislike");
+      cpBuffer = false;
+      setCurrentPreference(false);
+      setUtilCounts([utilCounts[0], utilCounts[1] + 1, utilCounts[2]]);
+    }
+    if (debouncer) {
+      clearTimeout(debouncer);
+    }
+    setDebouncer(setTimeout(async () => {
+      if (cpBuffer != null) { await updateCommentPreference(current_user.user_id, comment.comment_id, cpBuffer); }
+      else { await removeCommentPreference(current_user.user_id, comment.comment_id) }
+      comment_render(e => !e);
+    }, 5000));
   }
 
   return <div className="flex flex-col gap-5 rounded-xl bg-base-300 p-4">
@@ -111,27 +121,27 @@ const CommentCard = ({ comment, user, preference, id, current_user, comment_rend
 
       <div className="flex flex-col">
         {
-          preferenceLoader ?
-            <>
-              <button className="btn btn-sm btn-ghost flex gap-4 items-center skeleton" disabled>
-                <HiOutlineChevronUp className="text-green-400 text-lg" />
-                {utilCounts[0]}
-              </button>
-              <button className="btn btn-sm btn-ghost flex gap-4 items-center skeleton" disabled>
-                <HiOutlineChevronDown className="text-red-400 text-lg" />
-                {utilCounts[1]}
-              </button>
-            </> :
-            <>
-              <button className="btn btn-sm btn-ghost flex gap-4 items-center" id="like" onClick={checkPreference}>
-                <HiOutlineChevronUp className={`text-xl pointer-events-none` + (currentPreference == true ? ` text-green-500` : "")} />
-                {utilCounts[0]}
-              </button>
-              <button className="btn btn-sm btn-ghost flex gap-4 items-center" id="dislike" onClick={checkPreference}>
-                <HiOutlineChevronDown className={`text-xl pointer-events-none` + (currentPreference == false ? ` text-red-500` : "")} />
-                {utilCounts[1]}
-              </button>
-            </>
+          // preferenceLoader ?
+          //   <>
+          //     <button className="btn btn-sm btn-ghost flex gap-4 items-center skeleton" disabled>
+          //       <HiOutlineChevronUp className="text-green-400 text-lg" />
+          //       {utilCounts[0]}
+          //     </button>
+          //     <button className="btn btn-sm btn-ghost flex gap-4 items-center skeleton" disabled>
+          //       <HiOutlineChevronDown className="text-red-400 text-lg" />
+          //       {utilCounts[1]}
+          //     </button>
+          //   </> :
+          <>
+            <button className="btn btn-sm btn-ghost flex gap-4 items-center" id="like" onClick={checkPreference}>
+              <HiOutlineChevronUp className={`text-xl pointer-events-none` + (currentPreference == true ? ` text-green-500` : "")} />
+              {utilCounts[0]}
+            </button>
+            <button className="btn btn-sm btn-ghost flex gap-4 items-center" id="dislike" onClick={checkPreference}>
+              <HiOutlineChevronDown className={`text-xl pointer-events-none` + (currentPreference == false ? ` text-red-500` : "")} />
+              {utilCounts[1]}
+            </button>
+          </>
         }
       </div>
 

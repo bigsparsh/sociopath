@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import { HiBan, HiFlag, HiHome } from "react-icons/hi";
-import { HiOutlineHome, HiMiniPhoto, HiBars3, HiEye, HiChatBubbleBottomCenter } from "react-icons/hi2";
+import { HiOutlineHome,  HiBars3, HiEye } from "react-icons/hi2";
 import { HiOutlineGlobeAlt } from "react-icons/hi2";
 import logo from "../assets/social-lilac.svg"
 
