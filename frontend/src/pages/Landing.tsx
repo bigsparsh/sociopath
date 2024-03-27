@@ -124,7 +124,7 @@ const Landing = () => {
             <h2 className="card-title">Enjoy the experience now!</h2>
             <p>Click the button to Sign up now and explore the world of Socialilac</p>
             <div className="card-actions justify-end">
-              <button className="btn btn-primary">Sign Up</button>
+              <button className="btn btn-primary" onClick={() => {navigator("/auth/signup")}}>Sign Up</button>
             </div>
           </div>
         </div>

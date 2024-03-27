@@ -84,7 +84,7 @@ const CommentCard = ({ comment, user, preference, id, current_user, comment_rend
       if (cpBuffer != null) { await updateCommentPreference(current_user.user_id, comment.comment_id, cpBuffer); }
       else { await removeCommentPreference(current_user.user_id, comment.comment_id) }
       comment_render(e => !e);
-    }, 5000));
+    }, 2500));
   }
 
   return <div className="flex flex-col gap-5 rounded-xl bg-base-300 p-4">
