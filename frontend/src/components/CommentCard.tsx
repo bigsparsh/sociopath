@@ -120,29 +120,14 @@ const CommentCard = ({ comment, user, preference, id, current_user, comment_rend
       </div>
 
       <div className="flex flex-col">
-        {
-          // preferenceLoader ?
-          //   <>
-          //     <button className="btn btn-sm btn-ghost flex gap-4 items-center skeleton" disabled>
-          //       <HiOutlineChevronUp className="text-green-400 text-lg" />
-          //       {utilCounts[0]}
-          //     </button>
-          //     <button className="btn btn-sm btn-ghost flex gap-4 items-center skeleton" disabled>
-          //       <HiOutlineChevronDown className="text-red-400 text-lg" />
-          //       {utilCounts[1]}
-          //     </button>
-          //   </> :
-          <>
-            <button className="btn btn-sm btn-ghost flex gap-4 items-center" id="like" onClick={checkPreference}>
-              <HiOutlineChevronUp className={`text-xl pointer-events-none` + (currentPreference == true ? ` text-green-500` : "")} />
-              {utilCounts[0]}
-            </button>
-            <button className="btn btn-sm btn-ghost flex gap-4 items-center" id="dislike" onClick={checkPreference}>
-              <HiOutlineChevronDown className={`text-xl pointer-events-none` + (currentPreference == false ? ` text-red-500` : "")} />
-              {utilCounts[1]}
-            </button>
-          </>
-        }
+        <button className="btn btn-sm btn-ghost flex gap-4 items-center" id="like" onClick={checkPreference}>
+          <HiOutlineChevronUp className={`text-xl pointer-events-none` + (currentPreference == true ? ` text-green-500` : "")} />
+          {utilCounts[0]}
+        </button>
+        <button className="btn btn-sm btn-ghost flex gap-4 items-center" id="dislike" onClick={checkPreference}>
+          <HiOutlineChevronDown className={`text-xl pointer-events-none` + (currentPreference == false ? ` text-red-500` : "")} />
+          {utilCounts[1]}
+        </button>
       </div>
 
     </div>

@@ -145,31 +145,15 @@ const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }:
       </div>
       <p className="text-xs opacity-50 px-5 pt-3">Posted at {post.created_at} </p>
       <div className="flex bg-base-300 p-5 justify-start lg:gap-16 items-center">
-        {
-          // preferenceLoader ?
-          //   <>
-          //     <button className="btn btn-ghost flex gap-3 items-center skeleton" id="like" disabled>
-          //       <HiMiniHandThumbUp className={`text-xl pointer-events-none` + (currentPreference == true ? ` text-green-500` : "")} /> {utilCounts[0]}
-          //     </button>
-          //     <button className="btn btn-ghost flex gap-3 items-center skeleton" disabled id="dislike">
-          //       <HiMiniHandThumbDown className={`text-xl pointer-events-none` + (currentPreference == false ? ` text-red-500` : "")} /> {utilCounts[1]}
-          //     </button>
-          //     <button className="btn btn-ghost flex gap-3 items-center skeleton" disabled>
-          //       <HiChatBubbleLeft className="text-xl" /> {utilCounts[2]}
-          //     </button>
-          //   </> :
-          <>
-            <button className="btn btn-ghost flex gap-3 items-center" id="like" onClick={checkPreference}>
-              <HiMiniHandThumbUp className={`text-xl pointer-events-none` + (currentPreference == true ? ` text-green-500` : "")} /> {utilCounts[0]}
-            </button>
-            <button className="btn btn-ghost flex gap-3 items-center" id="dislike" onClick={checkPreference}>
-              <HiMiniHandThumbDown className={`text-xl pointer-events-none` + (currentPreference == false ? ` text-red-500` : "")} /> {utilCounts[1]}
-            </button>
-            <button className="btn btn-ghost flex gap-3 items-center" onClick={showComments}>
-              <HiChatBubbleLeft className="text-xl" /> {commentCount}
-            </button>
-          </>
-        }
+        <button className="btn btn-ghost flex gap-3 items-center" id="like" onClick={checkPreference}>
+          <HiMiniHandThumbUp className={`text-xl pointer-events-none` + (currentPreference == true ? ` text-green-500` : "")} /> {utilCounts[0]}
+        </button>
+        <button className="btn btn-ghost flex gap-3 items-center" id="dislike" onClick={checkPreference}>
+          <HiMiniHandThumbDown className={`text-xl pointer-events-none` + (currentPreference == false ? ` text-red-500` : "")} /> {utilCounts[1]}
+        </button>
+        <button className="btn btn-ghost flex gap-3 items-center" onClick={showComments}>
+          <HiChatBubbleLeft className="text-xl" /> {commentCount}
+        </button>
       </div>
     </div >
   )

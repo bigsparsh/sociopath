@@ -123,7 +123,7 @@ const SignUp =  () => {
               </button>
               :
               <button className="btn btn-primary">
-                Login
+                Sign Up
               </button>
 
           }
