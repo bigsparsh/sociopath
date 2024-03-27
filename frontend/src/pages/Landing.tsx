@@ -27,9 +27,9 @@ const Landing = () => {
         }, 3000);
       } else {
         localStorage.setItem("auth-token", res.data.jwt);
-        if(screenTime.current) {
-            localStorage.setItem("screen-time", screenTime.current.value);
-          }
+        if (screenTime.current) {
+          localStorage.setItem("screen-time", screenTime.current.value);
+        }
         navigator("/user/feed");
       }
       setLoadingState(val => !val);
@@ -94,7 +94,7 @@ const Landing = () => {
                     <label className="label">
                       <span className="label-text">Minutes</span>
                     </label>
-                    <input type="range" min="1" max="5"  className="range range-primary range-sm" ref={screenTime} />
+                    <input type="range" min="1" max="5" className="range range-primary range-sm" ref={screenTime} />
                     <div className="w-full flex justify-between text-xs px-2">
                       <span>1</span>
                       <span>2</span>
