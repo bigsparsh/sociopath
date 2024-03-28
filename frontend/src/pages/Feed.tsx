@@ -25,16 +25,16 @@ const Feed = () => {
       }).then((res) => {
         if (res.data.error) return;
         setCurrentUser(res.data.you);
-        axios.get(import.meta.env.VITE_BACKEND_URL + "/post/get", {
-          headers: {
-            Authorization: localStorage.getItem("auth-token")
-          }
-        }).then((res) => {
-          if (res.data.error) return;
-          setPosts(res.data.posts);
-        })
       })
 
+      axios.get(import.meta.env.VITE_BACKEND_URL + "/post/get", {
+        headers: {
+          Authorization: localStorage.getItem("auth-token")
+        }
+      }).then((res) => {
+        if (res.data.error) return;
+        setPosts(res.data.posts);
+      })
     }
   }, [feedRender, n])
 

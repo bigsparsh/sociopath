@@ -1,9 +1,9 @@
 import logo from "../assets/social-lilac.svg"
 import Timer from "./Timer";
-const NavBar = ({ extras }:{
+const NavBar = ({ extras }: {
   extras: JSX.Element | null
 }) => {
-  
+
 
 
   return <div className="navbar bg-base-100 justify-between">
@@ -14,7 +14,7 @@ const NavBar = ({ extras }:{
 
       </a>
     </div>
-   <Timer /> 
+    <Timer />
     <div className="flex-none">
       <ul className="menu menu-horizontal px-1">
 

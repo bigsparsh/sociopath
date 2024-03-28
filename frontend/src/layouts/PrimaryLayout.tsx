@@ -1,11 +1,12 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
-import { HiBan, HiFlag, HiHome } from "react-icons/hi";
-import { HiOutlineHome,  HiBars3, HiEye } from "react-icons/hi2";
+import { HiBan, HiHome } from "react-icons/hi";
+import { HiOutlineHome,  HiBars3, HiEye, HiMiniArrowLeftOnRectangle } from "react-icons/hi2";
 import { HiOutlineGlobeAlt } from "react-icons/hi2";
 import logo from "../assets/social-lilac.svg"
 
 const PrimaryLayout = () => {
+  const navigator = useNavigate();
   return <div className="flex flex-col">
     <NavBar extras={<label htmlFor="my-drawer-2" className="btn btn-sm btn-primary drawer-button lg:hidden"><HiBars3 className="text-xl" /></label>
     } />
@@ -35,13 +36,13 @@ const PrimaryLayout = () => {
               </a>
             </li>
             <li>
-              <a>
+              <a onClick={() => navigator("/user/profile")}>
                 <HiOutlineGlobeAlt className="text-xl" />
                 Your Profile
               </a>
             </li>
             <li>
-              <a>
+              <a onClick={() => navigator("/user/feed")}>
                 <HiBan className="text-xl" />
                 Your Feed
               </a>
@@ -59,9 +60,12 @@ const PrimaryLayout = () => {
               </a>
             </li>
             <li>
-              <a>
-                <HiFlag className="text-xl" />
-                Friend Feed
+              <a onClick={()=>{
+                localStorage.clear();
+                navigator("/");
+              }}>
+                <HiMiniArrowLeftOnRectangle className="text-xl" />
+                Logout
               </a>
             </li>
 
