@@ -127,9 +127,10 @@ const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }:
               <><div className="w-52 rounded-full h-3 skeleton"></div>
                 <div className="w-24 rounded-full h-3 skeleton"></div></> :
               <>
-
                 <h1 className="text-xl">{user.name}</h1>
-                <p className="text-sm">{user.email}</p></>}
+                <p className="text-sm">{user.email}</p>
+              </>
+            }
           </div>
         </div>
 

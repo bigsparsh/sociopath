@@ -17,10 +17,10 @@ const PrimaryLayout = () => {
 
 
       </div>
-      <div className="drawer-side">
+      <div className="drawer-side  rounded-r-xl">
 
         <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
-        <ul className="menu p-4 w-80 min-h-full text-base-content">
+        <ul className="menu p-4 w-80 bg-base-300 rounded-r-xl min-h-full text-base-content">
           <img src={logo} width="75" className="lg:hidden block" />
           <ul className="menu bg-base-300 w-full gap-1 rounded-box">
             <li>

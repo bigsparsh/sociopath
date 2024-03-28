@@ -38,7 +38,7 @@ const Feed = () => {
     }
   }, [feedRender, n])
 
-  return <div className="flex lg:gap-10 gap-0">
+  return <div className="flex ">
     <div className="p-3 lg:p-10 grow lg:basis-2/3 w-full">
       <h1 className="text-3xl font-bold">Your Feed</h1>
       <div className="flex flex-col py-10 gap-5">

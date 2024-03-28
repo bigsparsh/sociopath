@@ -65,7 +65,7 @@ const CommentSection = ({ post_id, close, feed_render, current_user, comment_cou
   }
 
   return (
-    <div className="h-screen bg-base-300 fixed lg:sticky w-full inset-0 lg:top-0 flex flex-col py-5 lg:pr-5 gap-10 overflow-y-scroll">
+    <div className="h-screen bg-base-300 rounded-l-xl fixed lg:sticky w-full inset-0 lg:top-0 flex flex-col py-5 lg:pr-5 gap-10 overflow-y-scroll">
       <div className="flex justify-between items-center px-5">
         <h1 className="text-3xl font-semibold ">Comments</h1>
         <button className="btn btn-square btn-ghost" onClick={() => close(null)}>

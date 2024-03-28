@@ -78,7 +78,7 @@ const SignUp =  () => {
           <label className="label">
             <span className="label-text">Bio</span>
           </label>
-          <textarea className="textarea textarea-bordered" ref={bio} placeholder="Bio"></textarea>
+          <textarea className="textarea textarea-bordered" ref={bio} placeholder="Bio" required></textarea>
         </div>
         <div className="form-control">
           <label className="label">
@@ -96,13 +96,13 @@ const SignUp =  () => {
           <label className="label">
             <span className="label-text">Address</span>
           </label>
-          <textarea className="textarea textarea-bordered" ref={address} placeholder="address"></textarea>
+          <textarea className="textarea textarea-bordered" ref={address} placeholder="address" required></textarea>
         </div>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Profile Image</span>
           </label>
-          <input type="file" ref={profile_image} className="file-input-md file-input file-input-bordered w-full max-w-xs" />
+          <input type="file" ref={profile_image} className="file-input-md file-input file-input-bordered w-full max-w-xs" required />
         </div>
         <div className="form-control">
           <label className="label">
