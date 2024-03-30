@@ -23,9 +23,10 @@ interface post_card {
   comment: PostType["comment"];
   feed_render: Dispatch<SetStateAction<boolean>>;
   right_sec: Dispatch<SetStateAction<JSX.Element | null | undefined>>;
+  overlay: Dispatch<SetStateAction<string | undefined | null>>
 }
 
-const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }: post_card) => {
+const PostCard = ({ current_user, user, post, comment, feed_render, right_sec, overlay }: post_card) => {
 
   const [utilCounts, setUtilCounts] = useState<number[]>([0, 0]);
   const [commentCount, setCommentCount] = useState<number>(0);
@@ -104,7 +105,7 @@ const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }:
   }
 
   return (
-    <div className={post.post_image == "NO IMAGE" ? `flex x-20 border border-base-100 flex-col bg-base-300 rounded-xl  shadow-xl  max-h-[600px] z-50` : `flex flex-col bg-base-300 border border-base-100 rounded-xl shadow-xl relative h-[600px] z-10`}>
+    <div className={post.post_image == "NO IMAGE" ? `flex x-20 border border-base-100 flex-col bg-base-300 rounded-xl  shadow-xl  max-h-[600px] z-20` : `flex flex-col bg-base-300 border border-base-100 rounded-xl shadow-xl relative h-[600px] z-10`}>
       {
         post.post_image == "NO IMAGE" ? null :
           <div className="bg-cover bg-center grow absolute inset-0 scale-110 blur-3xl opacity-30 z-[-10]   " style={{ backgroundImage: `url(${post.post_image})` }}></div>
@@ -144,7 +145,7 @@ const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }:
 
       {
         post.post_image == "NO IMAGE" ? null :
-          <div className="bg-cover bg-center grow " style={{ backgroundImage: `url(${post.post_image})` }}></div>
+          <div className="bg-cover bg-center grow hover:opacity-70 duration-200" onClick={() => { overlay(post.post_image) }} style={{ backgroundImage: `url(${post.post_image})` }}></div>
 
       }
       <div className="text-cont max-h-[200px] overflow-auto bg-base-300">

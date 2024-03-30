@@ -65,8 +65,8 @@ const CommentSection = ({ post_id, close, feed_render, current_user, comment_cou
   }
 
   return (
-    <div className="h-screen bg-base-300 rounded-l-xl fixed lg:sticky w-full inset-0 lg:top-0 flex flex-col pb-5 lg:pr-5 gap-10 overflow-y-scroll z-50">
-      <div className="flex justify-between items-center px-5 sticky top-0 backdrop-blur-xl py-5 z-50">
+    <div className="h-screen bg-base-300 rounded-l-xl fixed lg:sticky w-full inset-0 lg:top-0 flex flex-col pb-5 lg:pr-5 gap-10 overflow-y-scroll z-20">
+      <div className="flex justify-between items-center px-5 sticky top-0 backdrop-blur-xl py-5 z-20">
         <h1 className="text-3xl font-semibold ">Comments</h1>
         <button className="btn btn-ghost " onClick={() => close(null)}>
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>

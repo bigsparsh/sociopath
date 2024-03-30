@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import CurrentUserType from "../types/CurrentUserType"
 import PostType from "../types/PostType"
+import ImagePopup from "../components/ImagePopup";
 
 const Feed = () => {
 
@@ -11,6 +12,7 @@ const Feed = () => {
   const [currentUser, setCurrentUser] = useState<CurrentUserType>();
   const [feedRender, setFeedRender] = useState<boolean>(false);
   const [rightSection, setRightSection] = useState<JSX.Element | null | undefined>();
+  const [overlay, setOverlay] = useState<string | null>();
   const n = useNavigate();
 
   useEffect(() => {
@@ -38,7 +40,11 @@ const Feed = () => {
     }
   }, [feedRender, n])
 
-  return <div className="flex ">
+  return <div className="flex overflow-x-clip">
+    {
+      overlay ?
+      <ImagePopup image={overlay} overlay={setOverlay} /> : null
+    }
     <div className="lg:block fixed text-transparent lg:inset-y-10 lg:inset-x-5 hidden w-fit h-fit flex-col flex justify-center items-center text-7xl lg:text-9xl font-black tracking-wide ">
       <h1 className="bg-gradient-to-r from-primary/50 via-primary to-primary/50 bg-clip-text">YOUR</h1>
       <h1 className="bg-gradient-to-l from-primary/50 via-primary to-primary/50 bg-clip-text">FEED</h1>
@@ -63,6 +69,7 @@ const Feed = () => {
               comment={ele.comment}
               current_user={currentUser}
               feed_render={setFeedRender}
+              overlay={setOverlay}
             />))
           :
           <div className="h-[500px] w-full grid place-items-center">
