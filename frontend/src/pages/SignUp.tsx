@@ -51,7 +51,11 @@ const SignUp = () => {
   }
 
 
-  return <div className="h-screen grid place-items-center">
+  return <div className="h-screen my-3 lg:my-10 grid place-items-center">
+    <div className="fixed text-transparent inset-1/2 flex-col flex justify-center items-center text-7xl lg:text-9xl font-black tracking-wide bg-red-500 ">
+      <h1 className="bg-gradient-to-r from-primary/50 via-primary to-primary/50 bg-clip-text">SIGNUP</h1>
+      <h1 className="bg-gradient-to-l from-primary/50 via-primary to-primary/50 bg-clip-text">FORM</h1>
+    </div>
     {error ?
       <div className="toast">
         <div className="alert alert-error">
@@ -60,49 +64,49 @@ const SignUp = () => {
       </div>
       : null
     }
-    <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-300">
+    <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-300/70">
       <form className="card-body" encType="multipart/form-data" onSubmit={sign}>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Email</span>
           </label>
-          <input type="email" placeholder="email" ref={email} className="input input-bordered placeholder:text-xs" required />
+          <input type="email" placeholder="email" ref={email} className="input input-bordered bg-base-100/50 backdrop-blur-sm placeholder:text-xs" required />
         </div>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Password</span>
           </label>
-          <input type="password" placeholder="password" ref={password} className="input input-bordered placeholder:text-xs" required />
+          <input type="password" placeholder="password" ref={password} className="input input-bordered bg-base-100/50 backdrop-blur-sm placeholder:text-xs" required />
         </div>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Bio</span>
           </label>
-          <textarea className="textarea textarea-bordered placeholder:text-xs" ref={bio} placeholder="Bio" required></textarea>
+          <textarea className="textarea textarea-bordered placeholder:text-xs bg-base-100/50 backdrop-blur-sm" ref={bio} placeholder="Bio" required></textarea>
         </div>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Name</span>
           </label>
-          <input type="text" placeholder="full name" ref={name} className="input input-bordered placeholder:text-xs" required />
+          <input type="text" placeholder="full name" ref={name} className="input input-bordered placeholder:text-xs bg-base-100/50 backdrop-blur-sm" required />
         </div>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Phone</span>
           </label>
-          <input type="number" placeholder="phone number" ref={phone} className="input input-bordered placeholder:text-xs" required />
+          <input type="number" placeholder="phone number" ref={phone} className="input input-bordered placeholder:text-xs bg-base-100/50 backdrop-blur-sm" required />
         </div>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Address</span>
           </label>
-          <textarea className="textarea textarea-bordered placeholder:text-xs" ref={address} placeholder="address" required></textarea>
+          <textarea className="textarea textarea-bordered placeholder:text-xs bg-base-100/50 backdrop-blur-sm" ref={address} placeholder="address" required></textarea>
         </div>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Profile Image (Optional)</span>
           </label>
-          <input type="file" ref={profile_image} accept="image/*" className="file-input-sm placeholder:text-xs file-input file-input-bordered w-full max-w-xs" />
+          <input type="file" ref={profile_image} accept="image/*" className="file-input-sm placeholder:text-xs bg-base-100/50 backdrop-blur-sm file-input file-input-bordered w-full max-w-xs" />
         </div>
         <div className="form-control">
           <label className="label">

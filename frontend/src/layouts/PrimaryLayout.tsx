@@ -7,7 +7,7 @@ import logo from "../assets/social-lilac.svg"
 
 const PrimaryLayout = () => {
   const navigator = useNavigate();
-  return <div className="flex flex-col">
+  return <div className="flex flex-col overflow-x-hidden">
     <NavBar extras={<label htmlFor="my-drawer-2" className="btn btn-sm btn-primary drawer-button lg:hidden"><HiBars3 className="text-xl" /></label>
     } />
     <div className="drawer lg:drawer-open">
