@@ -51,7 +51,7 @@ const SignUp = () => {
   }
 
 
-  return <div className="h-screen my-3 lg:my-10 grid place-items-center">
+  return <div className="h-full my-3 lg:my-10 grid place-items-center">
     <div className="fixed text-transparent inset-1/2 flex-col flex justify-center items-center text-7xl lg:text-9xl font-black tracking-wide bg-red-500 ">
       <h1 className="bg-gradient-to-r from-primary/50 via-primary to-primary/50 bg-clip-text">SIGNUP</h1>
       <h1 className="bg-gradient-to-l from-primary/50 via-primary to-primary/50 bg-clip-text">FORM</h1>

@@ -17,7 +17,7 @@ const PrimaryLayout = () => {
 
 
       </div>
-      <div className="drawer-side  rounded-r-xl">
+      <div className="drawer-side z-50 rounded-r-xl">
 
         <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
         <ul className="menu p-4 w-80 bg-base-300 rounded-r-xl min-h-full text-base-content">
