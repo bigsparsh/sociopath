@@ -2,7 +2,7 @@ import axios from "axios";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const SignUp =  () => {
+const SignUp = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const navigator = useNavigate();
@@ -20,15 +20,15 @@ const SignUp =  () => {
     e.preventDefault();
     setLoading(true);
     const data = new FormData();
-    var image:string = "NO IMAGE";
-    const file = (profile_image.current as HTMLInputElement).files?.[0];
-    if (file) {
-      data.append("upload_preset", "image_preset");
-      data.append("file", file);
-      data.append("folder", "profiles")
-    }
+    var image: string = "NO IMAGE";
+    const file = (profile_image.current as HTMLInputElement).files || "NO IMAGE";
+    data.append("upload_preset", "image_preset");
+    data.append("file", file[0]);
+    data.append("folder", "profiles")
     await axios.post(import.meta.env.VITE_CLOUDINARY_URL + "/image/upload", data).then((res) => {
       image = res.data.secure_url;
+    }).catch(() => {
+      image = "NO IMAGE";
     })
     await axios.post(import.meta.env.VITE_BACKEND_URL + "/user/create", {
       name: name.current?.value,
@@ -66,49 +66,49 @@ const SignUp =  () => {
           <label className="label">
             <span className="label-text">Email</span>
           </label>
-          <input type="email" placeholder="email" ref={email} className="input input-bordered" required />
+          <input type="email" placeholder="email" ref={email} className="input input-bordered placeholder:text-xs" required />
         </div>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Password</span>
           </label>
-          <input type="password" placeholder="password" ref={password} className="input input-bordered" required />
+          <input type="password" placeholder="password" ref={password} className="input input-bordered placeholder:text-xs" required />
         </div>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Bio</span>
           </label>
-          <textarea className="textarea textarea-bordered" ref={bio} placeholder="Bio" required></textarea>
+          <textarea className="textarea textarea-bordered placeholder:text-xs" ref={bio} placeholder="Bio" required></textarea>
         </div>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Name</span>
           </label>
-          <input type="text" placeholder="full name" ref={name} className="input input-bordered" required />
+          <input type="text" placeholder="full name" ref={name} className="input input-bordered placeholder:text-xs" required />
         </div>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Phone</span>
           </label>
-          <input type="number" placeholder="phone number" ref={phone} className="input input-bordered" required />
+          <input type="number" placeholder="phone number" ref={phone} className="input input-bordered placeholder:text-xs" required />
         </div>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Address</span>
           </label>
-          <textarea className="textarea textarea-bordered" ref={address} placeholder="address" required></textarea>
+          <textarea className="textarea textarea-bordered placeholder:text-xs" ref={address} placeholder="address" required></textarea>
         </div>
         <div className="form-control">
           <label className="label">
-            <span className="label-text">Profile Image</span>
+            <span className="label-text">Profile Image (Optional)</span>
           </label>
-          <input type="file" ref={profile_image} className="file-input-md file-input file-input-bordered w-full max-w-xs" required />
+          <input type="file" ref={profile_image} accept="image/*" className="file-input-sm placeholder:text-xs file-input file-input-bordered w-full max-w-xs" />
         </div>
         <div className="form-control">
           <label className="label">
             <span className="label-text">Appreciate Type</span>
           </label>
-          <div className="w-full flex justify-start items-center gap-3">
+          <div className="w-full flex justify-center text-xs items-center gap-3">
             Likes
             <input type="checkbox" ref={appreciate_mode} className="toggle" />
             Upvotes

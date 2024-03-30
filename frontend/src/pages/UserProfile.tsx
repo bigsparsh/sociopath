@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { HiDeviceMobile } from "react-icons/hi";
-import { HiEnvelope, HiMapPin, HiMiniHeart, HiMiniIdentification } from "react-icons/hi2";
+import { HiEnvelope, HiMapPin, HiMiniEyeSlash, HiMiniHeart, HiMiniIdentification } from "react-icons/hi2";
 import CurrentUserType from "../types/CurrentUserType"
 
 const UserProfile = () => {
@@ -32,6 +32,9 @@ const UserProfile = () => {
           <h1 className="text-3xl font-bold mt-5 lg:mt-0 px-5 lg:px-0">Their Posts</h1>
           <div className="py-10 gap-3 grid grid-cols-3 lg:px-5 px-3 w-full">
             {
+              currentUser?.post.length == 0  ?
+                <h1 className="text-xl text-primary flex gap-3 justify-center w-full items-center"><HiMiniEyeSlash /> No posts </h1>
+              :
               currentUser?.post.map((ele) => {
                 return ele.post_image == "NO IMAGE" ?
                   <div className="aspect-square rounded-lg bg-gradient-to-t hover:scale-110 duration-200 p-3 lg:p-5 overflow-hidden from-base-100 text-xs lg:text-base to-base-300">{ele.description}</div>
