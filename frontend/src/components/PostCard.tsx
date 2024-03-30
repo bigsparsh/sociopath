@@ -104,7 +104,7 @@ const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }:
   }
 
   return (
-    <div className={post.post_image == "NO IMAGE" ? `flex x-20 flex-col bg-base-300 rounded-xl  shadow-xl  max-h-[600px] z-50` : `flex flex-col bg-base-300 rounded-xl shadow-xl relative h-[600px] z-10`}>
+    <div className={post.post_image == "NO IMAGE" ? `flex x-20 border border-base-100 flex-col bg-base-300 rounded-xl  shadow-xl  max-h-[600px] z-50` : `flex flex-col bg-base-300 border border-base-100 rounded-xl shadow-xl relative h-[600px] z-10`}>
       {
         post.post_image == "NO IMAGE" ? null :
           <div className="bg-cover bg-center grow absolute inset-0 scale-110 blur-3xl opacity-30 z-[-10]   " style={{ backgroundImage: `url(${post.post_image})` }}></div>
@@ -150,7 +150,7 @@ const PostCard = ({ current_user, user, post, comment, feed_render, right_sec }:
       <div className="text-cont max-h-[200px] overflow-auto bg-base-300">
         <p className="p-5">{post.description}</p>
       </div>
-      <p className="text-xs  px-5 pt-3 bg-base-300">Posted at {post.created_at} </p>
+      <p className="text-xs text-white/30  px-5 pt-3 bg-base-300">Posted at {post.created_at} </p>
       <div className="flex bg-base-300 p-5 justify-start lg:gap-16 items-center rounded-b-xl">
         <button className="btn btn-ghost flex gap-3 items-center" id="like" onClick={checkPreference}>
           <HiMiniHandThumbUp className={`text-xl pointer-events-none` + (currentPreference == true ? ` text-green-500` : "")} /> {utilCounts[0]}

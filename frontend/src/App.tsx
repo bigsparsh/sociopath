@@ -6,6 +6,7 @@ import Feed from "./pages/Feed";
 import PrimaryLayout from "./layouts/PrimaryLayout";
 import SignUp from "./pages/SignUp";
 import UserProfile from "./pages/UserProfile";
+import UploadPost from "./pages/UploadPost";
 const App = () => {
   return <BrowserRouter>
     <Routes>
@@ -16,9 +17,10 @@ const App = () => {
         <Route path="signup" element={<SignUp />} />
       </Route>
       <Route path="/user" element={<PrimaryLayout />} >
-      <Route path="profile" element={<UserProfile />} />
+        <Route path="profile" element={<UserProfile />} />
         <Route path="feed">
           <Route index element={<Feed />} />
+          <Route path="create" element={<UploadPost />} />
         </Route>
       </Route>
     </Routes>
