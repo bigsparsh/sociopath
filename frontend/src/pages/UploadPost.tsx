@@ -51,13 +51,13 @@ const UploadPost = () => {
   }
   return (
     <div className="flex justify-evenly gap-5 flex-col lg:flex-row items-center p-4 lg:p-10 h-full overflow-x-clip">
-      <div className="fixed text-transparent inset-y-20 inset-x-[20%] w-fit h-fit flex-col flex justify-center items-center text-7xl lg:text-9xl font-black tracking-wide ">
+      <div className="fixed text-transparent lg:inset-y-20 lg:inset-x-[20%] w-fit h-fit flex-col flex justify-center items-center text-7xl lg:text-9xl font-black tracking-wide ">
         <h1 className="bg-gradient-to-r from-primary/50 via-primary to-primary/50 bg-clip-text">UPLOAD</h1>
         <h1 className="bg-gradient-to-l from-primary/50 via-primary to-primary/50 bg-clip-text">POST</h1>
       </div>
 
       <div className="lg:basis-1/3 w-full">
-        <div className="card shrink-0 w-full lg:max-w-sm shadow-2xl bg-base-300/70">
+        <div className="card shrink-0 w-full lg:max-w-sm shadow-2xl bg-base-300/70 lg:bg-base-300">
           <form className="card-body" encType="multipart/form-data" onSubmit={uploadPost}>
             <div className="form-control">
               <label className="label">
@@ -101,7 +101,6 @@ const UploadPost = () => {
                   <button className="btn btn-primary">
                     Upload post
                   </button>
-
               }
             </div>
           </form>
@@ -109,7 +108,7 @@ const UploadPost = () => {
 
       </div>
       <div className="lg:basis-2/3 w-full">
-        <div className={postImage == "NO IMAGE" ? `flex x-20 border border-base-100 flex-col opacity-90 bg-base-300 rounded-xl backdrop-blur-sm shadow-xl max-h-[600px] z-50` : `flex flex-col bg-base-300 border border-base-100 rounded-xl shadow-xl relative h-[600px] z-10`}>
+        <div className={postImage == "NO IMAGE" ? `flex x-20 border border-base-100 flex-col opacity-90 bg-base-300 rounded-xl shadow-xl max-h-[600px] z-50` : `flex flex-col bg-base-300 border border-base-100 rounded-xl shadow-xl relative h-[600px] z-10`}>
           {
             postImage == "NO IMAGE" ? null :
               <div className="bg-cover bg-center grow absolute inset-0 scale-110 blur-3xl opacity-30 z-[-10]" style={{ backgroundImage: `url(${postImage})` }}></div>

@@ -39,8 +39,13 @@ const Feed = () => {
   }, [feedRender, n])
 
   return <div className="flex ">
+    <div className="lg:block fixed text-transparent lg:inset-y-10 lg:inset-x-5 hidden w-fit h-fit flex-col flex justify-center items-center text-7xl lg:text-9xl font-black tracking-wide ">
+      <h1 className="bg-gradient-to-r from-primary/50 via-primary to-primary/50 bg-clip-text">YOUR</h1>
+      <h1 className="bg-gradient-to-l from-primary/50 via-primary to-primary/50 bg-clip-text">FEED</h1>
+    </div>
+
     <div className="p-3 lg:p-10 grow lg:basis-2/3 w-full">
-      <h1 className="text-3xl font-bold">Your Feed</h1>
+      <h1 className="text-3xl font-bold block lg:hidden">Your Feed</h1>
       <div className="flex flex-col py-10 gap-5">
         {posts && currentUser ?
           posts.map((ele) => (
