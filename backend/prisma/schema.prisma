@@ -48,6 +48,7 @@ model Post {
   description String
   post_image String
   user_id String
+  comment_enabled Boolean @default(true)
   user User @relation(fields: [user_id], references: [user_id])
   preference PostPreference[]
   comment Comment[]

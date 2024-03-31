@@ -3,6 +3,7 @@ interface Post {
   description: string;
   created_at: string;
   post_image: string;
+  comment_enabled: boolean;
   user: {
     name: string;
     user_id: string;

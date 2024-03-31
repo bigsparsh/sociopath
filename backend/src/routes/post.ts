@@ -23,10 +23,12 @@ postRouter.post("/create", async (c) => {
       description: body.description,
       post_image: body.post_image,
       user_id: body.user_id,
+      comment_enabled: body.comment_enabled,
     },
   });
 
   body.tag.map(async (ele: string) => {
+    console.log(ele);
     await prisma.tag.create({
       data: {
         post_id: post.post_id,
@@ -77,6 +79,7 @@ postRouter.get("/get", async (c) => {
         created_at: true,
         post_image: true,
         tag: true,
+        comment_enabled: true,
         user: {
           select: {
             name: true,
@@ -109,6 +112,7 @@ postRouter.get("/get", async (c) => {
       created_at: true,
       post_image: true,
       tag: true,
+      comment_enabled: true,
       user: {
         select: {
           name: true,
@@ -204,6 +208,7 @@ postRouter.put("/update", async (c) => {
       description: updatedPost.description,
       post_image: updatedPost.post_image,
       user_id: updatedPost.user_id,
+      comment_enabled: updatedPost.comment_enabled,
     },
   });
 

@@ -50,13 +50,16 @@ const Feed = () => {
         )
         .then((res) => {
           if (res.data.error) return;
-          if (pageIntake == 0) setPosts(res.data.posts);
+          if (pageIntake == 0) {
+            setPosts(res.data.posts);
+            return;
+          }
           const newPosts = [...(posts ?? []), ...res.data.posts];
           setPosts(newPosts);
           setLoading(false);
         });
     }
-  }, [feedRender, n, pageIntake]);
+  }, [n, pageIntake, feedRender]);
 
   return (
     <div className="flex overflow-x-clip">
@@ -79,6 +82,7 @@ const Feed = () => {
                 post={{
                   post_id: ele.post_id,
                   description: ele.description,
+                  comment_enabled: ele.comment_enabled,
                   post_image: ele.post_image,
                   created_at: String(new Date(ele.created_at)),
                   preference: ele.preference,

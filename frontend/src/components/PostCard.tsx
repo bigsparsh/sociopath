@@ -18,6 +18,7 @@ interface post_card {
     description: string;
     created_at: string;
     post_image: string;
+    comment_enabled: boolean;
     preference: {
       p_preference_id: string;
       post_id: string;
@@ -87,7 +88,6 @@ const PostCard = ({
       currentPreference == true &&
       (e.target as HTMLButtonElement).id == "like"
     ) {
-      console.log("true, like");
       cpBuffer = null;
       setCurrentPreference(null);
       setUtilCounts([utilCounts[0] - 1, utilCounts[1], utilCounts[2]]);
@@ -96,7 +96,6 @@ const PostCard = ({
       currentPreference == false &&
       (e.target as HTMLButtonElement).id == "dislike"
     ) {
-      console.log("false, dislike");
       cpBuffer = null;
       setCurrentPreference(null);
       setUtilCounts([utilCounts[0], utilCounts[1] - 1, utilCounts[2]]);
@@ -105,7 +104,6 @@ const PostCard = ({
       currentPreference == true &&
       (e.target as HTMLButtonElement).id == "dislike"
     ) {
-      console.log("true, dislike");
       cpBuffer = false;
       setCurrentPreference(false);
       setUtilCounts([utilCounts[0] - 1, utilCounts[1] + 1, utilCounts[2]]);
@@ -114,7 +112,6 @@ const PostCard = ({
       currentPreference == false &&
       (e.target as HTMLButtonElement).id == "like"
     ) {
-      console.log("false, like");
       cpBuffer = true;
       setCurrentPreference(true);
       setUtilCounts([utilCounts[0] + 1, utilCounts[1] - 1, utilCounts[2]]);
@@ -123,7 +120,6 @@ const PostCard = ({
       currentPreference == null &&
       (e.target as HTMLButtonElement).id == "like"
     ) {
-      console.log("null, like");
       cpBuffer = true;
       setCurrentPreference(true);
       setUtilCounts([utilCounts[0] + 1, utilCounts[1], utilCounts[2]]);
@@ -132,11 +128,11 @@ const PostCard = ({
       currentPreference == null &&
       (e.target as HTMLButtonElement).id == "dislike"
     ) {
-      console.log("null, dislike");
       cpBuffer = false;
       setCurrentPreference(false);
       setUtilCounts([utilCounts[0], utilCounts[1] + 1, utilCounts[2]]);
     }
+
     if (debouncer) {
       clearTimeout(debouncer);
     }
@@ -223,7 +219,10 @@ const PostCard = ({
       {tags.length != 0 ? (
         <div className="flex gap-3 bg-base-300 overflow-x-auto pt-5 pb-3 px-5">
           {tags.map((ele) => (
-            <div className="badge badge-neutral"> {ele.name} </div>
+            <div className="badge badge-neutral" key={ele.tag_id}>
+              {" "}
+              {ele.name}{" "}
+            </div>
           ))}
         </div>
       ) : null}
@@ -254,12 +253,26 @@ const PostCard = ({
           />{" "}
           {utilCounts[1]}
         </button>
-        <button
-          className="btn btn-ghost btn-sm flex gap-3 items-center"
-          onClick={showComments}
-        >
-          <HiChatBubbleLeft className="text-xl" /> {commentCount}
-        </button>
+        {post.comment_enabled == true ? (
+          <button
+            className="btn btn-ghost btn-sm flex gap-3 items-center"
+            onClick={showComments}
+          >
+            <HiChatBubbleLeft className="text-xl" /> {commentCount}
+          </button>
+        ) : (
+          <div
+            className="tooltip"
+            data-tip="The creator of this post has diabled commenting"
+          >
+            <button
+              className="btn btn-ghost btn-sm flex gap-3 items-center"
+              disabled
+            >
+              <HiChatBubbleLeft className="text-xl" /> {commentCount}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

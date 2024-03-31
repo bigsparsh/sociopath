@@ -19,25 +19,29 @@ const UploadPost = () => {
   const navigator = useNavigate();
 
   useEffect(() => {
-    setLoading(true);
-    axios
-      .get(
-        import.meta.env.VITE_BACKEND_URL +
-        "/user/me?jwt=" +
-        localStorage.getItem("auth-token"),
-      )
-      .then((res) => {
-        if (res.data.error) return;
-        setCurrentUser(res.data.you);
-        setLoading(false);
-      });
-  }, []);
+    if (localStorage.getItem("auth-token")) {
+      setLoading(true);
+      axios
+        .get(
+          import.meta.env.VITE_BACKEND_URL +
+          "/user/me?jwt=" +
+          localStorage.getItem("auth-token"),
+        )
+        .then((res) => {
+          if (res.data.error) return;
+          setCurrentUser(res.data.you);
+          setLoading(false);
+        });
+    } else {
+      navigator("/");
+    }
+  }, [navigator]);
 
   const uploadPost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     const data = new FormData();
-    var image: string = "NO IMAGE";
+    let image: string = "NO IMAGE";
     const file = postFile || "NO IMAGE";
     data.append("upload_preset", "image_preset");
     data.append("file", file);
@@ -58,6 +62,7 @@ const UploadPost = () => {
           post_image: image,
           user_id: currentUser?.user_id,
           tag: tags,
+          comment_enabled: enableComment,
         },
         {
           headers: {
