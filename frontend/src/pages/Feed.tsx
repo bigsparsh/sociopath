@@ -13,13 +13,16 @@ const Feed = () => {
   const [rightSection, setRightSection] = useState<
     JSX.Element | null | undefined
   >();
+  const [pageIntake, setPageIntake] = useState<number>(0);
   const [overlay, setOverlay] = useState<string | null>();
+  const [loading, setLoading] = useState<boolean>();
   const n = useNavigate();
 
   useEffect(() => {
     if (!localStorage.getItem("auth-token")) {
       n("/");
     } else {
+      setLoading(true);
       axios
         .get(
           import.meta.env.VITE_BACKEND_URL +
@@ -37,17 +40,23 @@ const Feed = () => {
         });
 
       axios
-        .get(import.meta.env.VITE_BACKEND_URL + "/post/get", {
-          headers: {
-            Authorization: localStorage.getItem("auth-token"),
+        .get(
+          import.meta.env.VITE_BACKEND_URL + "/post/get?intake=" + pageIntake,
+          {
+            headers: {
+              Authorization: localStorage.getItem("auth-token"),
+            },
           },
-        })
+        )
         .then((res) => {
           if (res.data.error) return;
-          setPosts(res.data.posts);
+          if (pageIntake == 0) setPosts(res.data.posts);
+          const newPosts = [...(posts ?? []), ...res.data.posts];
+          setPosts(newPosts);
+          setLoading(false);
         });
     }
-  }, [feedRender, n]);
+  }, [feedRender, n, pageIntake]);
 
   return (
     <div className="flex overflow-x-clip">
@@ -90,6 +99,19 @@ const Feed = () => {
             </div>
           )}
         </div>
+        {!loading ? (
+          <button
+            className="btn btn-info"
+            onClick={() => setPageIntake((e) => e + 5)}
+          >
+            Load More
+          </button>
+        ) : (
+          <button className="btn btn-info">
+            <span className="loading loading-spinner"></span>
+            loading
+          </button>
+        )}
       </div>
       <div className="lg:basis-1/2 basis-0">
         {rightSection ? rightSection : null}

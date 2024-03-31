@@ -64,6 +64,7 @@ postRouter.get("/get", async (c) => {
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
 
+  const intake = Number(c.req.query("intake")) || 0;
   const filterId = c.req.query("filterId") || "";
   if (filterId != "") {
     const post = await prisma.post.findUnique({
@@ -95,6 +96,13 @@ postRouter.get("/get", async (c) => {
   }
 
   const posts = await prisma.post.findMany({
+    skip: intake,
+    take: 5,
+    orderBy: [
+      {
+        created_at: "desc",
+      },
+    ],
     select: {
       post_id: true,
       description: true,
