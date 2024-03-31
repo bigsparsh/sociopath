@@ -221,15 +221,15 @@ const PostCard = ({
         Posted at {post.created_at}{" "}
       </p>
       {tags.length != 0 ? (
-        <div className="flex gap-3 bg-base-300 overflow-x-auto pt-5 px-5">
+        <div className="flex gap-3 bg-base-300 overflow-x-auto pt-5 pb-3 px-5">
           {tags.map((ele) => (
             <div className="badge badge-neutral"> {ele.name} </div>
           ))}
         </div>
       ) : null}
-      <div className="flex bg-base-300 p-5 justify-start lg:gap-16 items-center rounded-b-xl">
+      <div className="flex bg-base-300 px-5 py-3 justify-start lg:gap-16 items-center rounded-b-xl">
         <button
-          className="btn btn-ghost flex gap-3 items-center"
+          className="btn btn-ghost btn-sm flex gap-3 items-center"
           id="like"
           onClick={checkPreference}
         >
@@ -242,7 +242,7 @@ const PostCard = ({
           {utilCounts[0]}
         </button>
         <button
-          className="btn btn-ghost flex gap-3 items-center"
+          className="btn btn-sm btn-ghost flex gap-3 items-center"
           id="dislike"
           onClick={checkPreference}
         >
@@ -255,7 +255,7 @@ const PostCard = ({
           {utilCounts[1]}
         </button>
         <button
-          className="btn btn-ghost flex gap-3 items-center"
+          className="btn btn-ghost btn-sm flex gap-3 items-center"
           onClick={showComments}
         >
           <HiChatBubbleLeft className="text-xl" /> {commentCount}

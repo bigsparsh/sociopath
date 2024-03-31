@@ -164,8 +164,8 @@ const UploadPost = () => {
         <div
           className={
             postImage == "NO IMAGE"
-              ? `flex x-20 border border-base-100 flex-col opacity-90 bg-base-300 rounded-xl shadow-xl max-h-[600px] z-50`
-              : `flex flex-col bg-base-300 border border-base-100 rounded-xl shadow-xl relative h-[600px] z-10`
+              ? `flex x-20 border border-base-100 flex-col opacity-90 bg-base-300 rounded-xl  shadow-xl max-w-[800px] max-h-[600px] z-50`
+              : `flex flex-col bg-base-300 border border-base-100 rounded-xl shadow-xl relative max-w-[800px] h-[600px] z-10`
           }
         >
           {postImage == "NO IMAGE" ? null : (
@@ -225,24 +225,37 @@ const UploadPost = () => {
           <p className="text-xs  px-5 pt-3 bg-base-300">
             Posted at {String(new Date())}{" "}
           </p>
-          <div className="flex bg-base-300 p-5 justify-start lg:gap-16 items-center rounded-b-xl">
-            <button className="btn btn-ghost flex gap-3 items-center" id="like">
+          {tags ? (
+            <div className="flex gap-3 bg-base-300 overflow-x-auto pb-3 pt-5 px-5">
+              {tags?.map(
+                (ele) =>
+                  ele != "" && (
+                    <div className="badge badge-neutral"> {ele} </div>
+                  ),
+              )}
+            </div>
+          ) : null}
+          <div className="flex bg-base-300 px-5 py-3 justify-start lg:gap-16 items-center rounded-b-xl">
+            <button
+              className="btn btn-sm btn-ghost flex gap-3 items-center"
+              id="like"
+            >
               <HiMiniHandThumbUp className={`text-xl pointer-events-none`} /> 53
             </button>
             <button
-              className="btn btn-ghost flex gap-3 items-center"
+              className="btn btn-sm btn-ghost flex gap-3 items-center"
               id="dislike"
             >
               <HiMiniHandThumbDown className={`text-xl pointer-events-none`} />{" "}
               64
             </button>
             {enableComment ? (
-              <button className="btn btn-ghost flex gap-3 items-center">
+              <button className="btn btn-sm btn-ghost flex gap-3 items-center">
                 <HiChatBubbleLeft className="text-xl" /> 34
               </button>
             ) : (
               <button
-                className="btn btn-ghost flex gap-3 items-center"
+                className="btn btn-sm btn-ghost flex gap-3 items-center"
                 disabled
               >
                 <HiChatBubbleLeft className="text-xl" /> 34
