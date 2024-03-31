@@ -1,22 +1,22 @@
-import { PrismaClient } from "@prisma/client/edge";
-import { withAccelerate } from "@prisma/extension-accelerate";
-import { Hono } from "hono";
-import { sign } from "hono/jwt";
-import authMiddleware from "../middlewares/auth";
-import { decode } from "hono/jwt";
+import { PrismaClient } from '@prisma/client/edge'
+import { withAccelerate } from '@prisma/extension-accelerate'
+import { Hono } from 'hono'
+import { sign } from 'hono/jwt'
+import { decode } from 'hono/jwt'
+import authMiddleware from '../middlewares/auth'
 export const userRouter = new Hono<{
   Bindings: {
     DATABASE_URL: string;
     JWT_SECRET: string;
   }
-}>();
+}>()
 
 userRouter.post('/create', async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
-  }).$extends(withAccelerate());
+  }).$extends(withAccelerate())
 
-  const body = await c.req.json();
+  const body = await c.req.json()
 
   const user = await prisma.user.create({
     data: {
@@ -181,6 +181,5 @@ userRouter.put('/update', async (c) => {
   })
 
 });
-
 
 

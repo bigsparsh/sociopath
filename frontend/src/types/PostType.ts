@@ -28,5 +28,10 @@ interface Post {
     preference: boolean;
     user_id: string;
   }[];
+  tag: {
+    tag_id: string;
+    post_id: string;
+    name: string;
+  }[];
 }
 export default Post;
