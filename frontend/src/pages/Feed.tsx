@@ -51,6 +51,7 @@ const Feed = () => {
         .then((res) => {
           if (res.data.error) return;
           if (pageIntake == 0) {
+            setLoading(false);
             setPosts(res.data.posts);
             return;
           }

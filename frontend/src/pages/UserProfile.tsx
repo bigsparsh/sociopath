@@ -47,7 +47,7 @@ const UserProfile = () => {
   ) : (
     <>
       <div className="flex lg:flex-row flex-col-reverse lg:gap-10 gap-0">
-        <div className="fixed text-transparent inset-x-24 inset-y-12 lg:inset-x-1/4 w-fit h-fit flex-col flex justify-center items-center text-7xl lg:text-9xl font-black tracking-wide z-[-1]">
+        <div className="fixed text-transparent inset-x-12 inset-y-12 lg:inset-x-1/4 w-fit h-fit flex-col flex justify-center items-center text-7xl lg:text-9xl font-black tracking-wide z-[-1]">
           <h1 className="bg-gradient-to-r from-primary/50 via-primary to-primary/50 bg-clip-text">
             PROFILE
           </h1>
@@ -79,7 +79,7 @@ const UserProfile = () => {
             )}
           </div>
         </div>
-        <div className="lg:basis-1/2 gap-5 basis-0 bg-base-300/70 px-5 rounded-xl lg:bg-base-300 lg:mr-10 lg:ml-0 mx-5 flex flex-col py-10 items-center">
+        <div className="lg:basis-1/2 h-fit gap-5 basis-0 bg-base-300/70 px-5 rounded-xl lg:bg-base-300 lg:mr-10 lg:ml-0 mx-5 flex flex-col py-10 items-center">
           <div className="avatar">
             <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
               {currentUser?.profile_image == "NO IMAGE" ? (
