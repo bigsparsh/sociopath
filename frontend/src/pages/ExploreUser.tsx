@@ -3,12 +3,27 @@ import UserType from "../types/UserType";
 import axios from "axios";
 import UserCard from "../components/UserCard";
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
+import CurrentUserState from "../types/CurrentUserType";
 
 const ExploreUser = () => {
   const [users, setUsers] = useState<UserType[]>();
   const [userIntake, setUserIntake] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [link, setLink] = useState<string>("/user/get?intake=");
+  const [currentUser, setCurrentUser] = useState<CurrentUserState>();
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  useEffect(() => {
+    axios
+      .get(
+        import.meta.env.VITE_BACKEND_URL +
+        "/user/me?jwt=" +
+        localStorage.getItem("auth-token"),
+      )
+      .then((res) => {
+        if (res.data.error) return;
+        setCurrentUser(res.data.you);
+      });
+  }, []);
   useEffect(() => {
     setLoading(true);
     axios
@@ -41,6 +56,13 @@ const ExploreUser = () => {
   };
   return (
     <div className="lg:p-10 p-3 w-full lg:w-2/3">
+      {alertMessage ? (
+        <div className="toast">
+          <div className="alert alert-neutral">
+            <span>{alertMessage}</span>
+          </div>
+        </div>
+      ) : null}
       <label className="input mb-5 input-bordered flex items-center gap-2">
         <input
           type="text"
@@ -51,7 +73,15 @@ const ExploreUser = () => {
         <HiMiniMagnifyingGlass />
       </label>
       <div className="flex flex-col gap-4">
-        {users?.map((ele) => <UserCard user={ele} key={ele.user_id} />)}
+        {currentUser &&
+          users?.map((ele) => (
+            <UserCard
+              alertMessage={setAlertMessage}
+              user={ele}
+              key={ele.user_id}
+              current_user_id={currentUser?.user_id}
+            />
+          ))}
         {loading ? (
           <button className="btn">
             <span className="loading loading-spinner"></span>

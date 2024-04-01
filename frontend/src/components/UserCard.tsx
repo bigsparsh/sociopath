@@ -1,5 +1,38 @@
+import axios from "axios";
 import UserType from "../types/UserType";
-const UserCard = ({ user }: { user: UserType }) => {
+import { Dispatch, SetStateAction } from "react";
+const UserCard = ({
+  user,
+  current_user_id,
+  alertMessage,
+}: {
+  user: UserType;
+  current_user_id: string;
+  alertMessage: Dispatch<SetStateAction<string | null>>;
+}) => {
+  const makeFriend = async () => {
+    await axios
+      .post(
+        import.meta.env.VITE_BACKEND_URL + "/friend/create",
+        {
+          user1_id: current_user_id,
+          user2_id: user.user_id,
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("auth-token"),
+          },
+        },
+      )
+      .then((res) => {
+        if (res.data.error) {
+          alertMessage(res.data.error);
+          return;
+        }
+        alertMessage(res.data.message);
+        setTimeout(() => alertMessage(null), 3000);
+      });
+  };
   return (
     <div className="flex items-center flex-col lg:flex-row gap-5 p-3 rounded-xl bg-base-300">
       <div className="flex grow gap-5 w-full lg:w-fit">
@@ -35,7 +68,9 @@ const UserCard = ({ user }: { user: UserType }) => {
       </div>
       <div className="flex flex-row lg:flex-col h-full gap-3 justify-evenly ">
         <button className="btn btn-sm btn-primary">See Profile</button>
-        <button className="btn btn-sm btn-primary">Make Friend</button>
+        <button className="btn btn-sm btn-primary" onClick={makeFriend}>
+          Make Friend
+        </button>
       </div>
     </div>
   );
