@@ -1,22 +1,22 @@
-import { PrismaClient } from '@prisma/client/edge'
-import { withAccelerate } from '@prisma/extension-accelerate'
-import { Hono } from 'hono'
-import { sign } from 'hono/jwt'
-import { decode } from 'hono/jwt'
-import authMiddleware from '../middlewares/auth'
+import { PrismaClient } from "@prisma/client/edge";
+import { withAccelerate } from "@prisma/extension-accelerate";
+import { Hono } from "hono";
+import { sign } from "hono/jwt";
+import { decode } from "hono/jwt";
+import authMiddleware from "../middlewares/auth";
 export const userRouter = new Hono<{
   Bindings: {
     DATABASE_URL: string;
     JWT_SECRET: string;
-  }
-}>()
+  };
+}>();
 
-userRouter.post('/create', async (c) => {
+userRouter.post("/create", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
-  }).$extends(withAccelerate())
+  }).$extends(withAccelerate());
 
-  const body = await c.req.json()
+  const body = await c.req.json();
 
   const user = await prisma.user.create({
     data: {
@@ -27,17 +27,17 @@ userRouter.post('/create', async (c) => {
       profile_image: body.profile_image,
       bio: body.bio,
       appreciate_mode: body.appreciate_mode,
-      address: body.address
+      address: body.address,
     },
   });
 
-  const token = await sign({ id: user.user_id }, c.env.JWT_SECRET)
+  const token = await sign({ id: user.user_id }, c.env.JWT_SECRET);
   return c.json({
-    jwt: token
-  })
-})
+    jwt: token,
+  });
+});
 
-userRouter.get('/me', async (c) => {
+userRouter.get("/me", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
@@ -48,7 +48,7 @@ userRouter.get('/me', async (c) => {
   if (jwt) {
     const user = await prisma.user.findUnique({
       where: {
-        user_id: userId
+        user_id: userId,
       },
       select: {
         name: true,
@@ -64,22 +64,19 @@ userRouter.get('/me', async (c) => {
         profile_image: true,
         user_id: true,
         appreciate_mode: true,
-        password: true
-      }
-    })
+        password: true,
+      },
+    });
     return c.json({
-      you: user
-    })
+      you: user,
+    });
   }
   return c.json({
-    error: "Send the JWT in order to indentify"
-  })
-
-
+    error: "Send the JWT in order to indentify",
+  });
 });
 
-
-userRouter.post('/login', async (c) => {
+userRouter.post("/login", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
@@ -88,48 +85,83 @@ userRouter.post('/login', async (c) => {
   const user = await prisma.user.findFirst({
     where: {
       email: body.email,
-      password: body.password
-    }
-  })
+      password: body.password,
+    },
+  });
   if (user) {
     const token = await sign({ id: user.user_id }, c.env.JWT_SECRET);
     return c.json({
       message: "Logged in Successfully",
-      jwt: token
-    })
+      jwt: token,
+    });
   }
   return c.json({
-    error: "Email or password is invalid"
-  })
-
+    error: "Email or password is invalid",
+  });
 });
 
 userRouter.use(authMiddleware);
-userRouter.get('/get', async (c) => {
+// userRouter.get("/getcounts", async (c) => {
+//   const prisma = new PrismaClient({
+//     datasourceUrl: c.env.DATABASE_URL,
+//   }).$extends(withAccelerate());
+//
+//   const users = prisma.user.findMany({
+//     select:{
+//       _count
+//     }
+//   })
+
+// });
+userRouter.get("/get", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
 
+  const intake = Number(c.req.query("intake")) || 0;
   const filterId = c.req.query("filterId") || "";
   if (filterId != "") {
     const user = await prisma.user.findUnique({
+      include: {
+        _count: {
+          select: { post: true },
+        },
+      },
       where: {
-        user_id: filterId
-      }
+        user_id: filterId,
+      },
     });
     return c.json({
-      user: user
+      user: user,
     });
   }
 
-  const users = await prisma.user.findMany();
-  return c.json({
-    users: users
+  const users = await prisma.user.findMany({
+    skip: intake,
+    take: 5,
+    include: {
+      _count: {
+        select: {
+          post: true,
+          comment: true,
+          post_preference: true,
+          comment_preference: true,
+          user2: true,
+        },
+      },
+    },
+    orderBy: [
+      {
+        name: "asc",
+      },
+    ],
   });
-
+  return c.json({
+    users: users,
+  });
 });
 
-userRouter.delete('/delete', async (c) => {
+userRouter.delete("/delete", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
@@ -138,21 +170,20 @@ userRouter.delete('/delete', async (c) => {
   if (filterId != "") {
     const user = await prisma.user.delete({
       where: {
-        user_id: filterId
-      }
-    })
+        user_id: filterId,
+      },
+    });
     return c.json({
       message: "Successfully Deleted USER!",
-      response: user
-    })
+      response: user,
+    });
   }
   return c.json({
-    message: "Kindly, Send a filter ID to indentify the user to delete"
-  })
-
+    message: "Kindly, Send a filter ID to indentify the user to delete",
+  });
 });
 
-userRouter.put('/update', async (c) => {
+userRouter.put("/update", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
@@ -162,7 +193,7 @@ userRouter.put('/update', async (c) => {
 
   await prisma.user.update({
     where: {
-      user_id: filterId
+      user_id: filterId,
     },
     data: {
       name: updatedUser.name,
@@ -172,14 +203,11 @@ userRouter.put('/update', async (c) => {
       bio: updatedUser.bio,
       phone: updatedUser.phone,
       profile_image: updatedUser.profile_image,
-      appreciate_mode: updatedUser.appreciate_mode
-    }
+      appreciate_mode: updatedUser.appreciate_mode,
+    },
   });
 
   return c.json({
     message: "User updated Successfully",
-  })
-
+  });
 });
-
-

@@ -8,6 +8,7 @@ import {
   HiArrowUpTray,
   HiMiniPhoto,
   HiUser,
+  HiGlobeAsiaAustralia,
 } from "react-icons/hi2";
 import logo from "../assets/social-lilac.svg";
 
@@ -64,9 +65,9 @@ const PrimaryLayout = () => {
                 </a>
               </li>
               <li>
-                <a>
-                  <HiEye className="text-xl" />
-                  Settings
+                <a onClick={() => navigator("/explore/user")}>
+                  <HiGlobeAsiaAustralia className="text-xl" />
+                  Explore
                 </a>
               </li>
               <li>

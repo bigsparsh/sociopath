@@ -213,7 +213,7 @@ const PostCard = ({
       <div className="text-cont max-h-[200px] overflow-auto bg-base-300">
         <p className="p-5">{post.description}</p>
       </div>
-      <p className="text-xs text-white/30  px-5 pt-3 bg-base-300">
+      <p className="text-xs dark:text-white/30 text-black/30  px-5 pt-3 bg-base-300">
         Posted at {post.created_at}{" "}
       </p>
       {tags.length != 0 ? (
