@@ -1,4 +1,3 @@
-import { HiMiniPhoto, HiMiniUserGroup } from "react-icons/hi2";
 import UserType from "../types/UserType";
 const UserCard = ({ user }: { user: UserType }) => {
   return (
