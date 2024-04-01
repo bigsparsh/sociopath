@@ -3,7 +3,6 @@ import NavBar from "../components/NavBar";
 import { HiHome } from "react-icons/hi";
 import {
   HiBars3,
-  HiEye,
   HiMiniArrowLeftOnRectangle,
   HiArrowUpTray,
   HiMiniPhoto,
