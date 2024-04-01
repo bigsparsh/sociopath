@@ -35,13 +35,13 @@ const SignUp = () => {
       });
     await axios
       .post(import.meta.env.VITE_BACKEND_URL + "/user/create", {
-        name: name.current?.value,
-        email: email.current?.value,
-        password: password.current?.value,
-        address: address.current?.value,
+        name: name.current?.value.trim(),
+        email: email.current?.value.trim(),
+        password: password.current?.value.trim(),
+        address: address.current?.value.trim(),
         profile_image: image,
-        bio: bio.current?.value,
-        phone: phone.current?.value,
+        bio: bio.current?.value.trim(),
+        phone: phone.current?.value.trim(),
         appreciate_mode:
           appreciate_mode.current?.value == "on" ? "Likes" : "Upvotes",
       })

@@ -161,6 +161,42 @@ userRouter.get("/get", async (c) => {
   });
 });
 
+userRouter.get("/search", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+  const filter = c.req.query("filter") || "";
+  const intake = Number(c.req.query("intake")) || 0;
+  const users = await prisma.user.findMany({
+    skip: intake,
+    take: 5,
+    where: {
+      name: {
+        startsWith: filter,
+      },
+    },
+    include: {
+      _count: {
+        select: {
+          post: true,
+          comment: true,
+          post_preference: true,
+          comment_preference: true,
+          user2: true,
+        },
+      },
+    },
+    orderBy: [
+      {
+        name: "asc",
+      },
+    ],
+  });
+  return c.json({
+    message: "These are your search results",
+    users: users,
+  });
+});
 userRouter.delete("/delete", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,

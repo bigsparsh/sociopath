@@ -8,17 +8,15 @@ const ExploreUser = () => {
   const [users, setUsers] = useState<UserType[]>();
   const [userIntake, setUserIntake] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
+  const [link, setLink] = useState<string>("/user/get?intake=");
   useEffect(() => {
     setLoading(true);
     axios
-      .get(
-        import.meta.env.VITE_BACKEND_URL + "/user/get?intake=" + userIntake,
-        {
-          headers: {
-            Authorization: localStorage.getItem("auth-token"),
-          },
+      .get(import.meta.env.VITE_BACKEND_URL + link + userIntake, {
+        headers: {
+          Authorization: localStorage.getItem("auth-token"),
         },
-      )
+      })
       .then((res) => {
         if (res.data.error) return;
         if (userIntake == 0) {
@@ -30,11 +28,26 @@ const ExploreUser = () => {
         setUsers(newUsers);
         setLoading(false);
       });
-  }, [userIntake]);
+  }, [userIntake, link]);
+
+  let myTimeout: ReturnType<typeof setTimeout>;
+  const fetchSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    clearTimeout(myTimeout);
+    myTimeout = setTimeout(() => {
+      if (e.target.value == "") setLink("/user/get?intake=");
+      else setLink("/user/search?filter=" + e.target.value + "&intake=");
+      setUserIntake(0);
+    }, 250);
+  };
   return (
     <div className="lg:p-10 p-3 w-full lg:w-2/3">
       <label className="input mb-5 input-bordered flex items-center gap-2">
-        <input type="text" className="grow" placeholder="Search for users" />
+        <input
+          type="text"
+          onChange={fetchSearch}
+          className="grow"
+          placeholder="Search for users"
+        />
         <HiMiniMagnifyingGlass />
       </label>
       <div className="flex flex-col gap-4">
