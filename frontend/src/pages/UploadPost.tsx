@@ -15,7 +15,7 @@ const UploadPost = () => {
   const [enableComment, setEnableComment] = useState<boolean>();
   const [loading, setLoading] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<CurrentUserType>();
-  const [tags, setTags] = useState<string[]>();
+  const [tags, setTags] = useState<string[]>([]);
   const navigator = useNavigate();
 
   useEffect(() => {
@@ -135,7 +135,6 @@ const UploadPost = () => {
                 placeholder="tags eg: adventure,playful,new"
                 className="input input-bordered bg-base-100/50 backdrop-blur-sm placeholder:text-xs"
                 onChange={(e) => setTags(e.target.value.split(","))}
-                required
               />
             </div>
             <div className="form-control">

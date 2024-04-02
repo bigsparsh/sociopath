@@ -27,15 +27,19 @@ postRouter.post("/create", async (c) => {
     },
   });
 
-  body.tag.map(async (ele: string) => {
-    console.log(ele);
-    await prisma.tag.create({
-      data: {
-        post_id: post.post_id,
-        name: ele.trim(),
-      },
-    });
-  });
+  await Promise.all(
+    body.tag.map(async (ele: string) => {
+      if (ele.trim() == "") {
+        return;
+      }
+      await prisma.tag.create({
+        data: {
+          post_id: post.post_id,
+          name: ele.trim(),
+        },
+      });
+    }),
+  );
 
   return c.json({
     message: "POST created",
