@@ -3,18 +3,23 @@ import { useEffect, useState } from "react";
 import { HiDeviceMobile } from "react-icons/hi";
 import {
   HiEnvelope,
+  HiMiniTrash,
+  HiMiniPencilSquare,
   HiMapPin,
+  HiMiniEye,
   HiMiniEyeSlash,
   HiMiniHeart,
   HiMiniIdentification,
 } from "react-icons/hi2";
 import CurrentUserType from "../types/CurrentUserType";
 import { useNavigate } from "react-router-dom";
+import FullPostPopup from "../components/FullPostPopup";
 
 const UserProfile = () => {
   const [currentUser, setCurrentUser] = useState<CurrentUserType>();
   const [loading, setLoading] = useState<boolean>(true);
   const navigator = useNavigate();
+  const [overlay, setOverlay] = useState<string | null>();
 
   useEffect(() => {
     if (localStorage.getItem("auth-token")) {
@@ -46,6 +51,10 @@ const UserProfile = () => {
     </div>
   ) : (
     <>
+      {overlay != null ? (
+        <FullPostPopup post_id={overlay} overlay={setOverlay} />
+      ) : null}
+
       <div className="flex lg:flex-row flex-col-reverse lg:gap-10 gap-0">
         <div className="fixed text-transparent inset-x-12 inset-y-12 lg:inset-x-1/4 w-fit h-fit flex-col flex justify-center items-center text-7xl lg:text-9xl font-black tracking-wide z-[-1]">
           <h1 className="bg-gradient-to-r from-primary/50 via-primary to-primary/50 bg-clip-text">
@@ -65,15 +74,32 @@ const UserProfile = () => {
             ) : (
               currentUser?.post.map((ele) => {
                 return ele.post_image == "NO IMAGE" ? (
-                  <div className="aspect-square rounded-lg bg-gradient-to-b text-white backdrop-blur-sm shadow-2xl hover:scale-110 duration-200 p-3 lg:p-5 overflow-hidden from-slate-700 lg:text-base to-slate-700/10">
+                  <div className="aspect-square rounded-lg bg-gradient-to-b text-white backdrop-blur-sm shadow-2xl hover:scale-110 duration-200 p-3 lg:p-5 overflow-hidden from-slate-700 text-xs lg:text-base to-slate-700/10 group relative">
                     {ele.description}
+                    <div className="w-full hidden opacity-0 justify-center gap-1 flex-wrap lg:gap-3 items-center group-hover:opacity-100 duration-200 h-full bg-base-300/50 group-hover:flex absolute inset-0">
+                      <HiMiniEye
+                        onClick={() => setOverlay(ele.post_id)}
+                        className="text-5xl text-primary rounded-lg p-3 bg-base-300"
+                      />
+                      <HiMiniPencilSquare className="text-5xl text-warning rounded-lg p-3 bg-base-300" />
+                      <HiMiniTrash className="text-5xl text-error rounded-lg p-3 bg-base-300" />
+                    </div>
                   </div>
                 ) : (
                   <div
                     style={{ backgroundImage: `url('${ele.post_image}')` }}
                     key={ele.post_id}
-                    className={`hover:scale-110 shadow-2xl duration-200 bg-center bg-cover aspect-square rounded-lg bg-base-300  `}
-                  ></div>
+                    className={`hover:scale-110 shadow-2xl duration-200 group bg-center bg-cover aspect-square rounded-lg bg-base-300  `}
+                  >
+                    <div className="w-full hidden opacity-0 justify-center gap-1 flex-wrap lg:gap-3 items-center group-hover:opacity-100 duration-200 h-full bg-base-300/50 group-hover:flex">
+                      <HiMiniEye
+                        onClick={() => setOverlay(ele.post_id)}
+                        className="text-5xl text-primary rounded-lg p-3 bg-base-300"
+                      />
+                      <HiMiniPencilSquare className="text-5xl text-warning rounded-lg p-3 bg-base-300" />
+                      <HiMiniTrash className="text-5xl text-error rounded-lg p-3 bg-base-300" />
+                    </div>
+                  </div>
                 );
               })
             )}
