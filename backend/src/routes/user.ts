@@ -172,7 +172,8 @@ userRouter.get("/search", async (c) => {
     take: 5,
     where: {
       name: {
-        startsWith: filter,
+        contains: filter,
+        mode: "insensitive",
       },
     },
     include: {

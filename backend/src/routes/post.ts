@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import authMiddleware from "../middlewares/auth";
+import { log } from "console";
 
 export const postRouter = new Hono<{
   Bindings: {
@@ -63,6 +64,113 @@ postRouter.delete("/removePreference", async (c) => {
   return c.json({
     message: "Preference deleted Successfully",
   });
+});
+postRouter.post("/search", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  const searchParam = c.req.query("searchParam");
+  const intake = Number(c.req.query("intake")) || 0;
+  const body = await c.req.json();
+
+  if (searchParam == "Appreciation") {
+    const appreciationPosts = await prisma.postPreference.groupBy({
+      by: ["post_id"],
+      orderBy: {
+        _count: {
+          preference: "desc",
+        },
+      },
+      where: {
+        preference: body.appreciationType,
+      },
+      skip: intake,
+      take: 5,
+    });
+    const post_ids = appreciationPosts.map((ele) => ele.post_id);
+    const posts = await prisma.post.findMany({
+      where: {
+        post_id: {
+          in: post_ids,
+        },
+      },
+    });
+
+    return c.json({
+      posts: posts,
+    });
+  }
+  if (searchParam == "User") {
+    const user = await prisma.user.findMany({
+      where: {
+        name: {
+          contains: body.userName,
+          mode: "insensitive",
+        },
+      },
+    });
+    const user_ids = user.map((ele) => ele.user_id);
+    const posts = await prisma.post.findMany({
+      where: {
+        user_id: {
+          in: user_ids,
+        },
+      },
+      skip: intake,
+      take: 5,
+    });
+    return c.json({
+      posts: posts,
+    });
+  }
+  if (searchParam == "Tags") {
+    const tag = await prisma.tag.findMany({
+      select: {
+        post_id: true,
+      },
+      where: {
+        name: {
+          in: body.tags,
+          mode: "insensitive",
+        },
+      },
+    });
+    const tag_ids = tag.map((ele) => ele.post_id);
+    const posts = await prisma.post.findMany({
+      where: {
+        post_id: {
+          in: tag_ids,
+        },
+      },
+      skip: intake,
+      take: 5,
+    });
+    return c.json({
+      posts: posts,
+    });
+  }
+  if (searchParam == "Friends") {
+    const friends = await prisma.friend.findMany({
+      where: {
+        user1_id: body.currentUserId,
+      },
+      select: {
+        user2_id: true,
+      },
+    });
+    const user_ids = friends.map((ele) => ele.user2_id);
+    const posts = await prisma.post.findMany({
+      where: {
+        user_id: {
+          in: user_ids,
+        },
+      },
+    });
+    return c.json({
+      posts: posts,
+    });
+  }
 });
 
 postRouter.get("/get", async (c) => {
