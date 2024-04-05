@@ -27,9 +27,9 @@ interface post_card {
     }[];
   };
   comment: PostType["comment"];
-  feed_render: Dispatch<SetStateAction<boolean>>;
-  right_sec: Dispatch<SetStateAction<JSX.Element | null | undefined>>;
-  overlay: Dispatch<SetStateAction<string | undefined | null>>;
+  feed_render: Dispatch<SetStateAction<boolean>> | null;
+  right_sec: Dispatch<SetStateAction<JSX.Element | null | undefined>> | null;
+  overlay: Dispatch<SetStateAction<string | undefined | null>> | null;
 }
 
 const PostCard = ({
@@ -68,9 +68,11 @@ const PostCard = ({
         setCurrentPreference(ele.preference);
       }
     });
-  }, []);
+    console.log(likes, dislikes, commentCount);
+  }, [post]);
 
   const showComments = () => {
+    if (!right_sec) return;
     right_sec(
       <CommentSection
         post_id={post.post_id}
@@ -147,7 +149,7 @@ const PostCard = ({
         } else {
           await removePostPreference(current_user.user_id, post.post_id);
         }
-        feed_render((e) => !e);
+        if (feed_render) feed_render((e) => !e);
       }, 2500),
     );
   };
@@ -205,7 +207,7 @@ const PostCard = ({
         <div
           className="bg-cover bg-center grow hover:opacity-70 cursor-pointer duration-200"
           onClick={() => {
-            overlay(post.post_image);
+            if (overlay) overlay(post.post_image);
           }}
           style={{ backgroundImage: `url(${post.post_image})` }}
         ></div>

@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import authMiddleware from "../middlewares/auth";
-import { log } from "console";
 
 export const postRouter = new Hono<{
   Bindings: {
@@ -85,17 +84,42 @@ postRouter.post("/search", async (c) => {
       where: {
         preference: body.appreciationType,
       },
+      _count: {
+        preference: true,
+      },
       skip: intake,
       take: 5,
     });
-    const post_ids = appreciationPosts.map((ele) => ele.post_id);
-    const posts = await prisma.post.findMany({
-      where: {
-        post_id: {
-          in: post_ids,
-        },
-      },
-    });
+
+    const posts = await Promise.all(
+      appreciationPosts.map(async (ele) => {
+        const post = await prisma.post.findUnique({
+          where: {
+            post_id: ele.post_id,
+          },
+          select: {
+            post_id: true,
+            description: true,
+            created_at: true,
+            post_image: true,
+            tag: true,
+            comment_enabled: true,
+            user: {
+              select: {
+                name: true,
+                user_id: true,
+                friend: true,
+                email: true,
+                profile_image: true,
+              },
+            },
+            comment: true,
+            preference: true,
+          },
+        });
+        return post;
+      }),
+    );
 
     return c.json({
       posts: posts,
@@ -117,9 +141,29 @@ postRouter.post("/search", async (c) => {
           in: user_ids,
         },
       },
+      select: {
+        post_id: true,
+        description: true,
+        created_at: true,
+        post_image: true,
+        tag: true,
+        comment_enabled: true,
+        user: {
+          select: {
+            name: true,
+            user_id: true,
+            friend: true,
+            email: true,
+            profile_image: true,
+          },
+        },
+        comment: true,
+        preference: true,
+      },
       skip: intake,
       take: 5,
     });
+    console.log(posts);
     return c.json({
       posts: posts,
     });
@@ -142,6 +186,25 @@ postRouter.post("/search", async (c) => {
         post_id: {
           in: tag_ids,
         },
+      },
+      select: {
+        post_id: true,
+        description: true,
+        created_at: true,
+        post_image: true,
+        tag: true,
+        comment_enabled: true,
+        user: {
+          select: {
+            name: true,
+            user_id: true,
+            friend: true,
+            email: true,
+            profile_image: true,
+          },
+        },
+        comment: true,
+        preference: true,
       },
       skip: intake,
       take: 5,
@@ -166,6 +229,27 @@ postRouter.post("/search", async (c) => {
           in: user_ids,
         },
       },
+      select: {
+        post_id: true,
+        description: true,
+        created_at: true,
+        post_image: true,
+        tag: true,
+        comment_enabled: true,
+        user: {
+          select: {
+            name: true,
+            user_id: true,
+            friend: true,
+            email: true,
+            profile_image: true,
+          },
+        },
+        comment: true,
+        preference: true,
+      },
+      skip: intake,
+      take: 5,
     });
     return c.json({
       posts: posts,

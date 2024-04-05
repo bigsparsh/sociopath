@@ -8,6 +8,7 @@ import SignUp from "./pages/SignUp";
 import UserProfile from "./pages/UserProfile";
 import UploadPost from "./pages/UploadPost";
 import ExploreUser from "./pages/ExploreUser";
+import FeedSearch from "./pages/FeedSearch";
 const App = () => {
   return (
     <BrowserRouter>
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="feed">
             <Route index element={<Feed />} />
             <Route path="create" element={<UploadPost />} />
+            <Route path="search" element={<FeedSearch />} />
           </Route>
         </Route>
       </Routes>

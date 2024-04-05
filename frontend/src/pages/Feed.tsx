@@ -9,7 +9,7 @@ import ImagePopup from "../components/ImagePopup";
 const Feed = () => {
   const [posts, setPosts] = useState<PostType[]>();
   const [currentUser, setCurrentUser] = useState<CurrentUserType>();
-  const [feedRender, setFeedRender] = useState<boolean>(false);
+  const [feedRender, setFeedRender] = useState<boolean | null>(false);
   const [rightSection, setRightSection] = useState<
     JSX.Element | null | undefined
   >();

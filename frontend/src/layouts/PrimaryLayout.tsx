@@ -8,6 +8,7 @@ import {
   HiMiniPhoto,
   HiUser,
   HiGlobeAsiaAustralia,
+  HiMiniMagnifyingGlass,
 } from "react-icons/hi2";
 import logo from "../assets/social-lilac.svg";
 
@@ -70,9 +71,13 @@ const PrimaryLayout = () => {
                 </a>
               </li>
               <li>
-                <a>
-                  <HiHome className="text-xl" />
-                  Selective Feed
+                <a
+                  onClick={() => {
+                    navigator("/user/feed/search");
+                  }}
+                >
+                  <HiMiniMagnifyingGlass className="text-xl" />
+                  Filter Feed
                 </a>
               </li>
               <li>
