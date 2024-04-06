@@ -135,6 +135,7 @@ postRouter.post("/search", async (c) => {
       },
     });
     const user_ids = user.map((ele) => ele.user_id);
+    console.log(user_ids);
     const posts = await prisma.post.findMany({
       where: {
         user_id: {
@@ -163,7 +164,7 @@ postRouter.post("/search", async (c) => {
       skip: intake,
       take: 5,
     });
-    console.log(posts);
+    console.log(intake);
     return c.json({
       posts: posts,
     });

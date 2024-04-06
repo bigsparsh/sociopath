@@ -12,7 +12,7 @@ const CommentSection = ({
   comment_count,
 }: {
   post_id: string;
-  feed_render: Dispatch<SetStateAction<boolean>> | null;
+  feed_render: Dispatch<SetStateAction<boolean | null>> | null;
   close: Dispatch<SetStateAction<JSX.Element | null | undefined>>;
   current_user: CurrentUserType | null;
   comment_count: Dispatch<SetStateAction<number>>;

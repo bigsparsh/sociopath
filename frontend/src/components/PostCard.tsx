@@ -27,7 +27,7 @@ interface post_card {
     }[];
   };
   comment: PostType["comment"];
-  feed_render: Dispatch<SetStateAction<boolean>> | null;
+  feed_render: Dispatch<SetStateAction<boolean | null>> | null;
   right_sec: Dispatch<SetStateAction<JSX.Element | null | undefined>> | null;
   overlay: Dispatch<SetStateAction<string | undefined | null>> | null;
 }
@@ -68,7 +68,6 @@ const PostCard = ({
         setCurrentPreference(ele.preference);
       }
     });
-    console.log(likes, dislikes, commentCount);
   }, [post]);
 
   const showComments = () => {
