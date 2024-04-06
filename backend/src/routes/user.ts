@@ -122,10 +122,24 @@ userRouter.get("/get", async (c) => {
   const filterId = c.req.query("filterId") || "";
   if (filterId != "") {
     const user = await prisma.user.findUnique({
-      include: {
+      select: {
         _count: {
           select: { post: true },
         },
+        name: true,
+        email: true,
+        phone: true,
+        address: true,
+        comment: true,
+        comment_preference: true,
+        post: true,
+        post_preference: true,
+        bio: true,
+        friend: true,
+        profile_image: true,
+        user_id: true,
+        appreciate_mode: true,
+        password: true,
       },
       where: {
         user_id: filterId,

@@ -53,7 +53,7 @@ const PrimaryLayout = () => {
                 </a>
               </li>
               <li>
-                <a onClick={() => navigator("/user/profile")}>
+                <a onClick={() => navigator("/user/profile/self")}>
                   <HiUser className="text-xl" />
                   Your Profile
                 </a>

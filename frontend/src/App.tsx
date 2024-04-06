@@ -23,7 +23,7 @@ const App = () => {
           <Route path="signup" element={<SignUp />} />
         </Route>
         <Route path="/user" element={<PrimaryLayout />}>
-          <Route path="profile" element={<UserProfile />} />
+          <Route path="profile/:id" element={<UserProfile />} />
           <Route path="feed">
             <Route index element={<Feed />} />
             <Route path="create" element={<UploadPost />} />

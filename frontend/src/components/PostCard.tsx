@@ -8,6 +8,7 @@ import { removePostPreference, updatePostPreference } from "../utils";
 import CommentSection from "../pages/CommentSection";
 import CurrentUserType from "../types/CurrentUserType";
 import PostType from "../types/PostType";
+import { useNavigate } from "react-router-dom";
 
 interface post_card {
   current_user: CurrentUserType;
@@ -50,6 +51,7 @@ const PostCard = ({
   const [debouncer, setDebouncer] = useState<ReturnType<
     typeof setTimeout
   > | null>(null);
+  const navigator = useNavigate();
 
   useEffect(() => {
     let likes = 0,
@@ -169,7 +171,12 @@ const PostCard = ({
       )}
 
       <div className="p-5 flex justify-between items-center bg-base-300 rounded-t-xl">
-        <div className="profile flex gap-5 items-center">
+        <div
+          className="profile cursor-pointer flex gap-5 items-center"
+          onClick={() => {
+            navigator("/user/profile/" + user.user_id);
+          }}
+        >
           {user.profile_image == "NO IMAGE" ? (
             <div className="avatar placeholder">
               <div className="bg-neutral text-neutral-content rounded-full w-12">

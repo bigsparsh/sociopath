@@ -12,7 +12,7 @@ import {
   HiMiniIdentification,
 } from "react-icons/hi2";
 import CurrentUserType from "../types/CurrentUserType";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import FullPostPopup from "../components/FullPostPopup";
 
 const UserProfile = () => {
@@ -20,26 +20,41 @@ const UserProfile = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const navigator = useNavigate();
   const [overlay, setOverlay] = useState<string | null>();
+  const { id } = useParams();
 
   useEffect(() => {
     if (localStorage.getItem("auth-token")) {
       setLoading(true);
-      axios
-        .get(
-          import.meta.env.VITE_BACKEND_URL +
-          "/user/me?jwt=" +
-          localStorage.getItem("auth-token"),
-          {
+      if (id == "self") {
+        axios
+          .get(
+            import.meta.env.VITE_BACKEND_URL +
+            "/user/me?jwt=" +
+            localStorage.getItem("auth-token"),
+            {
+              headers: {
+                Authorization: localStorage.getItem("auth-token"),
+              },
+            },
+          )
+          .then((res) => {
+            if (res.data.error) return;
+            setCurrentUser(res.data.you);
+            setLoading(false);
+          });
+      } else {
+        axios
+          .get(import.meta.env.VITE_BACKEND_URL + "/user/get?filterId=" + id, {
             headers: {
               Authorization: localStorage.getItem("auth-token"),
             },
-          },
-        )
-        .then((res) => {
-          if (res.data.error) return;
-          setCurrentUser(res.data.you);
-          setLoading(false);
-        });
+          })
+          .then((res) => {
+            if (res.data.error) return;
+            setCurrentUser(res.data.user);
+            setLoading(false);
+          });
+      }
     } else {
       navigator("/");
     }
@@ -74,15 +89,22 @@ const UserProfile = () => {
             ) : (
               currentUser?.post.map((ele) => {
                 return ele.post_image == "NO IMAGE" ? (
-                  <div className="aspect-square rounded-lg bg-gradient-to-b text-white backdrop-blur-sm shadow-2xl hover:scale-110 duration-200 p-3 lg:p-5 overflow-hidden from-slate-700 text-xs lg:text-base to-slate-700/10 group relative">
+                  <div
+                    className="aspect-square rounded-lg bg-gradient-to-b text-white backdrop-blur-sm shadow-2xl hover:scale-110 duration-200 p-3 lg:p-5 overflow-hidden from-slate-700 text-xs lg:text-base to-slate-700/10 group relative"
+                    key={ele.post_id}
+                  >
                     {ele.description}
                     <div className="w-full hidden opacity-0 justify-center gap-1 flex-wrap lg:gap-3 items-center group-hover:opacity-100 duration-200 h-full bg-base-300/50 group-hover:flex absolute inset-0">
                       <HiMiniEye
                         onClick={() => setOverlay(ele.post_id)}
-                        className="text-5xl text-primary rounded-lg p-3 bg-base-300"
+                        className="text-2xl text-primary rounded-lg p-1 bg-base-300"
                       />
-                      <HiMiniPencilSquare className="text-5xl text-warning rounded-lg p-3 bg-base-300" />
-                      <HiMiniTrash className="text-5xl text-error rounded-lg p-3 bg-base-300" />
+                      {id == "self" ? (
+                        <>
+                          <HiMiniPencilSquare className="text-2xl text-warning rounded-lg p-1 bg-base-300" />
+                          <HiMiniTrash className="text-2xl text-error rounded-lg p-1 bg-base-300" />
+                        </>
+                      ) : null}
                     </div>
                   </div>
                 ) : (
@@ -91,13 +113,17 @@ const UserProfile = () => {
                     key={ele.post_id}
                     className={`hover:scale-110 shadow-2xl duration-200 group bg-center bg-cover aspect-square rounded-lg bg-base-300  `}
                   >
-                    <div className="w-full hidden opacity-0 justify-center gap-1 flex-wrap lg:gap-3 items-center group-hover:opacity-100 duration-200 h-full bg-base-300/50 group-hover:flex">
+                    <div className="w-full hidden opacity-0 justify-center gap-1 flex-wrap lg:gap-2 items-center group-hover:opacity-100 duration-200 h-full bg-base-300/50 group-hover:flex">
                       <HiMiniEye
                         onClick={() => setOverlay(ele.post_id)}
-                        className="text-5xl text-primary rounded-lg p-3 bg-base-300"
+                        className="text-2xl text-primary rounded-lg p-1 bg-base-300"
                       />
-                      <HiMiniPencilSquare className="text-5xl text-warning rounded-lg p-3 bg-base-300" />
-                      <HiMiniTrash className="text-5xl text-error rounded-lg p-3 bg-base-300" />
+                      {id == "self" ? (
+                        <>
+                          <HiMiniPencilSquare className="text-2xl text-warning rounded-lg p-1 bg-base-300" />
+                          <HiMiniTrash className="text-2xl text-error rounded-lg p-1 bg-base-300" />
+                        </>
+                      ) : null}
                     </div>
                   </div>
                 );
