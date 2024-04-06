@@ -157,7 +157,7 @@ const PostCard = ({
     <div
       className={
         post.post_image == "NO IMAGE"
-          ? `flex x-20 border border-base-100 flex-col bg-base-300 rounded-xl  shadow-xl  max-h-[600px] z-20`
+          ? `flex border border-base-100 flex-col bg-base-300 rounded-xl  shadow-xl  max-h-[600px] z-20`
           : `flex flex-col bg-base-300 border border-base-100 rounded-xl shadow-xl relative h-[600px] z-10`
       }
     >

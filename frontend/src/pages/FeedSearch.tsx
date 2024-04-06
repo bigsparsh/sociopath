@@ -30,8 +30,8 @@ const FeedSearch = () => {
       });
   }, []);
   return (
-    <div className="flex">
-      <div className="flex flex-col basis-full lg:basis-2/3 p-3 lg:p-10 gap-5">
+    <div className="flex overflow-x-clip">
+      <div className="flex flex-col grow w-full lg:basis-2/3 p-3 lg:p-10 gap-5">
         <div className="flex  justify-between items-center">
           <h1 className="text-2xl font-semibold mb-4">Your search results</h1>
           <button

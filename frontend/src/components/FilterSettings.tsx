@@ -23,6 +23,7 @@ const FilterSettings = ({
   const [body, setBody] = useState<object>();
   useEffect(() => {
     if (link && body) {
+      loading(true);
       axios
         .post(import.meta.env.VITE_BACKEND_URL + link + intake, body, {
           headers: {
@@ -30,7 +31,6 @@ const FilterSettings = ({
           },
         })
         .then((res) => {
-          console.log(res.data.psots);
           if (res.data.error) return;
           if (intake == 0) {
             loading(false);
