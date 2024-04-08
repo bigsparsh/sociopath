@@ -17,14 +17,15 @@ import FullPostPopup from "../components/FullPostPopup";
 
 const UserProfile = () => {
   const [currentUser, setCurrentUser] = useState<CurrentUserType>();
-  const [isFriend, setIsFriend] = useState<boolean>(false);
-  const [loggedUser, setLoggedUser] = useState<CurrentUserType>();
+  const [isFriend, setIsFriend] = useState<boolean>();
+  // const [loggedUser, setLoggedUser] = useState<CurrentUserType>();
   const [loading, setLoading] = useState<boolean>(true);
   const navigator = useNavigate();
   const [overlay, setOverlay] = useState<string | null>();
   const { id } = useParams();
 
   useEffect(() => {
+    // console.log(loggedUser);
     if (localStorage.getItem("auth-token")) {
       setLoading(true);
       if (id == "self") {
@@ -45,6 +46,7 @@ const UserProfile = () => {
             setLoading(false);
           });
       } else {
+        let bfr: CurrentUserType;
         axios
           .get(import.meta.env.VITE_BACKEND_URL + "/user/get?filterId=" + id, {
             headers: {
@@ -53,8 +55,8 @@ const UserProfile = () => {
           })
           .then((res) => {
             if (res.data.error) return;
+            bfr = res.data.user;
             setCurrentUser(res.data.user);
-            setLoading(false);
           });
         axios
           .get(
@@ -70,9 +72,9 @@ const UserProfile = () => {
           .then((res) => {
             if (res.data.error) return;
             const user: CurrentUserType = res.data.you;
-            setLoggedUser(user);
+            // setLoggedUser(user);
             user.friend.map((ele) => {
-              if (ele.user2_id == currentUser?.user_id) {
+              if (ele.user2_id === bfr.user_id) {
                 setIsFriend(true);
               }
             });
@@ -177,7 +179,7 @@ const UserProfile = () => {
             </div>
           </div>
           <h1 className="text-4xl font-semibold">{currentUser?.name}</h1>
-          {isFriend == true ? (
+          {id === "self" ? null : isFriend == true ? (
             <button className="btn btn-outline btn-primary">Un Follow</button>
           ) : (
             <button className="btn btn-primary">Follow</button>
