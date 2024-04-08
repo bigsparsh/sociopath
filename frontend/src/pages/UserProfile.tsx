@@ -17,6 +17,8 @@ import FullPostPopup from "../components/FullPostPopup";
 
 const UserProfile = () => {
   const [currentUser, setCurrentUser] = useState<CurrentUserType>();
+  const [isFriend, setIsFriend] = useState<boolean>(false);
+  const [loggedUser, setLoggedUser] = useState<CurrentUserType>();
   const [loading, setLoading] = useState<boolean>(true);
   const navigator = useNavigate();
   const [overlay, setOverlay] = useState<string | null>();
@@ -52,6 +54,28 @@ const UserProfile = () => {
           .then((res) => {
             if (res.data.error) return;
             setCurrentUser(res.data.user);
+            setLoading(false);
+          });
+        axios
+          .get(
+            import.meta.env.VITE_BACKEND_URL +
+            "/user/me?jwt=" +
+            localStorage.getItem("auth-token"),
+            {
+              headers: {
+                Authorization: localStorage.getItem("auth-token"),
+              },
+            },
+          )
+          .then((res) => {
+            if (res.data.error) return;
+            const user: CurrentUserType = res.data.you;
+            setLoggedUser(user);
+            user.friend.map((ele) => {
+              if (ele.user2_id == currentUser?.user_id) {
+                setIsFriend(true);
+              }
+            });
             setLoading(false);
           });
       }
@@ -153,6 +177,11 @@ const UserProfile = () => {
             </div>
           </div>
           <h1 className="text-4xl font-semibold">{currentUser?.name}</h1>
+          {isFriend == true ? (
+            <button className="btn btn-outline btn-primary">Un Follow</button>
+          ) : (
+            <button className="btn btn-primary">Follow</button>
+          )}
           <div className="divider italic">Personal Details</div>
           <div className="flex flex-col w-full px-2 lg:px-5 gap-5">
             <h1 className="lg:text-base text-sm">

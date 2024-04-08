@@ -9,12 +9,14 @@ import UserProfile from "./pages/UserProfile";
 import UploadPost from "./pages/UploadPost";
 import ExploreUser from "./pages/ExploreUser";
 import FeedSearch from "./pages/FeedSearch";
+import ChatApp from "./pages/ChatApp";
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingLayout />}>
           <Route index element={<Landing />} />
+          <Route path="chat" element={<ChatApp />} />
         </Route>
         <Route path="/explore" element={<PrimaryLayout />}>
           <Route path="user" element={<ExploreUser />} />

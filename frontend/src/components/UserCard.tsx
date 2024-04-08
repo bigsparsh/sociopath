@@ -1,6 +1,7 @@
 import axios from "axios";
 import UserType from "../types/UserType";
 import { Dispatch, SetStateAction } from "react";
+import { useNavigate } from "react-router-dom";
 const UserCard = ({
   user,
   current_user_id,
@@ -10,6 +11,7 @@ const UserCard = ({
   current_user_id: string;
   alertMessage: Dispatch<SetStateAction<string | null>>;
 }) => {
+  const navigator = useNavigate();
   const makeFriend = async () => {
     await axios
       .post(
@@ -67,7 +69,12 @@ const UserCard = ({
         </div>
       </div>
       <div className="flex flex-row lg:flex-col h-full gap-3 justify-evenly ">
-        <button className="btn btn-sm btn-primary">See Profile</button>
+        <button
+          className="btn btn-sm btn-primary"
+          onClick={() => navigator("/user/profile/" + user.user_id)}
+        >
+          See Profile
+        </button>
         <button className="btn btn-sm btn-primary" onClick={makeFriend}>
           Make Friend
         </button>
