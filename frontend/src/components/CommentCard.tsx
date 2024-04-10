@@ -16,6 +16,7 @@ const CommentCard = ({
     comment_id: string;
     message: string;
     created_at: string;
+    is_answer: boolean;
   };
   user: CommentType["user"] | null;
   id: string;
@@ -57,7 +58,6 @@ const CommentCard = ({
       currentPreference == true &&
       (e.target as HTMLButtonElement).id == "like"
     ) {
-      console.log("true, like");
       cpBuffer = null;
       setCurrentPreference(null);
       setUtilCounts([utilCounts[0] - 1, utilCounts[1], utilCounts[2]]);
@@ -66,7 +66,6 @@ const CommentCard = ({
       currentPreference == false &&
       (e.target as HTMLButtonElement).id == "dislike"
     ) {
-      console.log("false, dislike");
       cpBuffer = null;
       setCurrentPreference(null);
       setUtilCounts([utilCounts[0], utilCounts[1] - 1, utilCounts[2]]);
@@ -75,7 +74,6 @@ const CommentCard = ({
       currentPreference == true &&
       (e.target as HTMLButtonElement).id == "dislike"
     ) {
-      console.log("true, dislike");
       cpBuffer = false;
       setCurrentPreference(false);
       setUtilCounts([utilCounts[0] - 1, utilCounts[1] + 1, utilCounts[2]]);
@@ -84,7 +82,6 @@ const CommentCard = ({
       currentPreference == false &&
       (e.target as HTMLButtonElement).id == "like"
     ) {
-      console.log("false, like");
       cpBuffer = true;
       setCurrentPreference(true);
       setUtilCounts([utilCounts[0] + 1, utilCounts[1] - 1, utilCounts[2]]);
@@ -93,7 +90,6 @@ const CommentCard = ({
       currentPreference == null &&
       (e.target as HTMLButtonElement).id == "like"
     ) {
-      console.log("null, like");
       cpBuffer = true;
       setCurrentPreference(true);
       setUtilCounts([utilCounts[0] + 1, utilCounts[1], utilCounts[2]]);
@@ -102,7 +98,6 @@ const CommentCard = ({
       currentPreference == null &&
       (e.target as HTMLButtonElement).id == "dislike"
     ) {
-      console.log("null, dislike");
       cpBuffer = false;
       setCurrentPreference(false);
       setUtilCounts([utilCounts[0], utilCounts[1] + 1, utilCounts[2]]);
@@ -163,35 +158,36 @@ const CommentCard = ({
             )}
           </div>
         </div>
-
-        <div className="flex flex-col">
-          <button
-            className="btn btn-sm btn-ghost flex gap-4 items-center"
-            id="like"
-            onClick={checkPreference}
-          >
-            <HiOutlineChevronUp
-              className={
-                `text-xl pointer-events-none` +
-                (currentPreference == true ? ` text-green-500` : "")
-              }
-            />
-            {utilCounts[0]}
-          </button>
-          <button
-            className="btn btn-sm btn-ghost flex gap-4 items-center"
-            id="dislike"
-            onClick={checkPreference}
-          >
-            <HiOutlineChevronDown
-              className={
-                `text-xl pointer-events-none` +
-                (currentPreference == false ? ` text-red-500` : "")
-              }
-            />
-            {utilCounts[1]}
-          </button>
-        </div>
+        {comment.is_answer == true ? null : (
+          <div className="flex flex-col">
+            <button
+              className="btn btn-sm btn-ghost flex gap-4 items-center"
+              id="like"
+              onClick={checkPreference}
+            >
+              <HiOutlineChevronUp
+                className={
+                  `text-xl pointer-events-none` +
+                  (currentPreference == true ? ` text-green-500` : "")
+                }
+              />
+              {utilCounts[0]}
+            </button>
+            <button
+              className="btn btn-sm btn-ghost flex gap-4 items-center"
+              id="dislike"
+              onClick={checkPreference}
+            >
+              <HiOutlineChevronDown
+                className={
+                  `text-xl pointer-events-none` +
+                  (currentPreference == false ? ` text-red-500` : "")
+                }
+              />
+              {utilCounts[1]}
+            </button>
+          </div>
+        )}
       </div>
       <div className="space-y-4">
         <p className="text-sm">{comment.message}</p>

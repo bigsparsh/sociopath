@@ -49,6 +49,7 @@ model Post {
   post_image String
   user_id String
   comment_enabled Boolean @default(true)
+  is_question Boolean @default(false)
   user User @relation(fields: [user_id], references: [user_id])
   preference PostPreference[]
   comment Comment[]
@@ -61,6 +62,7 @@ model Comment {
   created_at DateTime @default(now())
   post_id String
   user_id String
+  is_answer Boolean @default(false)
   post Post @relation(fields: [post_id], references: [post_id])
   preference CommentPreferences[]
   user User @relation(fields: [user_id], references: [user_id])

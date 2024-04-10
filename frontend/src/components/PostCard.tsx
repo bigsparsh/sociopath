@@ -1,8 +1,10 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   HiChatBubbleLeft,
+  HiKey,
   HiMiniHandThumbDown,
   HiMiniHandThumbUp,
+  HiMiniQuestionMarkCircle,
 } from "react-icons/hi2";
 import { removePostPreference, updatePostPreference } from "../utils";
 import CommentSection from "../pages/CommentSection";
@@ -16,6 +18,8 @@ interface post_card {
   tags: PostType["tag"];
   post: {
     post_id: string;
+    is_answered: boolean;
+    is_question: boolean;
     description: string;
     created_at: string;
     post_image: string;
@@ -77,6 +81,7 @@ const PostCard = ({
     right_sec(
       <CommentSection
         post_id={post.post_id}
+        is_question={post.is_question}
         close={right_sec}
         feed_render={feed_render}
         current_user={current_user}
@@ -207,6 +212,14 @@ const PostCard = ({
             )}
           </div>
         </div>
+        {post.is_question ? (
+          <HiMiniQuestionMarkCircle
+            className={
+              `text-2xl ` +
+              (post.is_answered == true ? "text-success" : "text-error")
+            }
+          />
+        ) : null}
       </div>
 
       {post.post_image == "NO IMAGE" ? null : (
@@ -261,7 +274,14 @@ const PostCard = ({
           />{" "}
           {utilCounts[1]}
         </button>
-        {post.comment_enabled == true ? (
+        {post.is_question == true ? (
+          <button
+            className="btn btn-sm btn-ghost flex gap-3 items-center"
+            onClick={showComments}
+          >
+            <HiKey className={"text-xl"} /> {commentCount}
+          </button>
+        ) : post.comment_enabled == true ? (
           <button
             className="btn btn-ghost btn-sm flex gap-3 items-center"
             onClick={showComments}

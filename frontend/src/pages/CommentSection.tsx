@@ -6,12 +6,14 @@ import CommentType from "../types/CommentType";
 
 const CommentSection = ({
   post_id,
+  is_question,
   close,
   feed_render,
   current_user,
   comment_count,
 }: {
   post_id: string;
+  is_question: boolean;
   feed_render: Dispatch<SetStateAction<boolean | null>> | null;
   close: Dispatch<SetStateAction<JSX.Element | null | undefined>>;
   current_user: CurrentUserType | null;
@@ -75,7 +77,9 @@ const CommentSection = ({
   return (
     <div className="h-screen bg-base-300 rounded-l-xl fixed lg:sticky w-full inset-0 lg:top-0 flex flex-col pb-5 lg:pr-5 gap-10 overflow-y-scroll z-20">
       <div className="flex justify-between items-center px-5 sticky top-0 backdrop-blur-xl py-5 z-20">
-        <h1 className="text-3xl font-semibold ">Comments</h1>
+        <h1 className="text-3xl font-semibold ">
+          {is_question == true ? "Answers" : "Comments"}
+        </h1>
         <button className="btn btn-ghost " onClick={() => close(null)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -95,10 +99,13 @@ const CommentSection = ({
       </div>
       <div className="space-y-9 px-5">
         <div className="space-y-3">
-          <label>Draft your own comment for this post</label>
+          <label>
+            Draft your own {is_question == true ? "answer" : "comment"} for this
+            post
+          </label>
           <textarea
             className="textarea textarea-bordered bg-base-300 w-full"
-            placeholder="Your comment"
+            placeholder={"Your " + (is_question == true ? "answer" : "comment")}
             ref={user_comment}
           ></textarea>
           {loader ? (
@@ -111,7 +118,7 @@ const CommentSection = ({
               className="btn btn-primary btn-sm text-right"
               onClick={upload_comment}
             >
-              Comment
+              {is_question == true ? "Submit Answer" : "Comment"}
             </button>
           )}
         </div>
@@ -122,6 +129,7 @@ const CommentSection = ({
                 <CommentCard
                   comment={{
                     comment_id: ele.comment_id,
+                    is_answer: ele.is_answer,
                     message: ele.message,
                     created_at: String(new Date(ele.created_at)),
                   }}

@@ -10,6 +10,27 @@ export const postRouter = new Hono<{
   };
 }>();
 
+const postReturnContent = {
+  post_id: true,
+  description: true,
+  is_question: true,
+  created_at: true,
+  post_image: true,
+  tag: true,
+  comment_enabled: true,
+  user: {
+    select: {
+      name: true,
+      user_id: true,
+      friend: true,
+      email: true,
+      profile_image: true,
+    },
+  },
+  comment: true,
+  preference: true,
+};
+
 postRouter.use(authMiddleware);
 postRouter.post("/create", async (c) => {
   const prisma = new PrismaClient({
@@ -22,6 +43,7 @@ postRouter.post("/create", async (c) => {
     data: {
       description: body.description,
       post_image: body.post_image,
+      is_question: body.is_question || false,
       user_id: body.user_id,
       comment_enabled: body.comment_enabled,
     },
@@ -97,25 +119,7 @@ postRouter.post("/search", async (c) => {
           where: {
             post_id: ele.post_id,
           },
-          select: {
-            post_id: true,
-            description: true,
-            created_at: true,
-            post_image: true,
-            tag: true,
-            comment_enabled: true,
-            user: {
-              select: {
-                name: true,
-                user_id: true,
-                friend: true,
-                email: true,
-                profile_image: true,
-              },
-            },
-            comment: true,
-            preference: true,
-          },
+          select: postReturnContent,
         });
         return post;
       }),
@@ -141,25 +145,7 @@ postRouter.post("/search", async (c) => {
           in: user_ids,
         },
       },
-      select: {
-        post_id: true,
-        description: true,
-        created_at: true,
-        post_image: true,
-        tag: true,
-        comment_enabled: true,
-        user: {
-          select: {
-            name: true,
-            user_id: true,
-            friend: true,
-            email: true,
-            profile_image: true,
-          },
-        },
-        comment: true,
-        preference: true,
-      },
+      select: postReturnContent,
       skip: intake,
       take: 5,
     });
@@ -186,25 +172,7 @@ postRouter.post("/search", async (c) => {
           in: tag_ids,
         },
       },
-      select: {
-        post_id: true,
-        description: true,
-        created_at: true,
-        post_image: true,
-        tag: true,
-        comment_enabled: true,
-        user: {
-          select: {
-            name: true,
-            user_id: true,
-            friend: true,
-            email: true,
-            profile_image: true,
-          },
-        },
-        comment: true,
-        preference: true,
-      },
+      select: postReturnContent,
       skip: intake,
       take: 5,
     });
@@ -228,25 +196,7 @@ postRouter.post("/search", async (c) => {
           in: user_ids,
         },
       },
-      select: {
-        post_id: true,
-        description: true,
-        created_at: true,
-        post_image: true,
-        tag: true,
-        comment_enabled: true,
-        user: {
-          select: {
-            name: true,
-            user_id: true,
-            friend: true,
-            email: true,
-            profile_image: true,
-          },
-        },
-        comment: true,
-        preference: true,
-      },
+      select: postReturnContent,
       skip: intake,
       take: 5,
     });
@@ -268,25 +218,7 @@ postRouter.get("/get", async (c) => {
       where: {
         post_id: filterId,
       },
-      select: {
-        post_id: true,
-        description: true,
-        created_at: true,
-        post_image: true,
-        tag: true,
-        comment_enabled: true,
-        user: {
-          select: {
-            name: true,
-            user_id: true,
-            friend: true,
-            email: true,
-            profile_image: true,
-          },
-        },
-        comment: true,
-        preference: true,
-      },
+      select: postReturnContent,
     });
     return c.json({
       post: post,
@@ -301,25 +233,7 @@ postRouter.get("/get", async (c) => {
         created_at: "desc",
       },
     ],
-    select: {
-      post_id: true,
-      description: true,
-      created_at: true,
-      post_image: true,
-      tag: true,
-      comment_enabled: true,
-      user: {
-        select: {
-          name: true,
-          user_id: true,
-          friend: true,
-          email: true,
-          profile_image: true,
-        },
-      },
-      comment: true,
-      preference: true,
-    },
+    select: postReturnContent,
   });
   return c.json({
     posts: posts,

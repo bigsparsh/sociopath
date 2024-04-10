@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import {
   HiChatBubbleLeft,
+  HiKey,
   HiMiniHandThumbDown,
   HiMiniHandThumbUp,
+  HiMiniQuestionMarkCircle,
+  HiQuestionMarkCircle,
 } from "react-icons/hi2";
 import CurrentUserType from "../types/CurrentUserType";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { HiOutlineLockClosed } from "react-icons/hi";
 
 const UploadPost = () => {
   const [description, setDescription] = useState<string>("");
@@ -14,6 +18,7 @@ const UploadPost = () => {
   const [postFile, setPostFile] = useState<File>();
   const [enableComment, setEnableComment] = useState<boolean>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [isQuestion, setIsQuestion] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<CurrentUserType>();
   const [tags, setTags] = useState<string[]>([]);
   const navigator = useNavigate();
@@ -59,6 +64,7 @@ const UploadPost = () => {
         import.meta.env.VITE_BACKEND_URL + "/post/create",
         {
           description: description,
+          is_question: isQuestion,
           post_image: image,
           user_id: currentUser?.user_id,
           tag: tags,
@@ -103,6 +109,7 @@ const UploadPost = () => {
                   setDescription(e.target.value);
                 }}
                 placeholder="description"
+                required
               ></textarea>
             </div>
             <div className="form-control">
@@ -141,11 +148,31 @@ const UploadPost = () => {
               <label className="label">
                 <span className="label-text">Enable Comment</span>
               </label>
+              {isQuestion == true ? (
+                <div className="w-full flex justify-start text-xs items-center gap-3">
+                  <input type="checkbox" className="toggle" disabled />
+                </div>
+              ) : (
+                <div className="w-full flex justify-start text-xs items-center gap-3">
+                  <input
+                    type="checkbox"
+                    onChange={() => {
+                      setEnableComment((e) => !e);
+                    }}
+                    className="toggle"
+                  />
+                </div>
+              )}
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Post as a question</span>
+              </label>
               <div className="w-full flex justify-start text-xs items-center gap-3">
                 <input
                   type="checkbox"
                   onChange={() => {
-                    setEnableComment((e) => !e);
+                    setIsQuestion((e) => !e);
                   }}
                   className="toggle"
                 />
@@ -215,6 +242,9 @@ const UploadPost = () => {
                 )}
               </div>
             </div>
+            {isQuestion == true ? (
+              <HiQuestionMarkCircle className="text-2xl" />
+            ) : null}
           </div>
 
           {postImage == "NO IMAGE" ? null : (
@@ -253,7 +283,11 @@ const UploadPost = () => {
               <HiMiniHandThumbDown className={`text-xl pointer-events-none`} />{" "}
               64
             </button>
-            {enableComment ? (
+            {isQuestion == true ? (
+              <button className="btn btn-sm btn-ghost flex gap-3 items-center">
+                <HiKey className="text-xl" /> 34
+              </button>
+            ) : enableComment ? (
               <button className="btn btn-sm btn-ghost flex gap-3 items-center">
                 <HiChatBubbleLeft className="text-xl" /> 34
               </button>

@@ -78,26 +78,36 @@ const Feed = () => {
         <h1 className="text-3xl font-bold block lg:hidden">Your Feed</h1>
         <div className="flex flex-col py-10 gap-5">
           {posts && currentUser ? (
-            posts.map((ele) => (
-              <PostCard
-                post={{
-                  post_id: ele.post_id,
-                  description: ele.description,
-                  comment_enabled: ele.comment_enabled,
-                  post_image: ele.post_image,
-                  created_at: String(new Date(ele.created_at)),
-                  preference: ele.preference,
-                }}
-                tags={ele.tag}
-                right_sec={setRightSection}
-                key={ele.post_id}
-                user={ele.user}
-                comment={ele.comment}
-                current_user={currentUser}
-                feed_render={setFeedRender}
-                overlay={setOverlay}
-              />
-            ))
+            posts.map((ele) => {
+              let answered = false;
+              ele.comment.map((ele) => {
+                if (ele.is_answer == true) {
+                  answered = true;
+                }
+              });
+              return (
+                <PostCard
+                  post={{
+                    is_answered: answered,
+                    is_question: ele.is_question,
+                    post_id: ele.post_id,
+                    description: ele.description,
+                    comment_enabled: ele.comment_enabled,
+                    post_image: ele.post_image,
+                    created_at: String(new Date(ele.created_at)),
+                    preference: ele.preference,
+                  }}
+                  tags={ele.tag}
+                  right_sec={setRightSection}
+                  key={ele.post_id}
+                  user={ele.user}
+                  comment={ele.comment}
+                  current_user={currentUser}
+                  feed_render={setFeedRender}
+                  overlay={setOverlay}
+                />
+              );
+            })
           ) : (
             <div className="h-[500px] w-full grid place-items-center">
               <span className="loading loading-infinity loading-lg"></span>

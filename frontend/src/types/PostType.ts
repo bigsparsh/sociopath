@@ -1,6 +1,7 @@
 interface Post {
   post_id: string;
   description: string;
+  is_question: boolean;
   created_at: string;
   post_image: string;
   comment_enabled: boolean;
@@ -17,6 +18,7 @@ interface Post {
     profile_image: string;
   };
   comment: {
+    is_answer: boolean;
     comment_id: string;
     message: string;
     created_at: string;

@@ -10,6 +10,19 @@ export const commentRouter = new Hono<{
   };
 }>();
 
+const commentReturnContent = {
+  comment_id: true,
+  is_answer: true,
+  message: true,
+  created_at: true,
+  user: true,
+  preference: {
+    select: {
+      preference: true,
+      user: true,
+    },
+  },
+};
 commentRouter.use(authMiddleware);
 commentRouter.post("/create", async (c) => {
   const prisma = new PrismaClient({
@@ -22,20 +35,10 @@ commentRouter.post("/create", async (c) => {
     data: {
       message: body.message,
       post_id: body.post_id,
+      is_answer: body.is_answer || false,
       user_id: body.user_id,
     },
-    select: {
-      comment_id: true,
-      message: true,
-      created_at: true,
-      user: true,
-      preference: {
-        select: {
-          preference: true,
-          user: true,
-        },
-      },
-    },
+    select: commentReturnContent,
   });
 
   return c.json({
@@ -55,18 +58,7 @@ commentRouter.get("/get", async (c) => {
     where: {
       post_id: filterId,
     },
-    select: {
-      comment_id: true,
-      message: true,
-      created_at: true,
-      user: true,
-      preference: {
-        select: {
-          preference: true,
-          user: true,
-        },
-      },
-    },
+    select: commentReturnContent,
   });
   return c.json({
     message: "All comments associated with this post",
