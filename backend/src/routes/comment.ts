@@ -118,6 +118,30 @@ commentRouter.put("/updatePreference", async (c) => {
       user_id: body.user_id,
     },
   });
+  const postPoster = await prisma.post.findFirst({
+    where: {
+      user: {
+        user_id: body.user_id,
+      },
+    },
+    select: {
+      user: {
+        select: {
+          user_id: true,
+        },
+      },
+    },
+  });
+  if (postPoster?.user.user_id == body.user_id) {
+    await prisma.comment.update({
+      where: {
+        comment_id: body.comment_id,
+      },
+      data: {
+        is_answer: true,
+      },
+    });
+  }
   if (!exists) {
     await prisma.commentPreferences.create({
       data: {

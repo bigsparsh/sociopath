@@ -126,7 +126,7 @@ const CommentCard = ({
 
   return (
     <div className="flex flex-col gap-5 rounded-xl bg-base-300 p-4">
-      <div className="border-b pb-3 border-gray-700 flex justify-between">
+      <div className="flex items-center justify-between">
         <div className="profile flex gap-3  items-center">
           {user?.profile_image == "NO IMAGE" ? (
             <div className="avatar placeholder">
@@ -158,36 +158,40 @@ const CommentCard = ({
             )}
           </div>
         </div>
-        {comment.is_answer == true ? null : (
-          <div className="flex flex-col">
-            <button
-              className="btn btn-sm btn-ghost flex gap-4 items-center"
-              id="like"
-              onClick={checkPreference}
-            >
-              <HiOutlineChevronUp
-                className={
-                  `text-xl pointer-events-none` +
-                  (currentPreference == true ? ` text-green-500` : "")
-                }
-              />
-              {utilCounts[0]}
-            </button>
-            <button
-              className="btn btn-sm btn-ghost flex gap-4 items-center"
-              id="dislike"
-              onClick={checkPreference}
-            >
-              <HiOutlineChevronDown
-                className={
-                  `text-xl pointer-events-none` +
-                  (currentPreference == false ? ` text-red-500` : "")
-                }
-              />
-              {utilCounts[1]}
-            </button>
-          </div>
-        )}
+
+        <div className="flex flex-col">
+          <button
+            className="btn btn-sm btn-ghost flex gap-4 items-center"
+            id="like"
+            onClick={checkPreference}
+          >
+            <HiOutlineChevronUp
+              className={
+                `text-xl pointer-events-none` +
+                (currentPreference == true ? ` text-green-500` : "")
+              }
+            />
+            {utilCounts[0]}
+          </button>
+          <button
+            className="btn btn-sm btn-ghost flex gap-4 items-center"
+            id="dislike"
+            onClick={checkPreference}
+          >
+            <HiOutlineChevronDown
+              className={
+                `text-xl pointer-events-none` +
+                (currentPreference == false ? ` text-red-500` : "")
+              }
+            />
+            {utilCounts[1]}
+          </button>
+        </div>
+      </div>
+      <div className="divider m-0">
+        {comment.is_answer == true ? (
+          <div className="badge badge-accent">Verified Answer</div>
+        ) : null}
       </div>
       <div className="space-y-4">
         <p className="text-sm">{comment.message}</p>

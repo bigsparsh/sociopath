@@ -65,12 +65,9 @@ const Feed = () => {
   return (
     <div className="flex overflow-x-clip">
       {overlay ? <ImagePopup image={overlay} overlay={setOverlay} /> : null}
-      <div className="lg:flex fixed text-transparent lg:inset-y-10 lg:inset-x-5 hidden w-fit h-fit flex-col justify-center items-center text-7xl lg:text-9xl font-black tracking-wide ">
+      <div className="lg:flex fixed text-transparent lg:inset-y-10 lg:start-[20%] hidden w-fit h-fit flex-col justify-center items-center text-7xl lg:text-9xl font-black tracking-wide ">
         <h1 className="bg-gradient-to-r from-primary/50 via-primary to-primary/50 bg-clip-text">
-          YOUR
-        </h1>
-        <h1 className="bg-gradient-to-l from-primary/50 via-primary to-primary/50 bg-clip-text">
-          FEED
+          YOUR FEED
         </h1>
       </div>
 
