@@ -80,22 +80,30 @@ const FeedSearch = () => {
         )}
         {currentUser &&
           posts?.map((ele) => {
+            let answered = false;
+            ele.comment.map((ele) => {
+              if (ele.is_answer == true) {
+                answered = true;
+              }
+            });
             return (
               <PostCard
-                key={ele.post_id}
-                current_user={currentUser}
-                user={ele.user}
-                tags={ele.tag}
                 post={{
+                  is_answered: answered,
+                  is_question: ele.is_question,
                   post_id: ele.post_id,
-                  created_at: ele.created_at,
-                  post_image: ele.post_image,
-                  comment_enabled: ele.comment_enabled,
                   description: ele.description,
+                  comment_enabled: ele.comment_enabled,
+                  post_image: ele.post_image,
+                  created_at: String(new Date(ele.created_at)),
                   preference: ele.preference,
                 }}
+                tags={ele.tag}
                 right_sec={null}
+                key={ele.post_id}
+                user={ele.user}
                 comment={ele.comment}
+                current_user={currentUser}
                 feed_render={null}
                 overlay={null}
               />

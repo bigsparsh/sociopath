@@ -123,6 +123,7 @@ const FullPostPopup = ({
                 return (
                   <CommentCard
                     comment={{
+                      is_answer: ele.is_answer,
                       comment_id: ele.comment_id,
                       message: ele.message,
                       created_at: String(new Date(ele.created_at)),

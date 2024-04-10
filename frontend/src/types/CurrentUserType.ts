@@ -17,6 +17,7 @@ interface User {
 
 interface Comment {
   comment_id: string;
+  is_answer: string;
   message: string;
   created_at: string;
   post_id: string;
@@ -36,6 +37,7 @@ interface Post {
   description: string;
   post_image: string;
   user_id: string;
+  is_question: string;
 }
 
 interface PostPreference {
