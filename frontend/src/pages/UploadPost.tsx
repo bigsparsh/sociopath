@@ -4,13 +4,11 @@ import {
   HiKey,
   HiMiniHandThumbDown,
   HiMiniHandThumbUp,
-  HiMiniQuestionMarkCircle,
   HiQuestionMarkCircle,
 } from "react-icons/hi2";
 import CurrentUserType from "../types/CurrentUserType";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { HiOutlineLockClosed } from "react-icons/hi";
 
 const UploadPost = () => {
   const [description, setDescription] = useState<string>("");
