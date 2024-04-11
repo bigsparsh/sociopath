@@ -135,6 +135,7 @@ const FullPostPopup = ({
                     current_user={null}
                     comment_render={null}
                     key={ele.comment_id}
+                    is_question={post?.is_question || false}
                   />
                 );
               })
