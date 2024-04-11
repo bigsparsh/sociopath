@@ -85,9 +85,6 @@ const UploadPost = () => {
         <h1 className="bg-gradient-to-r from-primary/50 via-primary to-primary/50 bg-clip-text">
           UPLOAD
         </h1>
-        <h1 className="bg-gradient-to-l from-primary/50 via-primary to-primary/50 bg-clip-text">
-          POST
-        </h1>
       </div>
 
       <div className="lg:basis-1/3 w-full">

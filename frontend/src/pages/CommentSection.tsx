@@ -38,7 +38,6 @@ const CommentSection = ({
         if (res.data.error) return;
         setComment(res.data.comments);
         setLoader(false);
-        if (feed_render) feed_render((e) => !e);
       });
   }, [post_id]);
 
@@ -64,7 +63,6 @@ const CommentSection = ({
       .then((res) => {
         const currentComments = comment;
         currentComments?.push(res.data.comment);
-        console.log(currentComments);
         setComment(currentComments);
         comment_count((e) => e + 1);
         setLoader(false);
@@ -80,7 +78,13 @@ const CommentSection = ({
         <h1 className="text-3xl font-semibold ">
           {is_question == true ? "Answers" : "Comments"}
         </h1>
-        <button className="btn btn-ghost " onClick={() => close(null)}>
+        <button
+          className="btn btn-ghost "
+          onClick={() => {
+            feed_render && feed_render((e) => !e);
+            close(null);
+          }}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
@@ -123,10 +127,11 @@ const CommentSection = ({
           )}
         </div>
         <div className="h-full w-full flex flex-col gap-3">
-          {loader == false && comment && current_user ? (
+          {comment && current_user ? (
             comment.map((ele) => {
               return (
                 <CommentCard
+                  is_question={is_question}
                   comment={{
                     comment_id: ele.comment_id,
                     is_answer: ele.is_answer,

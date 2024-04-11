@@ -11,6 +11,7 @@ const CommentCard = ({
   id,
   current_user,
   comment_render,
+  is_question,
 }: {
   comment: {
     comment_id: string;
@@ -24,6 +25,7 @@ const CommentCard = ({
   preference: CommentType["preference"] | null;
   current_user: CurrentUserType | null;
   comment_render: Dispatch<SetStateAction<boolean>> | null;
+  is_question: boolean;
 }) => {
   const [utilCounts, setUtilCounts] = useState<number[]>([0, 0]);
   const [currentPreference, setCurrentPreference] = useState<boolean | null>(
@@ -69,7 +71,7 @@ const CommentCard = ({
     ) {
       cpBuffer = null;
       setCurrentPreference(null);
-      isPostUser == true && setIsAnswer(false);
+      is_question == true && isPostUser == true && setIsAnswer(false);
       setUtilCounts([utilCounts[0] - 1, utilCounts[1], utilCounts[2]]);
     }
     if (
@@ -78,7 +80,7 @@ const CommentCard = ({
     ) {
       cpBuffer = null;
       setCurrentPreference(null);
-      isPostUser == true && setIsAnswer(false);
+      is_question == true && isPostUser == true && setIsAnswer(false);
       setUtilCounts([utilCounts[0], utilCounts[1] - 1, utilCounts[2]]);
     }
     if (
@@ -87,7 +89,7 @@ const CommentCard = ({
     ) {
       cpBuffer = false;
       setCurrentPreference(false);
-      isPostUser == true && setIsAnswer(false);
+      is_question == true && isPostUser == true && setIsAnswer(false);
       setUtilCounts([utilCounts[0] - 1, utilCounts[1] + 1, utilCounts[2]]);
     }
     if (
@@ -96,7 +98,7 @@ const CommentCard = ({
     ) {
       cpBuffer = true;
       setCurrentPreference(true);
-      isPostUser == true && setIsAnswer(true);
+      is_question == true && isPostUser == true && setIsAnswer(true);
       setUtilCounts([utilCounts[0] + 1, utilCounts[1] - 1, utilCounts[2]]);
     }
     if (
@@ -105,7 +107,7 @@ const CommentCard = ({
     ) {
       cpBuffer = true;
       setCurrentPreference(true);
-      isPostUser == true && setIsAnswer(true);
+      is_question == true && isPostUser == true && setIsAnswer(true);
       setUtilCounts([utilCounts[0] + 1, utilCounts[1], utilCounts[2]]);
     }
     if (
@@ -114,7 +116,7 @@ const CommentCard = ({
     ) {
       cpBuffer = false;
       setCurrentPreference(false);
-      isPostUser == true && setIsAnswer(false);
+      is_question == true && isPostUser == true && setIsAnswer(false);
       setUtilCounts([utilCounts[0], utilCounts[1] + 1, utilCounts[2]]);
     }
     if (debouncer) {
@@ -168,13 +170,13 @@ const CommentCard = ({
             ) : (
               <>
                 <h1 className="text-base">{user.name}</h1>
-                <p className="text-xs">{user.email}</p>
+                <p className="text-xs break-all">{user.email}</p>
               </>
             )}
           </div>
         </div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col w-20">
           <button
             className="btn btn-sm btn-ghost flex gap-4 items-center"
             id="like"

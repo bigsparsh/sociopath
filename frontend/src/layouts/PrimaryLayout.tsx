@@ -49,7 +49,7 @@ const PrimaryLayout = () => {
               <li>
                 <a onClick={() => navigator("/user/feed/create")}>
                   <HiArrowUpTray className="text-xl" />
-                  Upload Post
+                  Upload
                 </a>
               </li>
               <li>

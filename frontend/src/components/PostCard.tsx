@@ -78,6 +78,7 @@ const PostCard = ({
 
   const showComments = () => {
     if (!right_sec) return;
+    feed_render && feed_render((e) => !e);
     right_sec(
       <CommentSection
         post_id={post.post_id}

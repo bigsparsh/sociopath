@@ -39,28 +39,75 @@ const Feed = () => {
           setCurrentUser(res.data.you);
         });
 
-      axios
-        .get(
-          import.meta.env.VITE_BACKEND_URL + "/post/get?intake=" + pageIntake,
-          {
-            headers: {
-              Authorization: localStorage.getItem("auth-token"),
+      if (pageIntake == 0) {
+        loadMore();
+      } else {
+        axios
+          .get(
+            import.meta.env.VITE_BACKEND_URL +
+            "/post/get?intake=0&count=" +
+            pageIntake,
+            {
+              headers: {
+                Authorization: localStorage.getItem("auth-token"),
+              },
             },
-          },
-        )
-        .then((res) => {
-          if (res.data.error) return;
-          if (pageIntake == 0) {
-            setLoading(false);
+          )
+          .then((res) => {
+            if (res.data.error) return;
+            if (pageIntake == 0) {
+              setLoading(false);
+              setPosts(res.data.posts);
+              return;
+            }
+            // const newPosts = [...(posts ?? []), ...res.data.posts];
             setPosts(res.data.posts);
-            return;
-          }
-          const newPosts = [...(posts ?? []), ...res.data.posts];
-          setPosts(newPosts);
-          setLoading(false);
-        });
+            setLoading(false);
+          });
+      }
     }
-  }, [n, pageIntake, feedRender]);
+  }, [n, feedRender]);
+
+  const loadMore = () => {
+    setLoading(true);
+    setPageIntake((e) => e + 5);
+    axios
+      .get(
+        import.meta.env.VITE_BACKEND_URL +
+        "/user/me?jwt=" +
+        localStorage.getItem("auth-token"),
+        {
+          headers: {
+            Authorization: localStorage.getItem("auth-token"),
+          },
+        },
+      )
+      .then((res) => {
+        if (res.data.error) return;
+        setCurrentUser(res.data.you);
+      });
+
+    axios
+      .get(
+        import.meta.env.VITE_BACKEND_URL + "/post/get?intake=" + pageIntake,
+        {
+          headers: {
+            Authorization: localStorage.getItem("auth-token"),
+          },
+        },
+      )
+      .then((res) => {
+        if (res.data.error) return;
+        if (pageIntake == 0) {
+          setLoading(false);
+          setPosts(res.data.posts);
+          return;
+        }
+        const newPosts = [...(posts ?? []), ...res.data.posts];
+        setPosts(newPosts);
+        setLoading(false);
+      });
+  };
 
   return (
     <div className="flex overflow-x-clip">
@@ -112,10 +159,7 @@ const Feed = () => {
           )}
         </div>
         {!loading ? (
-          <button
-            className="btn btn-info"
-            onClick={() => setPageIntake((e) => e + 5)}
-          >
+          <button className="btn btn-info" onClick={loadMore}>
             Load More
           </button>
         ) : (

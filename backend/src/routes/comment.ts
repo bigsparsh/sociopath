@@ -119,10 +119,13 @@ commentRouter.put("/updatePreference", async (c) => {
       user_id: body.user_id,
     },
   });
+
   const postPoster = await prisma.post.findFirst({
     where: {
-      user: {
-        user_id: body.user_id,
+      comment: {
+        some: {
+          comment_id: body.comment_id,
+        },
       },
     },
     select: {
@@ -131,9 +134,15 @@ commentRouter.put("/updatePreference", async (c) => {
           user_id: true,
         },
       },
+      is_question: true,
     },
   });
-  if (postPoster?.user.user_id == body.user_id && body.preference == true) {
+  console.log(postPoster);
+  if (
+    postPoster?.user.user_id == body.user_id &&
+    body.preference == true &&
+    postPoster?.is_question == true
+  ) {
     await prisma.comment.update({
       where: {
         comment_id: body.comment_id,

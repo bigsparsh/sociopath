@@ -57,28 +57,27 @@ const UserProfile = () => {
             if (res.data.error) return;
             bfr = res.data.user;
             setCurrentUser(res.data.user);
-          });
-        axios
-          .get(
-            import.meta.env.VITE_BACKEND_URL +
-            "/user/me?jwt=" +
-            localStorage.getItem("auth-token"),
-            {
-              headers: {
-                Authorization: localStorage.getItem("auth-token"),
-              },
-            },
-          )
-          .then((res) => {
-            if (res.data.error) return;
-            const user: CurrentUserType = res.data.you;
-            // setLoggedUser(user);
-            user.friend.map((ele) => {
-              if (ele.user2_id === bfr.user_id) {
-                setIsFriend(true);
-              }
-            });
-            setLoading(false);
+            axios
+              .get(
+                import.meta.env.VITE_BACKEND_URL +
+                "/user/me?jwt=" +
+                localStorage.getItem("auth-token"),
+                {
+                  headers: {
+                    Authorization: localStorage.getItem("auth-token"),
+                  },
+                },
+              )
+              .then((res) => {
+                if (res.data.error) return;
+                const user: CurrentUserType = res.data.you;
+                user.friend.map((ele) => {
+                  if (ele.user2_id === bfr.user_id) {
+                    setIsFriend(true);
+                  }
+                });
+                setLoading(false);
+              });
           });
       }
     } else {
