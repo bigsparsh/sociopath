@@ -29,7 +29,7 @@ const App = () => {
           <Route path="feed">
             <Route index element={<Feed />} />
             <Route path="create" element={<UploadPost />} />
-            <Route path="search" element={<FeedSearch />} />
+            <Route path="search/:type" element={<FeedSearch />} />
           </Route>
         </Route>
       </Routes>

@@ -4,13 +4,24 @@ import PostType from "../types/PostType";
 import axios from "axios";
 import CurrentUserType from "../types/CurrentUserType";
 import FilterSettings from "../components/FilterSettings";
+import { useParams, useSearchParams } from "react-router-dom";
 
 const FeedSearch = () => {
   const [posts, setPosts] = useState<PostType[]>();
   const [currentUser, setCurrentUser] = useState<CurrentUserType>();
   const [intake, setIntake] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
+  const { type } = useParams();
+  const [options, setOptions] = useState<{
+    type: string | undefined;
+    param: URLSearchParams;
+  } | null>(null);
+  const [searchParam, _] = useSearchParams();
   useEffect(() => {
+    setOptions({
+      type: type,
+      param: searchParam,
+    });
     setLoading(true);
     axios
       .get(
@@ -53,14 +64,17 @@ const FeedSearch = () => {
                 Select a filter option and fill out accurate detail
               </h1>
               <div className="flex flex-col gap-5 justify-center items-center">
-                <FilterSettings
-                  set_posts={setPosts}
-                  current_user={currentUser}
-                  set_intake={setIntake}
-                  intake={intake}
-                  posts={posts}
-                  loading={setLoading}
-                />
+                {options != null && (
+                  <FilterSettings
+                    set_posts={setPosts}
+                    options={options}
+                    current_user={currentUser}
+                    set_intake={setIntake}
+                    intake={intake}
+                    posts={posts}
+                    loading={setLoading}
+                  />
+                )}
               </div>
               <div className="modal-action">
                 <form method="dialog">
@@ -124,14 +138,17 @@ const FeedSearch = () => {
       </div>
       <div className="lg:flex hidden flex-col gap-5 basis-1/3 z-30">
         <h1 className="mb-5">Search by</h1>
-        <FilterSettings
-          set_posts={setPosts}
-          current_user={currentUser}
-          set_intake={setIntake}
-          intake={intake}
-          posts={posts}
-          loading={setLoading}
-        />
+        {options != null && (
+          <FilterSettings
+            set_posts={setPosts}
+            options={options}
+            current_user={currentUser}
+            set_intake={setIntake}
+            intake={intake}
+            posts={posts}
+            loading={setLoading}
+          />
+        )}
       </div>
     </div>
   );

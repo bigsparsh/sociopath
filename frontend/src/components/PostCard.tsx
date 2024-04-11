@@ -206,8 +206,8 @@ const PostCard = ({
               </>
             ) : (
               <>
-                <h1 className="text-xl">{user.name}</h1>
-                <p className="text-sm">{user.email}</p>
+                <h1 className="text-lg lg:text-xl">{user.name}</h1>
+                <p className="text-xs lg:text-sm">{user.email}</p>
               </>
             )}
           </div>
@@ -240,7 +240,17 @@ const PostCard = ({
       {tags.length != 0 ? (
         <div className="flex gap-3 bg-base-300 overflow-x-auto pt-5 pb-3 px-5">
           {tags.map((ele) => (
-            <div className="badge badge-neutral text-nowrap" key={ele.tag_id}>
+            <div
+              className="badge badge-neutral text-nowrap cursor-pointer"
+              key={ele.tag_id}
+              onClick={(e) => {
+                right_sec &&
+                  navigator(
+                    "/user/feed/search/Tags?param=" +
+                    (e.target as HTMLDivElement).innerText,
+                  );
+              }}
+            >
               {" "}
               {ele.name}{" "}
             </div>

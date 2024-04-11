@@ -10,6 +10,7 @@ const FilterSettings = ({
   intake,
   posts,
   loading,
+  options,
 }: {
   set_posts: Dispatch<SetStateAction<PostType[] | undefined>>;
   current_user: CurrentUserType | undefined;
@@ -17,10 +18,23 @@ const FilterSettings = ({
   intake: number;
   posts: PostType[] | undefined;
   loading: Dispatch<SetStateAction<boolean>>;
+  options: null | {
+    type: string | undefined;
+    param: URLSearchParams;
+  };
 }) => {
   const [filterMode, setFilterMode] = useState<string>("Normal");
   const [link, setLink] = useState<string>();
   const [body, setBody] = useState<object>();
+  useEffect(() => {
+    if (options?.type != "normal") {
+      setFilterMode(options?.type || "Normal");
+      setLink("/post/search?searchParam=Tags&intake=");
+      setBody({
+        tags: [options?.param.get("param")],
+      });
+    }
+  }, []);
   useEffect(() => {
     if (link && body) {
       loading(true);
@@ -93,10 +107,11 @@ const FilterSettings = ({
           }}
         />
         <input
-          className="join-item btn"
+          className="join-item btn checked"
           type="radio"
           name="options"
           aria-label="Tags"
+          id="tags"
           onChange={() => {
             setFilterMode("Tags");
             setLink("/post/search?searchParam=Tags&intake=");
@@ -131,6 +146,7 @@ const FilterSettings = ({
             type="text"
             onChange={changeTags}
             placeholder="Specify tags seperated by commas"
+            defaultValue={options?.param.get("param") || ""}
             className="input input-bordered w-full max-w-xs"
           />
         ) : filterMode == "Appreciation" ? (
@@ -140,7 +156,6 @@ const FilterSettings = ({
               type="checkbox"
               className="toggle"
               onChange={(e) => {
-                console.log(e.target.checked);
                 e.target.checked
                   ? setBody({ appreciationType: false })
                   : setBody({ appreciationType: true });
