@@ -73,7 +73,7 @@ const PrimaryLayout = () => {
               <li>
                 <a
                   onClick={() => {
-                    navigator("/user/feed/search");
+                    navigator("/user/feed/search/normal");
                   }}
                 >
                   <HiMiniMagnifyingGlass className="text-xl" />
