@@ -12,6 +12,7 @@ export const commentRouter = new Hono<{
 
 const commentReturnContent = {
   comment_id: true,
+  post_id: true,
   is_answer: true,
   message: true,
   created_at: true,
@@ -132,7 +133,7 @@ commentRouter.put("/updatePreference", async (c) => {
       },
     },
   });
-  if (postPoster?.user.user_id == body.user_id) {
+  if (postPoster?.user.user_id == body.user_id && body.preference == true) {
     await prisma.comment.update({
       where: {
         comment_id: body.comment_id,
@@ -175,6 +176,30 @@ commentRouter.delete("/removePreference", async (c) => {
   }).$extends(withAccelerate());
 
   const body = await c.req.json();
+  const postPoster = await prisma.post.findFirst({
+    where: {
+      user: {
+        user_id: body.user_id,
+      },
+    },
+    select: {
+      user: {
+        select: {
+          user_id: true,
+        },
+      },
+    },
+  });
+  if (postPoster?.user.user_id == body.user_id) {
+    await prisma.comment.update({
+      where: {
+        comment_id: body.comment_id,
+      },
+      data: {
+        is_answer: false,
+      },
+    });
+  }
   await prisma.commentPreferences.deleteMany({
     where: {
       comment_id: body.comment_id,

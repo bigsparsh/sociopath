@@ -132,6 +132,7 @@ const CommentSection = ({
                     is_answer: ele.is_answer,
                     message: ele.message,
                     created_at: String(new Date(ele.created_at)),
+                    post_id: ele.post_id,
                   }}
                   preference={ele.preference}
                   user={ele.user}

@@ -73,7 +73,7 @@ export const removeCommentPreference = async (
     {
       data: {
         user_id: user_id,
-        post_id: comment_id,
+        comment_id: comment_id,
       },
       headers: {
         Authorization: localStorage.getItem("auth-token"),

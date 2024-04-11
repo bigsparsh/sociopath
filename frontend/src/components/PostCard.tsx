@@ -240,7 +240,7 @@ const PostCard = ({
       {tags.length != 0 ? (
         <div className="flex gap-3 bg-base-300 overflow-x-auto pt-5 pb-3 px-5">
           {tags.map((ele) => (
-            <div className="badge badge-neutral" key={ele.tag_id}>
+            <div className="badge badge-neutral text-nowrap" key={ele.tag_id}>
               {" "}
               {ele.name}{" "}
             </div>

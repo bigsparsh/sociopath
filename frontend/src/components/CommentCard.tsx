@@ -16,6 +16,7 @@ const CommentCard = ({
     comment_id: string;
     message: string;
     created_at: string;
+    post_id: string;
     is_answer: boolean;
   };
   user: CommentType["user"] | null;
@@ -28,11 +29,19 @@ const CommentCard = ({
   const [currentPreference, setCurrentPreference] = useState<boolean | null>(
     null,
   );
+  const [isPostUser, setIsPostUser] = useState<boolean>();
+  const [isAnswer, setIsAnswer] = useState<boolean>();
   const [debouncer, setDebouncer] = useState<ReturnType<
     typeof setTimeout
   > | null>(null);
 
   useEffect(() => {
+    current_user?.post.map((ele) => {
+      if (ele.post_id == comment.post_id) {
+        setIsPostUser(true);
+      }
+    });
+    setIsAnswer(comment.is_answer);
     let likes = 0,
       dislikes = 0;
     preference?.map((ele) => {
@@ -40,7 +49,7 @@ const CommentCard = ({
         likes++;
       }
     });
-    dislikes = preference?.length || 0 - likes;
+    dislikes = (preference?.length || 0) - likes;
     setUtilCounts([likes, dislikes]);
 
     if (current_user != null) {
@@ -60,6 +69,7 @@ const CommentCard = ({
     ) {
       cpBuffer = null;
       setCurrentPreference(null);
+      isPostUser == true && setIsAnswer(false);
       setUtilCounts([utilCounts[0] - 1, utilCounts[1], utilCounts[2]]);
     }
     if (
@@ -68,6 +78,7 @@ const CommentCard = ({
     ) {
       cpBuffer = null;
       setCurrentPreference(null);
+      isPostUser == true && setIsAnswer(false);
       setUtilCounts([utilCounts[0], utilCounts[1] - 1, utilCounts[2]]);
     }
     if (
@@ -76,6 +87,7 @@ const CommentCard = ({
     ) {
       cpBuffer = false;
       setCurrentPreference(false);
+      isPostUser == true && setIsAnswer(false);
       setUtilCounts([utilCounts[0] - 1, utilCounts[1] + 1, utilCounts[2]]);
     }
     if (
@@ -84,6 +96,7 @@ const CommentCard = ({
     ) {
       cpBuffer = true;
       setCurrentPreference(true);
+      isPostUser == true && setIsAnswer(true);
       setUtilCounts([utilCounts[0] + 1, utilCounts[1] - 1, utilCounts[2]]);
     }
     if (
@@ -92,6 +105,7 @@ const CommentCard = ({
     ) {
       cpBuffer = true;
       setCurrentPreference(true);
+      isPostUser == true && setIsAnswer(true);
       setUtilCounts([utilCounts[0] + 1, utilCounts[1], utilCounts[2]]);
     }
     if (
@@ -100,6 +114,7 @@ const CommentCard = ({
     ) {
       cpBuffer = false;
       setCurrentPreference(false);
+      isPostUser == true && setIsAnswer(false);
       setUtilCounts([utilCounts[0], utilCounts[1] + 1, utilCounts[2]]);
     }
     if (debouncer) {
@@ -189,7 +204,7 @@ const CommentCard = ({
         </div>
       </div>
       <div className="divider m-0">
-        {comment.is_answer == true ? (
+        {isAnswer == true ? (
           <div className="badge badge-accent">Verified Answer</div>
         ) : null}
       </div>

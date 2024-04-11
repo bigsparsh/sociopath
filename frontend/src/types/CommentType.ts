@@ -1,6 +1,7 @@
 interface Comment {
   comment_id: string;
   is_answer: boolean;
+  post_id: string;
   message: string;
   created_at: string;
   user: User;
