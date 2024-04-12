@@ -14,18 +14,18 @@ import {
 import CurrentUserType from "../types/CurrentUserType";
 import { useNavigate, useParams } from "react-router-dom";
 import FullPostPopup from "../components/FullPostPopup";
+import FriendType from "../types/FriendType";
 
 const UserProfile = () => {
   const [currentUser, setCurrentUser] = useState<CurrentUserType>();
-  const [isFriend, setIsFriend] = useState<boolean>();
-  // const [loggedUser, setLoggedUser] = useState<CurrentUserType>();
+  const [loggedInUser, setLoggedInUser] = useState<CurrentUserType>();
+  const [isFriend, setIsFriend] = useState<FriendType | null>();
   const [loading, setLoading] = useState<boolean>(true);
   const navigator = useNavigate();
   const [overlay, setOverlay] = useState<string | null>();
   const { id } = useParams();
 
   useEffect(() => {
-    // console.log(loggedUser);
     if (localStorage.getItem("auth-token")) {
       setLoading(true);
       if (id == "self") {
@@ -71,11 +71,25 @@ const UserProfile = () => {
               .then((res) => {
                 if (res.data.error) return;
                 const user: CurrentUserType = res.data.you;
-                user.friend.map((ele) => {
-                  if (ele.user2_id === bfr.user_id) {
-                    setIsFriend(true);
+                let isYourFriend: FriendType | null = null;
+                bfr.friend.forEach((ele) => {
+                  if (ele.user2_id == user.user_id) {
+                    isYourFriend = FriendType.FOLLOWER;
+                    return;
                   }
                 });
+                user.friend.forEach((ele) => {
+                  if (ele.user2_id == bfr.user_id) {
+                    if (ele.mutual == true) {
+                      isYourFriend = FriendType.FRIEND;
+                      return;
+                    }
+                    isYourFriend = FriendType.FOLLOWING;
+                    return;
+                  }
+                });
+                setIsFriend(isYourFriend);
+                setLoggedInUser(user);
                 setLoading(false);
               });
           });
@@ -84,6 +98,51 @@ const UserProfile = () => {
       navigator("/");
     }
   }, [navigator]);
+
+  const makeFriend = async () => {
+    if (isFriend == FriendType.FRIEND || isFriend == FriendType.FOLLOWING) {
+      if (isFriend == FriendType.FRIEND) {
+        setIsFriend(FriendType.FOLLOWER);
+      }
+      if (isFriend == FriendType.FOLLOWING) {
+        setIsFriend(null);
+      }
+      await axios.delete(import.meta.env.VITE_BACKEND_URL + "/friend/delete", {
+        data: {
+          user1_id: loggedInUser?.user_id,
+          user2_id: currentUser?.user_id,
+        },
+        headers: {
+          Authorization: localStorage.getItem("auth-token"),
+        },
+      });
+      return;
+    }
+    if (isFriend == FriendType.FOLLOWER) {
+      setIsFriend(FriendType.FRIEND);
+    }
+    if (isFriend == null) {
+      setIsFriend(FriendType.FOLLOWING);
+    }
+    await axios
+      .post(
+        import.meta.env.VITE_BACKEND_URL + "/friend/create",
+        {
+          user1_id: loggedInUser?.user_id,
+          user2_id: currentUser?.user_id,
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("auth-token"),
+          },
+        },
+      )
+      .then((res) => {
+        if (res.data.error) {
+          return;
+        }
+      });
+  };
 
   return loading ? (
     <div className="grid place-items-center w-full h-screen">
@@ -178,11 +237,24 @@ const UserProfile = () => {
             </div>
           </div>
           <h1 className="text-4xl font-semibold">{currentUser?.name}</h1>
-          {id === "self" ? null : isFriend == true ? (
-            <button className="btn btn-outline btn-primary">Un Follow</button>
-          ) : (
-            <button className="btn btn-primary">Follow</button>
-          )}
+          {loggedInUser?.user_id == currentUser?.user_id ? null : isFriend ==
+            null ? (
+            <button className="btn btn-sm btn-primary" onClick={makeFriend}>
+              Add Friend
+            </button>
+          ) : isFriend == FriendType.FRIEND ? (
+            <button className="btn btn-sm btn-error" onClick={makeFriend}>
+              Unfriend
+            </button>
+          ) : isFriend == FriendType.FOLLOWER ? (
+            <button className="btn btn-sm btn-accent" onClick={makeFriend}>
+              Follow Back
+            </button>
+          ) : isFriend == FriendType.FOLLOWING ? (
+            <button className="btn btn-sm btn-secondary" onClick={makeFriend}>
+              Following
+            </button>
+          ) : null}
           <div className="divider italic">Personal Details</div>
           <div className="flex flex-col w-full px-2 lg:px-5 gap-5">
             <h1 className="lg:text-base text-sm">

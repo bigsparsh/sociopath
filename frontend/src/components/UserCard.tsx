@@ -37,6 +37,34 @@ const UserCard = ({
     setIsFriend(isYourFriend);
   }, []);
   const makeFriend = async () => {
+    if (isFriend == FriendType.FRIEND || isFriend == FriendType.FOLLOWING) {
+      if (isFriend == FriendType.FRIEND) {
+        setIsFriend(FriendType.FOLLOWER);
+        user._count.user2 -= 1;
+      }
+      if (isFriend == FriendType.FOLLOWING) {
+        setIsFriend(null);
+        user._count.user2 -= 1;
+      }
+      await axios.delete(import.meta.env.VITE_BACKEND_URL + "/friend/delete", {
+        data: {
+          user1_id: current_user.user_id,
+          user2_id: user.user_id,
+        },
+        headers: {
+          Authorization: localStorage.getItem("auth-token"),
+        },
+      });
+      return;
+    }
+    if (isFriend == FriendType.FOLLOWER) {
+      setIsFriend(FriendType.FRIEND);
+      user._count.user2 += 1;
+    }
+    if (isFriend == null) {
+      setIsFriend(FriendType.FOLLOWING);
+      user._count.user2 += 1;
+    }
     await axios
       .post(
         import.meta.env.VITE_BACKEND_URL + "/friend/create",
@@ -99,20 +127,20 @@ const UserCard = ({
         >
           See Profile
         </button>
-        {isFriend == null ? (
+        {current_user.user_id == user.user_id ? null : isFriend == null ? (
           <button className="btn btn-sm btn-primary" onClick={makeFriend}>
             Add Friend
           </button>
         ) : isFriend == FriendType.FRIEND ? (
-          <button className="btn btn-sm btn-error  " onClick={makeFriend}>
+          <button className="btn btn-sm btn-error" onClick={makeFriend}>
             Unfriend
           </button>
         ) : isFriend == FriendType.FOLLOWER ? (
-          <button className="btn btn-sm btn-accent  " onClick={makeFriend}>
+          <button className="btn btn-sm btn-accent" onClick={makeFriend}>
             Follow Back
           </button>
         ) : isFriend == FriendType.FOLLOWING ? (
-          <button className="btn btn-sm btn-secondary  " onClick={makeFriend}>
+          <button className="btn btn-sm btn-secondary" onClick={makeFriend}>
             Following
           </button>
         ) : null}
