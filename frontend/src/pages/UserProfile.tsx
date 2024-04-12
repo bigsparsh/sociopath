@@ -237,24 +237,24 @@ const UserProfile = () => {
             </div>
           </div>
           <h1 className="text-4xl font-semibold">{currentUser?.name}</h1>
-          {loggedInUser?.user_id == currentUser?.user_id ? null : isFriend ==
-            null ? (
-            <button className="btn btn-sm btn-primary" onClick={makeFriend}>
-              Add Friend
-            </button>
-          ) : isFriend == FriendType.FRIEND ? (
-            <button className="btn btn-sm btn-error" onClick={makeFriend}>
-              Unfriend
-            </button>
-          ) : isFriend == FriendType.FOLLOWER ? (
-            <button className="btn btn-sm btn-accent" onClick={makeFriend}>
-              Follow Back
-            </button>
-          ) : isFriend == FriendType.FOLLOWING ? (
-            <button className="btn btn-sm btn-secondary" onClick={makeFriend}>
-              Following
-            </button>
-          ) : null}
+          {id == "self" ? null : loggedInUser?.user_id ==
+            currentUser?.user_id ? null : isFriend == null ? (
+              <button className="btn btn-sm btn-primary" onClick={makeFriend}>
+                Add Friend
+              </button>
+            ) : isFriend == FriendType.FRIEND ? (
+              <button className="btn btn-sm btn-error" onClick={makeFriend}>
+                Unfriend
+              </button>
+            ) : isFriend == FriendType.FOLLOWER ? (
+              <button className="btn btn-sm btn-accent" onClick={makeFriend}>
+                Follow Back
+              </button>
+            ) : isFriend == FriendType.FOLLOWING ? (
+              <button className="btn btn-sm btn-secondary" onClick={makeFriend}>
+                Following
+              </button>
+            ) : null}
           <div className="divider italic">Personal Details</div>
           <div className="flex flex-col w-full px-2 lg:px-5 gap-5">
             <h1 className="lg:text-base text-sm">
