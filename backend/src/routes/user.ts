@@ -154,6 +154,7 @@ userRouter.get("/get", async (c) => {
     skip: intake,
     take: 5,
     include: {
+      friend: true,
       _count: {
         select: {
           post: true,

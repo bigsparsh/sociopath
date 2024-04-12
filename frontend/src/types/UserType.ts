@@ -1,5 +1,11 @@
 interface User {
   user_id: string;
+  friend: {
+    user1_id: string;
+    user2_id: string;
+    mutual: boolean;
+    friend_id: string;
+  }[];
   name: string;
   email: string;
   password: string;

@@ -1,23 +1,47 @@
 import axios from "axios";
 import UserType from "../types/UserType";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CurrentUserType from "../types/CurrentUserType";
+import FriendType from "../types/FriendType";
 const UserCard = ({
   user,
-  current_user_id,
+  current_user,
   alertMessage,
 }: {
   user: UserType;
-  current_user_id: string;
+  current_user: CurrentUserType;
   alertMessage: Dispatch<SetStateAction<string | null>>;
 }) => {
   const navigator = useNavigate();
+  const [isFriend, setIsFriend] = useState<FriendType | null>();
+  useEffect(() => {
+    let isYourFriend: FriendType | null = null;
+    user.friend.forEach((ele) => {
+      if (ele.user2_id == current_user.user_id) {
+        isYourFriend = FriendType.FOLLOWER;
+        return;
+      }
+    });
+    current_user.friend.forEach((ele) => {
+      if (ele.user2_id == user.user_id) {
+        if (ele.mutual == true) {
+          isYourFriend = FriendType.FRIEND;
+          return;
+        }
+        isYourFriend = FriendType.FOLLOWING;
+        return;
+      }
+    });
+    console.log(isYourFriend);
+    setIsFriend(isYourFriend);
+  }, []);
   const makeFriend = async () => {
     await axios
       .post(
         import.meta.env.VITE_BACKEND_URL + "/friend/create",
         {
-          user1_id: current_user_id,
+          user1_id: current_user.user_id,
           user2_id: user.user_id,
         },
         {
@@ -75,9 +99,23 @@ const UserCard = ({
         >
           See Profile
         </button>
-        <button className="btn btn-sm btn-primary" onClick={makeFriend}>
-          Make Friend
-        </button>
+        {isFriend == null ? (
+          <button className="btn btn-sm btn-primary" onClick={makeFriend}>
+            Add Friend
+          </button>
+        ) : isFriend == FriendType.FRIEND ? (
+          <button className="btn btn-sm btn-error  " onClick={makeFriend}>
+            Unfriend
+          </button>
+        ) : isFriend == FriendType.FOLLOWER ? (
+          <button className="btn btn-sm btn-accent  " onClick={makeFriend}>
+            Follow Back
+          </button>
+        ) : isFriend == FriendType.FOLLOWING ? (
+          <button className="btn btn-sm btn-secondary  " onClick={makeFriend}>
+            Following
+          </button>
+        ) : null}
       </div>
     </div>
   );

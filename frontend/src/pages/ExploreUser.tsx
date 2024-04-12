@@ -79,7 +79,7 @@ const ExploreUser = () => {
               alertMessage={setAlertMessage}
               user={ele}
               key={ele.user_id}
-              current_user_id={currentUser?.user_id}
+              current_user={currentUser}
             />
           ))}
         {loading ? (
