@@ -3,7 +3,7 @@ import Timer from "./Timer";
 import CurrentUserType from "../types/CurrentUserType";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const NavBar = ({
   extras,
   user,
@@ -86,7 +86,7 @@ const NavBar = ({
                 </summary>
                 <ul className="p-2 bg-base-100 rounded-t-none z-30">
                   <li>
-                    <a>Settings</a>
+                    <Link to="/setting">Setting</Link>
                   </li>
                   <li>
                     <a
