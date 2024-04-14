@@ -9,9 +9,7 @@ import UserProfile from "./pages/UserProfile";
 import UploadPost from "./pages/UploadPost";
 import ExploreUser from "./pages/ExploreUser";
 import FeedSearch from "./pages/FeedSearch";
-import SettingEditProfile from "./pages/SettingEditProfile";
 import SettingLayout from "./layouts/SettingLayout";
-import SettingDelete from "./pages/SettingDelete";
 const App = () => {
   return (
     <BrowserRouter>
