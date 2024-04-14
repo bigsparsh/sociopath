@@ -137,18 +137,24 @@ commentRouter.put("/updatePreference", async (c) => {
       is_question: true,
     },
   });
-  console.log(postPoster);
+  // console.log(
+  //   postPoster?.user.user_id,
+  //   body.user_id,
+  //   postPoster?.user.user_id == body.user_id,
+  //   body.preference == true,
+  //   postPoster?.is_question == true,
+  // );
   if (
     postPoster?.user.user_id == body.user_id &&
-    body.preference == true &&
     postPoster?.is_question == true
   ) {
+    // console.log("check");
     await prisma.comment.update({
       where: {
         comment_id: body.comment_id,
       },
       data: {
-        is_answer: true,
+        is_answer: body.preference,
       },
     });
   }
@@ -187,8 +193,10 @@ commentRouter.delete("/removePreference", async (c) => {
   const body = await c.req.json();
   const postPoster = await prisma.post.findFirst({
     where: {
-      user: {
-        user_id: body.user_id,
+      comment: {
+        some: {
+          comment_id: body.comment_id,
+        },
       },
     },
     select: {
@@ -197,9 +205,13 @@ commentRouter.delete("/removePreference", async (c) => {
           user_id: true,
         },
       },
+      is_question: true,
     },
   });
-  if (postPoster?.user.user_id == body.user_id) {
+  if (
+    postPoster?.user.user_id == body.user_id &&
+    postPoster?.is_question == true
+  ) {
     await prisma.comment.update({
       where: {
         comment_id: body.comment_id,

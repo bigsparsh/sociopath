@@ -28,9 +28,7 @@ const CommentCard = ({
   is_question: boolean;
 }) => {
   const [utilCounts, setUtilCounts] = useState<number[]>([0, 0]);
-  const [currentPreference, setCurrentPreference] = useState<boolean | null>(
-    null,
-  );
+  const [currentPreference, setCurrentPreference] = useState<boolean | null>();
   const [isPostUser, setIsPostUser] = useState<boolean>();
   const [isAnswer, setIsAnswer] = useState<boolean>();
   const [debouncer, setDebouncer] = useState<ReturnType<
@@ -55,23 +53,23 @@ const CommentCard = ({
     setUtilCounts([likes, dislikes]);
 
     if (current_user != null) {
+      setCurrentPreference(null);
       current_user.comment_preference.map((ele) => {
         if (ele.comment_id == id) {
           setCurrentPreference(ele.preference);
         }
       });
     }
-  }, []);
+  }, [current_user]);
 
   const checkPreference = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    let cpBuffer: null | boolean;
+    let cpBuffer: null | boolean = null;
     if (
       currentPreference == true &&
       (e.target as HTMLButtonElement).id == "like"
     ) {
       cpBuffer = null;
-      setCurrentPreference(null);
-      is_question == true && isPostUser == true && setIsAnswer(false);
+      if (is_question == true && isPostUser == true) setIsAnswer(false);
       setUtilCounts([utilCounts[0] - 1, utilCounts[1], utilCounts[2]]);
     }
     if (
@@ -79,8 +77,7 @@ const CommentCard = ({
       (e.target as HTMLButtonElement).id == "dislike"
     ) {
       cpBuffer = null;
-      setCurrentPreference(null);
-      is_question == true && isPostUser == true && setIsAnswer(false);
+      if (is_question == true && isPostUser == true) setIsAnswer(false);
       setUtilCounts([utilCounts[0], utilCounts[1] - 1, utilCounts[2]]);
     }
     if (
@@ -88,8 +85,7 @@ const CommentCard = ({
       (e.target as HTMLButtonElement).id == "dislike"
     ) {
       cpBuffer = false;
-      setCurrentPreference(false);
-      is_question == true && isPostUser == true && setIsAnswer(false);
+      if (is_question == true && isPostUser == true) setIsAnswer(false);
       setUtilCounts([utilCounts[0] - 1, utilCounts[1] + 1, utilCounts[2]]);
     }
     if (
@@ -97,8 +93,7 @@ const CommentCard = ({
       (e.target as HTMLButtonElement).id == "like"
     ) {
       cpBuffer = true;
-      setCurrentPreference(true);
-      is_question == true && isPostUser == true && setIsAnswer(true);
+      if (is_question == true && isPostUser == true) setIsAnswer(true);
       setUtilCounts([utilCounts[0] + 1, utilCounts[1] - 1, utilCounts[2]]);
     }
     if (
@@ -106,8 +101,7 @@ const CommentCard = ({
       (e.target as HTMLButtonElement).id == "like"
     ) {
       cpBuffer = true;
-      setCurrentPreference(true);
-      is_question == true && isPostUser == true && setIsAnswer(true);
+      if (is_question == true && isPostUser == true) setIsAnswer(true);
       setUtilCounts([utilCounts[0] + 1, utilCounts[1], utilCounts[2]]);
     }
     if (
@@ -115,10 +109,10 @@ const CommentCard = ({
       (e.target as HTMLButtonElement).id == "dislike"
     ) {
       cpBuffer = false;
-      setCurrentPreference(false);
-      is_question == true && isPostUser == true && setIsAnswer(false);
+      if (is_question == true && isPostUser == true) setIsAnswer(false);
       setUtilCounts([utilCounts[0], utilCounts[1] + 1, utilCounts[2]]);
     }
+    setCurrentPreference(cpBuffer);
     if (debouncer) {
       clearTimeout(debouncer);
     }
