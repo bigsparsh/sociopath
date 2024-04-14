@@ -1,12 +1,9 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
-import { HiHome } from "react-icons/hi";
 import {
   HiBars3,
-  HiMiniArrowLeftOnRectangle,
   HiArrowUpTray,
   HiMiniPhoto,
-  HiUser,
   HiGlobeAsiaAustralia,
   HiMiniMagnifyingGlass,
 } from "react-icons/hi2";
@@ -17,6 +14,7 @@ const PrimaryLayout = () => {
   return (
     <div className="flex flex-col ">
       <NavBar
+        user={true}
         extras={
           <label
             htmlFor="my-drawer-2"
@@ -41,21 +39,9 @@ const PrimaryLayout = () => {
             <img src={logo} width="75" className="lg:hidden block" />
             <ul className="menu font-bold w-full gap-1 rounded-box">
               <li>
-                <a>
-                  <HiHome className="text-xl" />
-                  Home
-                </a>
-              </li>
-              <li>
                 <a onClick={() => navigator("/user/feed/create")}>
                   <HiArrowUpTray className="text-xl" />
                   Upload
-                </a>
-              </li>
-              <li>
-                <a onClick={() => navigator("/user/profile/self")}>
-                  <HiUser className="text-xl" />
-                  Your Profile
                 </a>
               </li>
               <li>
@@ -78,17 +64,6 @@ const PrimaryLayout = () => {
                 >
                   <HiMiniMagnifyingGlass className="text-xl" />
                   Filter Feed
-                </a>
-              </li>
-              <li>
-                <a
-                  onClick={() => {
-                    localStorage.clear();
-                    navigator("/");
-                  }}
-                >
-                  <HiMiniArrowLeftOnRectangle className="text-xl" />
-                  Logout
                 </a>
               </li>
             </ul>

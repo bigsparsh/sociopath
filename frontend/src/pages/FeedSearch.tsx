@@ -136,7 +136,7 @@ const FeedSearch = () => {
           </button>
         )}
       </div>
-      <div className="lg:flex hidden flex-col gap-5 basis-1/3 z-30">
+      <div className="lg:flex hidden flex-col gap-5 basis-1/3 z-20">
         <h1 className="mb-5">Search by</h1>
         {options != null && (
           <FilterSettings

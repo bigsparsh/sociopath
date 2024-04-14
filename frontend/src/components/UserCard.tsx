@@ -17,12 +17,13 @@ const UserCard = ({
   const [isFriend, setIsFriend] = useState<FriendType | null>();
   useEffect(() => {
     let isYourFriend: FriendType | null = null;
-    user.friend.forEach((ele) => {
-      if (ele.user2_id == current_user.user_id) {
-        isYourFriend = FriendType.FOLLOWER;
-        return;
-      }
-    });
+    user &&
+      user.friend.forEach((ele) => {
+        if (ele.user2_id == current_user.user_id) {
+          isYourFriend = FriendType.FOLLOWER;
+          return;
+        }
+      });
     current_user.friend.forEach((ele) => {
       if (ele.user2_id == user.user_id) {
         if (ele.mutual == true) {

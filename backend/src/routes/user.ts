@@ -192,6 +192,7 @@ userRouter.get("/search", async (c) => {
       },
     },
     include: {
+      friend: true,
       _count: {
         select: {
           post: true,

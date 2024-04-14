@@ -155,7 +155,7 @@ const UserProfile = () => {
       ) : null}
 
       <div className="flex lg:flex-row flex-col-reverse lg:gap-10 gap-0">
-        <div className="fixed text-transparent inset-x-12 inset-y-12 lg:inset-x-1/4 w-fit h-fit flex-col flex justify-center items-center text-7xl lg:text-9xl font-black tracking-wide z-[-1]">
+        <div className="fixed text-transparent inset-x-12 inset-y-16 lg:inset-x-1/4 w-fit h-fit flex-col flex justify-center items-center text-7xl lg:text-9xl font-black tracking-wide z-[-1]">
           <h1 className="bg-gradient-to-r from-primary/50 via-primary to-primary/50 bg-clip-text">
             PROFILE
           </h1>
