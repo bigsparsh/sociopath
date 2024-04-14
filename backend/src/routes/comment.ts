@@ -137,18 +137,10 @@ commentRouter.put("/updatePreference", async (c) => {
       is_question: true,
     },
   });
-  // console.log(
-  //   postPoster?.user.user_id,
-  //   body.user_id,
-  //   postPoster?.user.user_id == body.user_id,
-  //   body.preference == true,
-  //   postPoster?.is_question == true,
-  // );
   if (
     postPoster?.user.user_id == body.user_id &&
     postPoster?.is_question == true
   ) {
-    // console.log("check");
     await prisma.comment.update({
       where: {
         comment_id: body.comment_id,

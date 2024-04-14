@@ -101,18 +101,6 @@ userRouter.post("/login", async (c) => {
 });
 
 userRouter.use(authMiddleware);
-// userRouter.get("/getcounts", async (c) => {
-//   const prisma = new PrismaClient({
-//     datasourceUrl: c.env.DATABASE_URL,
-//   }).$extends(withAccelerate());
-//
-//   const users = prisma.user.findMany({
-//     select:{
-//       _count
-//     }
-//   })
-
-// });
 userRouter.get("/get", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
