@@ -48,6 +48,9 @@ userRouter.get("/me", async (c) => {
   if (jwt) {
     const user = await prisma.user.findUnique({
       where: {
+        NOT: {
+          delete: true,
+        },
         user_id: userId,
       },
       select: {
@@ -84,6 +87,9 @@ userRouter.post("/login", async (c) => {
   const body = await c.req.json();
   const user = await prisma.user.findFirst({
     where: {
+      NOT: {
+        delete: true,
+      },
       email: body.email,
       password: body.password,
     },
@@ -130,6 +136,9 @@ userRouter.get("/get", async (c) => {
         password: true,
       },
       where: {
+        NOT: {
+          delete: true,
+        },
         user_id: filterId,
       },
     });
@@ -141,6 +150,11 @@ userRouter.get("/get", async (c) => {
   const users = await prisma.user.findMany({
     skip: intake,
     take: 5,
+    where: {
+      NOT: {
+        delete: true,
+      },
+    },
     include: {
       friend: true,
       _count: {
@@ -174,6 +188,7 @@ userRouter.get("/search", async (c) => {
     skip: intake,
     take: 5,
     where: {
+      delete: false,
       name: {
         contains: filter,
         mode: "insensitive",
@@ -209,9 +224,13 @@ userRouter.delete("/delete", async (c) => {
 
   const filterId = c.req.query("filterId") || "";
   if (filterId != "") {
-    const user = await prisma.user.delete({
+    const user = await prisma.user.update({
       where: {
         user_id: filterId,
+      },
+      data: {
+        delete: true,
+        email: String(new Date()),
       },
     });
     return c.json({
@@ -234,6 +253,9 @@ userRouter.put("/update", async (c) => {
 
   await prisma.user.update({
     where: {
+      NOT: {
+        delete: true,
+      },
       user_id: filterId,
     },
     data: {

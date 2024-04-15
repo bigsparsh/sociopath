@@ -18,6 +18,7 @@ model User {
   phone String
   address String
   appreciate_mode AppreciateModes
+  delete Boolean @default(false)
   friend Friend[] @relation("user1")
   user2 Friend[] @relation("user2")
   post Post[]
@@ -48,6 +49,7 @@ model Post {
   description String
   post_image String
   user_id String
+  delete Boolean @default(false)
   comment_enabled Boolean @default(true)
   is_question Boolean @default(false)
   user User @relation(fields: [user_id], references: [user_id])
@@ -62,6 +64,7 @@ model Comment {
   created_at DateTime @default(now())
   post_id String
   user_id String
+  delete Boolean @default(false)
   is_answer Boolean @default(false)
   post Post @relation(fields: [post_id], references: [post_id])
   preference CommentPreferences[]

@@ -3,6 +3,7 @@ interface User {
   email: string;
   phone: string;
   address: string;
+  delete: boolean;
   comment: Comment[];
   comment_preference: CommentPreference[];
   post: Post[];

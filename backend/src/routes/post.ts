@@ -77,6 +77,11 @@ postRouter.delete("/removePreference", async (c) => {
   const body = await c.req.json();
   await prisma.postPreference.deleteMany({
     where: {
+      NOT: {
+        user: {
+          delete: true,
+        },
+      },
       post_id: body.post_id,
       user_id: body.user_id,
     },
@@ -104,6 +109,11 @@ postRouter.post("/search", async (c) => {
         },
       },
       where: {
+        NOT: {
+          user: {
+            delete: true,
+          },
+        },
         preference: body.appreciationType,
       },
       _count: {
@@ -117,6 +127,11 @@ postRouter.post("/search", async (c) => {
       appreciationPosts.map(async (ele) => {
         const post = await prisma.post.findUnique({
           where: {
+            NOT: {
+              user: {
+                delete: true,
+              },
+            },
             post_id: ele.post_id,
           },
           select: postReturnContent,
@@ -132,6 +147,9 @@ postRouter.post("/search", async (c) => {
   if (searchParam == "User") {
     const user = await prisma.user.findMany({
       where: {
+        NOT: {
+          delete: true,
+        },
         name: {
           contains: body.userName,
           mode: "insensitive",
@@ -141,6 +159,11 @@ postRouter.post("/search", async (c) => {
     const user_ids = user.map((ele) => ele.user_id);
     const posts = await prisma.post.findMany({
       where: {
+        NOT: {
+          user: {
+            delete: true,
+          },
+        },
         user_id: {
           in: user_ids,
         },
@@ -168,6 +191,11 @@ postRouter.post("/search", async (c) => {
     const tag_ids = tag.map((ele) => ele.post_id);
     const posts = await prisma.post.findMany({
       where: {
+        NOT: {
+          user: {
+            delete: true,
+          },
+        },
         post_id: {
           in: tag_ids,
         },
@@ -192,6 +220,11 @@ postRouter.post("/search", async (c) => {
     const user_ids = friends.map((ele) => ele.user2_id);
     const posts = await prisma.post.findMany({
       where: {
+        NOT: {
+          user: {
+            delete: true,
+          },
+        },
         user_id: {
           in: user_ids,
         },
@@ -217,6 +250,11 @@ postRouter.get("/get", async (c) => {
   if (filterId != "") {
     const post = await prisma.post.findUnique({
       where: {
+        NOT: {
+          user: {
+            delete: true,
+          },
+        },
         post_id: filterId,
       },
       select: postReturnContent,
@@ -229,6 +267,13 @@ postRouter.get("/get", async (c) => {
   const posts = await prisma.post.findMany({
     skip: intake,
     take: count,
+    where: {
+      NOT: {
+        user: {
+          delete: true,
+        },
+      },
+    },
     orderBy: [
       {
         created_at: "desc",
@@ -271,6 +316,11 @@ postRouter.put("/updatePreference", async (c) => {
   const body = await c.req.json();
   const exists = await prisma.postPreference.findFirst({
     where: {
+      NOT: {
+        user: {
+          delete: true,
+        },
+      },
       post_id: body.post_id,
       user_id: body.user_id,
     },
@@ -289,6 +339,11 @@ postRouter.put("/updatePreference", async (c) => {
   }
   await prisma.postPreference.updateMany({
     where: {
+      NOT: {
+        user: {
+          delete: true,
+        },
+      },
       post_id: body.post_id,
       user_id: body.user_id,
     },
@@ -312,6 +367,11 @@ postRouter.put("/update", async (c) => {
 
   await prisma.post.update({
     where: {
+      NOT: {
+        user: {
+          delete: true,
+        },
+      },
       post_id: filterId,
     },
     data: {

@@ -1,5 +1,6 @@
 interface User {
   user_id: string;
+  delete: boolean;
   friend: {
     user1_id: string;
     user2_id: string;

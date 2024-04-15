@@ -57,6 +57,11 @@ commentRouter.get("/get", async (c) => {
 
   const comments = await prisma.comment.findMany({
     where: {
+      NOT: {
+        user: {
+          delete: true,
+        },
+      },
       post_id: filterId,
     },
     select: commentReturnContent,
@@ -93,6 +98,11 @@ commentRouter.put("/update", async (c) => {
   const body = await c.req.json();
   const newComment = await prisma.comment.update({
     where: {
+      NOT: {
+        user: {
+          delete: true,
+        },
+      },
       user_id: body.user_id,
       comment_id: body.comment_id,
     },
@@ -115,6 +125,11 @@ commentRouter.put("/updatePreference", async (c) => {
   const body = await c.req.json();
   const exists = await prisma.commentPreferences.findFirst({
     where: {
+      NOT: {
+        user: {
+          delete: true,
+        },
+      },
       comment_id: body.comment_id,
       user_id: body.user_id,
     },
@@ -122,6 +137,11 @@ commentRouter.put("/updatePreference", async (c) => {
 
   const postPoster = await prisma.post.findFirst({
     where: {
+      NOT: {
+        user: {
+          delete: true,
+        },
+      },
       comment: {
         some: {
           comment_id: body.comment_id,
@@ -143,6 +163,11 @@ commentRouter.put("/updatePreference", async (c) => {
   ) {
     await prisma.comment.update({
       where: {
+        NOT: {
+          user: {
+            delete: true,
+          },
+        },
         comment_id: body.comment_id,
       },
       data: {
@@ -164,6 +189,11 @@ commentRouter.put("/updatePreference", async (c) => {
   }
   await prisma.commentPreferences.updateMany({
     where: {
+      NOT: {
+        user: {
+          delete: true,
+        },
+      },
       comment_id: body.comment_id,
       user_id: body.user_id,
     },
@@ -185,6 +215,11 @@ commentRouter.delete("/removePreference", async (c) => {
   const body = await c.req.json();
   const postPoster = await prisma.post.findFirst({
     where: {
+      NOT: {
+        user: {
+          delete: true,
+        },
+      },
       comment: {
         some: {
           comment_id: body.comment_id,
@@ -206,6 +241,11 @@ commentRouter.delete("/removePreference", async (c) => {
   ) {
     await prisma.comment.update({
       where: {
+        NOT: {
+          user: {
+            delete: true,
+          },
+        },
         comment_id: body.comment_id,
       },
       data: {
@@ -215,6 +255,11 @@ commentRouter.delete("/removePreference", async (c) => {
   }
   await prisma.commentPreferences.deleteMany({
     where: {
+      NOT: {
+        user: {
+          delete: true,
+        },
+      },
       comment_id: body.comment_id,
       user_id: body.user_id,
     },
