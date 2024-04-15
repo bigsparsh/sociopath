@@ -24,6 +24,7 @@ const UserProfile = () => {
   const navigator = useNavigate();
   const [overlay, setOverlay] = useState<string | null>();
   const { id } = useParams();
+  const [actionPost, setActionPost] = useState<string>();
 
   useEffect(() => {
     if (localStorage.getItem("auth-token")) {
@@ -99,6 +100,27 @@ const UserProfile = () => {
     }
   }, [navigator]);
 
+  const deletePost = () => {
+    if (!actionPost) return;
+    setLoading(true);
+    axios
+      .delete(
+        import.meta.env.VITE_BACKEND_URL +
+        "/post/delete?filterId=" +
+        actionPost,
+        {
+          headers: {
+            Authorization: localStorage.getItem("auth-token"),
+          },
+        },
+      )
+      .then((res) => {
+        if (res.data.error) return;
+        currentUser?.post.filter((ele) => ele.post_id != actionPost);
+        setLoading(false);
+      });
+  };
+
   const makeFriend = async () => {
     if (isFriend == FriendType.FRIEND || isFriend == FriendType.FOLLOWING) {
       if (isFriend == FriendType.FRIEND) {
@@ -153,7 +175,26 @@ const UserProfile = () => {
       {overlay != null ? (
         <FullPostPopup post_id={overlay} overlay={setOverlay} />
       ) : null}
-
+      <div className="modal" role="dialog" id="my_modal_8">
+        <div className="modal-box">
+          <h3 className="font-bold text-xl text-error ">
+            Post Deletion Consent
+          </h3>
+          <p className="py-4">
+            After your post is deleted, there will be no way of recovering any
+            kind of data, you and anyone else will not be able to see this
+            again.
+          </p>
+          <div className="modal-action">
+            <a href="#" className="btn">
+              Close
+            </a>
+            <a href="#" className="btn btn-error" onClick={deletePost}>
+              Delete Post
+            </a>
+          </div>
+        </div>
+      </div>
       <div className="flex lg:flex-row flex-col-reverse lg:gap-10 gap-0">
         <div className="fixed text-transparent inset-x-12 inset-y-16 lg:inset-x-1/4 w-fit h-fit flex-col flex justify-center items-center text-7xl lg:text-9xl font-black tracking-wide z-[-1]">
           <h1 className="bg-gradient-to-r from-primary/50 via-primary to-primary/50 bg-clip-text">
@@ -186,7 +227,12 @@ const UserProfile = () => {
                       {id == "self" ? (
                         <>
                           <HiMiniPencilSquare className="text-2xl text-warning rounded-lg p-1 bg-base-300" />
-                          <HiMiniTrash className="text-2xl text-error rounded-lg p-1 bg-base-300" />
+                          <a
+                            href="#my_modal_8"
+                            onClick={() => setActionPost(ele.post_id)}
+                          >
+                            <HiMiniTrash className="text-2xl text-error rounded-lg p-1 bg-base-300" />
+                          </a>
                         </>
                       ) : null}
                     </div>
@@ -205,7 +251,12 @@ const UserProfile = () => {
                       {id == "self" ? (
                         <>
                           <HiMiniPencilSquare className="text-2xl text-warning rounded-lg p-1 bg-base-300" />
-                          <HiMiniTrash className="text-2xl text-error rounded-lg p-1 bg-base-300" />
+                          <a href="#my_modal_8">
+                            <HiMiniTrash
+                              className="text-2xl text-error rounded-lg p-1 bg-base-300"
+                              onClick={() => setActionPost(ele.post_id)}
+                            />
+                          </a>
                         </>
                       ) : null}
                     </div>

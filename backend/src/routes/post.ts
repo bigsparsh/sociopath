@@ -17,6 +17,7 @@ const postReturnContent = {
   created_at: true,
   post_image: true,
   tag: true,
+  delete: true,
   comment_enabled: true,
   user: {
     select: {
@@ -81,6 +82,9 @@ postRouter.delete("/removePreference", async (c) => {
         user: {
           delete: true,
         },
+        post: {
+          delete: true,
+        },
       },
       post_id: body.post_id,
       user_id: body.user_id,
@@ -113,6 +117,9 @@ postRouter.post("/search", async (c) => {
           user: {
             delete: true,
           },
+          post: {
+            delete: true,
+          },
         },
         preference: body.appreciationType,
       },
@@ -132,6 +139,7 @@ postRouter.post("/search", async (c) => {
                 delete: true,
               },
             },
+            delete: false,
             post_id: ele.post_id,
           },
           select: postReturnContent,
@@ -164,6 +172,7 @@ postRouter.post("/search", async (c) => {
             delete: true,
           },
         },
+        delete: false,
         user_id: {
           in: user_ids,
         },
@@ -196,6 +205,7 @@ postRouter.post("/search", async (c) => {
             delete: true,
           },
         },
+        delete: false,
         post_id: {
           in: tag_ids,
         },
@@ -225,6 +235,7 @@ postRouter.post("/search", async (c) => {
             delete: true,
           },
         },
+        delete: false,
         user_id: {
           in: user_ids,
         },
@@ -255,6 +266,7 @@ postRouter.get("/get", async (c) => {
             delete: true,
           },
         },
+        delete: false,
         post_id: filterId,
       },
       select: postReturnContent,
@@ -273,6 +285,7 @@ postRouter.get("/get", async (c) => {
           delete: true,
         },
       },
+      delete: false,
     },
     orderBy: [
       {
@@ -293,9 +306,12 @@ postRouter.delete("/delete", async (c) => {
 
   const filterId = c.req.query("filterId") || "";
   if (filterId != "") {
-    const post = await prisma.post.delete({
+    const post = await prisma.post.update({
       where: {
         post_id: filterId,
+      },
+      data: {
+        delete: true,
       },
     });
     return c.json({
@@ -320,6 +336,9 @@ postRouter.put("/updatePreference", async (c) => {
         user: {
           delete: true,
         },
+        post: {
+          delete: true,
+        },
       },
       post_id: body.post_id,
       user_id: body.user_id,
@@ -341,6 +360,9 @@ postRouter.put("/updatePreference", async (c) => {
     where: {
       NOT: {
         user: {
+          delete: true,
+        },
+        post: {
           delete: true,
         },
       },
@@ -371,7 +393,9 @@ postRouter.put("/update", async (c) => {
         user: {
           delete: true,
         },
+        delete: true,
       },
+
       post_id: filterId,
     },
     data: {

@@ -58,9 +58,17 @@ userRouter.get("/me", async (c) => {
         email: true,
         phone: true,
         address: true,
-        comment: true,
+        comment: {
+          where: {
+            delete: false,
+          },
+        },
         comment_preference: true,
-        post: true,
+        post: {
+          where: {
+            delete: false,
+          },
+        },
         post_preference: true,
         bio: true,
         friend: true,
@@ -124,9 +132,17 @@ userRouter.get("/get", async (c) => {
         email: true,
         phone: true,
         address: true,
-        comment: true,
+        comment: {
+          where: {
+            delete: false,
+          },
+        },
         comment_preference: true,
-        post: true,
+        post: {
+          where: {
+            delete: false,
+          },
+        },
         post_preference: true,
         bio: true,
         friend: true,
@@ -151,16 +167,22 @@ userRouter.get("/get", async (c) => {
     skip: intake,
     take: 5,
     where: {
-      NOT: {
-        delete: true,
-      },
+      delete: false,
     },
     include: {
       friend: true,
       _count: {
         select: {
-          post: true,
-          comment: true,
+          post: {
+            where: {
+              delete: false,
+            },
+          },
+          comment: {
+            where: {
+              delete: false,
+            },
+          },
           post_preference: true,
           comment_preference: true,
           user2: true,
@@ -198,8 +220,16 @@ userRouter.get("/search", async (c) => {
       friend: true,
       _count: {
         select: {
-          post: true,
-          comment: true,
+          post: {
+            where: {
+              delete: false,
+            },
+          },
+          comment: {
+            where: {
+              delete: false,
+            },
+          },
           post_preference: true,
           comment_preference: true,
           user2: true,
@@ -253,9 +283,7 @@ userRouter.put("/update", async (c) => {
 
   await prisma.user.update({
     where: {
-      NOT: {
-        delete: true,
-      },
+      delete: false,
       user_id: filterId,
     },
     data: {
