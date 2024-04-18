@@ -29,6 +29,7 @@ interface post_card {
       post_id: string;
       preference: boolean;
       user_id: string;
+      user: CurrentUserType;
     }[];
   };
   comment: PostType["comment"];
@@ -61,12 +62,14 @@ const PostCard = ({
     let likes = 0,
       dislikes = 0;
     post.preference.map((ele) => {
-      if (ele.preference == true) {
+      if (ele.preference == true && ele.user.delete == false) {
         likes++;
       }
+      if (ele.preference == false && ele.user.delete == false) {
+        dislikes++;
+      }
     });
-    dislikes = post.preference.length - likes;
-    setCommentCount(comment.length);
+    setCommentCount(comment.filter((ele) => ele.user.delete == false).length);
     setUtilCounts([likes, dislikes]);
 
     current_user.post_preference.map((ele) => {

@@ -28,8 +28,26 @@ const postReturnContent = {
       profile_image: true,
     },
   },
-  comment: true,
-  preference: true,
+  comment: {
+    select: {
+      comment_id: true,
+      post_id: true,
+      is_answer: true,
+      message: true,
+      created_at: true,
+      user: true,
+      user_id: true,
+    },
+  },
+  preference: {
+    select: {
+      preference: true,
+      user: true,
+      p_preference_id: true,
+      post_id: true,
+      user_id: true,
+    },
+  },
 };
 
 postRouter.use(authMiddleware);
@@ -127,7 +145,7 @@ postRouter.post("/search", async (c) => {
       skip: intake,
       take: 5,
     });
-    console.log(appreciationPosts);
+
     const posts = await Promise.all(
       appreciationPosts.map(async (ele) => {
         const post = await prisma.post.findUnique({

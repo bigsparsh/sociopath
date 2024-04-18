@@ -18,6 +18,7 @@ interface Post {
     profile_image: string;
   };
   comment: {
+    user: true;
     is_answer: boolean;
     comment_id: string;
     message: string;
@@ -26,6 +27,7 @@ interface Post {
     user_id: string;
   }[];
   preference: {
+    user: true;
     p_preference_id: string;
     post_id: string;
     preference: boolean;
