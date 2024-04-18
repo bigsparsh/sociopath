@@ -113,13 +113,11 @@ postRouter.post("/search", async (c) => {
         },
       },
       where: {
-        NOT: {
+        post: {
           user: {
-            delete: true,
+            delete: false,
           },
-          post: {
-            delete: true,
-          },
+          delete: false,
         },
         preference: body.appreciationType,
       },
@@ -129,15 +127,13 @@ postRouter.post("/search", async (c) => {
       skip: intake,
       take: 5,
     });
-
+    console.log(appreciationPosts);
     const posts = await Promise.all(
       appreciationPosts.map(async (ele) => {
         const post = await prisma.post.findUnique({
           where: {
-            NOT: {
-              user: {
-                delete: true,
-              },
+            user: {
+              delete: false,
             },
             delete: false,
             post_id: ele.post_id,
