@@ -1,3 +1,4 @@
+import CurrentUserType from "../types/CurrentUserType";
 interface Post {
   post_id: string;
   description: string;
@@ -18,7 +19,7 @@ interface Post {
     profile_image: string;
   };
   comment: {
-    user: true;
+    user: CurrentUserType;
     is_answer: boolean;
     comment_id: string;
     message: string;
@@ -27,7 +28,7 @@ interface Post {
     user_id: string;
   }[];
   preference: {
-    user: true;
+    user: CurrentUserType;
     p_preference_id: string;
     post_id: string;
     preference: boolean;
