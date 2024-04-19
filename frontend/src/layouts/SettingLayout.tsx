@@ -17,13 +17,6 @@ const SettingLayout = () => {
           </a>
           <a
             role="tab"
-            className={tabs == "Preferences" ? "tab tab-active" : "tab"}
-            onClick={() => setTabs("Preferences")}
-          >
-            Preferences
-          </a>
-          <a
-            role="tab"
             className={tabs == "Delete Account" ? "tab tab-active" : "tab"}
             onClick={() => setTabs("Delete Account")}
           >

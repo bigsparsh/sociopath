@@ -16,5 +16,6 @@
   outline: 1px solid slategrey;
 }
 * {
+  font-family: "open sans", sans-serif;
   /* border: 1px solid red !important; */
 }
